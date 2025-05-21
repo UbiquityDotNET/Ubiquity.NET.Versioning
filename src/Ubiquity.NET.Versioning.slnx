@@ -10,7 +10,6 @@
     <File Path="../Directory.Packages.props" />
     <File Path="../global.json" />
     <File Path="../Nuget.Config" />
-    <File Path="../Publish-Release.ps1" />
     <File Path="../Push-Docs.ps1" />
     <File Path="../README.md" />
     <File Path="../repo-buildutils.ps1" />

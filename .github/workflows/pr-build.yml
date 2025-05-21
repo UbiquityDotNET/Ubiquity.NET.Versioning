@@ -3,9 +3,11 @@ on:
   push:
     branches:
       - develop
+
     paths-ignore:
       - '**.md'
       - '**.dic'
+
   pull_request:
     branches:
       - develop

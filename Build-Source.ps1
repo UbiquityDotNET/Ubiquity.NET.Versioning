@@ -5,17 +5,12 @@
 .PARAMETER Configuration
     This sets the build configuration to use, default is "Release" though for inner loop development this may be set to "Debug"
 
-.PARAMETER AllowVsPreReleases
-    Switch to enable use of Visual Studio Pre-Release versions. This is NEVER enabled for official production builds, however it is
-    useful when adding support for new versions during the pre-release stages.
-
 .PARAMETER FullInit
     Performs a full initialization. A full initialization includes forcing a re-capture of the time stamp for local builds
     as well as writes details of the initialization to the information and verbose streams.
 #>
 Param(
     [string]$Configuration="Release",
-    [switch]$AllowVsPreReleases,
     [switch]$FullInit
 )
 
@@ -27,13 +22,9 @@ try
     # based on the switch parameter. Normally FullInit is done in Build-All, which calls this
     # script. But for a local "inner loop" development this might be the only script used.
     . .\repo-buildutils.ps1
-    $buildInfo = Initialize-BuildEnvironment -FullInit:$FullInit -AllowVsPreReleases:$AllowVsPreReleases
+    $buildInfo = Initialize-BuildEnvironment -FullInit:$FullInit
 
-    dotnet build -c $Configuration 'src/CSemVer.Build.Tasks.sln'
-
-    # Create a ZIP file of all the nuget packages to publish as a build artifact
-    cd $buildInfo['NuGetOutputPath']
-    Compress-Archive -Force -Path *.* -DestinationPath (join-path $buildInfo['BuildOutputPath'] Nuget.Packages.zip)
+    dotnet build -c $Configuration 'src/Ubiquity.NET.Versioning.slnx'
 }
 catch
 {

@@ -25,7 +25,7 @@ jobs:
           fetch-depth: 0
 
       - name: Build Source
-        run: .\Build-All.ps1 -FullInit
+        run: .\Build-All.ps1
 
       - name: Publish Artifacts
         uses: actions/upload-artifact@v4

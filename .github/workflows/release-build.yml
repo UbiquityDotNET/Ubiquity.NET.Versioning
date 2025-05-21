@@ -17,32 +17,32 @@ env:
 jobs:
   build_target:
     runs-on: windows-latest
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v2
+      steps:
+        - name: Checkout Repo
+          uses: actions/checkout@v2
+          with:
+            persist-credentials: false
+            fetch-depth: 0
+
+      - name: Build Source
+        run: .\Build-All.ps1 -FullInit
+
+      - name: Publish Artifacts
+        uses: actions/upload-artifact@v4
         with:
-          persist-credentials: false
-          fetch-depth: 0
+          name: nuget-packages
+          path: .\BuildOutput\Nuget
 
-    - name: Build Source
-      run: .\Build-All.ps1 -FullInit
+      - name: Show asset names
+        run: dir BuildOutput/Nuget
 
-    - name: Publish Artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: nuget-packages
-        path: .\BuildOutput\Nuget
+      - name: Publish packages to NuGet.org
+        run: dir .\BuildOutput\NuGet\*.nupkg | .\Push-Nuget.ps1 -apiKey ${{ secrets.NUGETPUSH_ACCESS_TOKEN }}
 
-    - name: Show asset names
-      run: dir BuildOutput/Nuget
-
-    - name: Publish packages to NuGet.org
-      run: dir .\BuildOutput\NuGet\*.nupkg | .\Push-Nuget.ps1 -apiKey ${{ secrets.NUGETPUSH_ACCESS_TOKEN }}
-
-    - name: Create Release
-      id: create_release
-      uses: softprops/action-gh-release@v2
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        draft: true
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: true

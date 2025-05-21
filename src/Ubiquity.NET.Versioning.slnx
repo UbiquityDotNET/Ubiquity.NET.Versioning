@@ -1,21 +1,32 @@
 <Solution>
   <Folder Name="/Solution Items/">
-    <File Path="../.github/workflows/pr-build.yml" />
-    <File Path="../.github/workflows/release-build.yml" />
     <File Path="../Build-All.ps1" />
-    <File Path="../Build-Source.ps1" />
     <File Path="../BuildVersion.xml" />
     <File Path="../Directory.Build.props" />
     <File Path="../Directory.Build.targets" />
     <File Path="../Directory.Packages.props" />
     <File Path="../global.json" />
     <File Path="../Nuget.Config" />
-    <File Path="../Push-Docs.ps1" />
     <File Path="../README.md" />
-    <File Path="../repo-buildutils.ps1" />
     <File Path="../stylecop.json" />
     <File Path="../Ubiquity.NET.ruleset" />
   </Folder>
+  <Folder Name="/Solution Items/GitHub/" Id="831fc56c-5192-4533-bdd4-7bc366efe570" />
+  <Folder Name="/Solution Items/GitHub/ISSUE_TEMPLATE/" Id="3b5f8dea-1188-472b-b762-43660c3b118b">
+    <File Path="../.github/ISSUE_TEMPLATE/bug_report.md" />
+    <File Path="../.github/ISSUE_TEMPLATE/feature_request.md" />
+  </Folder>
+  <Folder Name="/Solution Items/GitHub/workflows/" Id="f17836ca-4919-4f99-9bfc-659da632e39b">
+    <File Path="../.github/workflows/pr-build.yml" />
+    <File Path="../.github/workflows/release-build.yml" />
+  </Folder>
+  <Folder Name="/Solution Items/OneFlow/" Id="02ea681e-c7d8-13c7-8484-4ac65e1b71e8">
+    <File Path="../OneFlow/Publish-Release.ps1" />
+    <File Path="../OneFlow/ReadMe.md" />
+    <File Path="../OneFlow/Start-Release.ps1" />
+  </Folder>
+  <Project Path="../PsModules/CommonBuild/CommonBuild.pssproj" Type="f5034706-568f-408a-b7b3-4d38c6db8a32" Id="6cafc0c6-a428-4d30-a9f9-700e829fea51" />
+  <Project Path="../PsModules/RepoBuild/RepoBuild.pssproj" Type="f5034706-568f-408a-b7b3-4d38c6db8a32" Id="0c6a5f49-fc2a-4e62-8dd8-b31ade60ec76" />
   <Project Path="Ubiquity.NET.Versioning.Build.Tasks/Ubiquity.NET.Versioning.Build.Tasks.csproj" />
   <Project Path="Ubiquity.NET.Versioning.UT/Ubiquity.NET.Versioning.UT.csproj" Id="a60f8801-7550-468e-9821-a120497a99ea" />
   <Project Path="Ubiquity.NET.Versioning/Ubiquity.NET.Versioning.csproj" />

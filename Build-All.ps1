@@ -1,9 +1,13 @@
+using module "PSModules/CommonBuild/CommonBuild.psd1"
+using module "PSModules/RepoBuild/RepoBuild.psd1"
+
 <#
 .SYNOPSIS
     Script to build all of the code in this repo
 
 .PARAMETER Configuration
-    This sets the build configuration to use, default is "Release" though for inner loop development this may be set to "Debug"
+    This sets the build configuration to use, default is "Release" though for inner loop development this
+    may be set to "Debug".
 
 .PARAMETER ForceClean
     Forces a complete clean (Recursive delete of the build output)
@@ -24,23 +28,27 @@ Param(
     [switch]$ForceClean
 )
 
-pushd $PSScriptRoot
+Push-Location $PSScriptRoot
 $oldPath = $env:Path
 try
 {
     # Pull in the repo specific support and force a full initialization of all the environment
     # as this is a top level build command.
-    . .\repo-buildutils.ps1
     $buildInfo = Initialize-BuildEnvironment -FullInit
+    if(!$buildInfo -or $buildInfo -isnot [hashtable])
+    {
+        throw "build scripts BUSTED; Got null buildinfo hashtable..."
+    }
+
     if((Test-Path -PathType Container $buildInfo['BuildOutputPath']) -and $ForceClean )
     {
         Write-Information "Cleaning output folder from previous builds"
-        rd -Recurse -Force -Path $buildInfo['BuildOutputPath']
+        Remove-Item -Recurse -Force $buildInfo['BuildOutputPath'] -ProgressAction SilentlyContinue | Out-Null
     }
 
-    md $buildInfo['NuGetOutputPath'] -ErrorAction SilentlyContinue | Out-Null
+    mkdir $buildInfo['NuGetOutputPath'] -ErrorAction SilentlyContinue | Out-Null
 
-    .\Build-Source.ps1
+    dotnet build -c $Configuration 'src/Ubiquity.NET.Versioning.slnx'
 }
 catch
 {
@@ -53,7 +61,7 @@ catch
 }
 finally
 {
-    popd
+    Pop-Location
     $env:Path = $oldPath
 }
 

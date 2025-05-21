@@ -1,3 +1,6 @@
+using module '../PSModules/CommonBuild/CommonBuild.psd1'
+using module '../PsModules/RepoBuild/RepoBuild.psd1'
+
 <#
 .SYNOPSIS
     Publishes the current release as a new branch to the upstream repository
@@ -17,18 +20,33 @@
     For the gory details of this process see: https://www.endoflineblog.com/implementing-oneflow-on-github-bitbucket-and-gitlab
 #>
 
-Param([Parameter(Mandatory=$True)]$commit)
-$repoRoot = [System.IO.Path]::GetFullPath([System.IO.Path]::Combine($PSScriptRoot, ".."))
-. (join-path $repoRoot repo-buildutils.ps1)
+Param()
 $buildInfo = Initialize-BuildEnvironment
 
-# create script scoped alias for git that throws a PowerShell exception if the command fails
-Set-Alias git Invoke-git -scope Script -option Private
-
-# pushing the tag to develop branch on the official repository triggers the official build and release of the Nuget Packages
+# merging the tag to develop branch on the official repository triggers the official build and release of the Nuget Packages
 $tagName = Get-BuildVersionTag $buildInfo
-git co develop
-git pull upstream develop
-git push
-git tag -a $tagName $commit -m"Release $tagName"
-git push upstream $tagName
+$officialRemoteName = Get-GitRemoteName $buildInfo official
+$forkRemoteName = Get-GitRemoteName $buildInfo fork
+
+$releaseBranch = "release/$tagName"
+$officialReleaseBranch = "$officialRemoteName/$releaseBranch"
+$mergeBackBranchName = "merge-back-$tagName"
+
+Write-Information 'Fetching from official repository'
+Invoke-External git fetch $officialRemoteName
+
+Write-Information "Switching to release branch [$officialReleaseBranch]"
+Invoke-External git switch '-c' $releasebranch $officialReleaseBranch
+
+Write-Information 'Creating tag of this branch as the release'
+Invoke-External git tag $tagname '-m' "Official release: $tagname"
+
+Write-Information 'Pushing tag to official remote [Starts automated build release process]'
+Invoke-External git push $officialRemoteName '--tags'
+
+Write-Information 'Creating local merge-back branch to merge changes associated with the release'
+# create a "merge-back" child branch to handle any updates/conflict resolutions when applying
+# the changes made in the release branch back to the develop branch.
+Invoke-External git checkout '-b' $mergeBackBranchName $releasebranch
+Write-Information 'pushing merge-back branch to fork'
+Invoke-External git push $forkRemoteName $mergeBackBranchName

@@ -1,12 +1,12 @@
 @{
 # Script module or binary module file associated with this manifest.
-RootModule = 'CSemVerBuild.psm1'
+RootModule = 'RepoBuild.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.0.0'
+ModuleVersion = '1.0'
 
 # ID used to uniquely identify this module
-GUID = '6da1bba8-442f-4bc3-9991-9c8783df06a4'
+GUID = '455a0307-1366-4de2-8abe-5396c5037cab'
 
 # Author of this module
 Author = 'Ubiquity.NET Contributors'
@@ -15,10 +15,10 @@ Author = 'Ubiquity.NET Contributors'
 CompanyName = 'Ubquity.NET'
 
 # Copyright statement for this module
-Copyright = '(c) 2020 Ubiquity.NET Contributors. All rights reserved.'
+Copyright = '(c) 2020-2025 Ubiquity.NET Contributors. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'Common build support functions for Ubiquity.NET projects'
+Description = 'Repository build support functions for Ubiquity.NET.LlvmLibs'
 
 # Minimum version of the Windows PowerShell engine required by this module
 PowerShellVersion = '7.0'
@@ -42,13 +42,13 @@ CompatiblePSEditions = @('Core')
 # ProcessorArchitecture = ''
 
 # Modules that must be imported into the global environment prior to importing this module
-# RequiredModules = @()
+RequiredModules = @(Join-Path $PsScriptRoot '..' CommonBuild CommonBuild.psd1)
 
 # Assemblies that must be loaded prior to importing this module
 # RequiredAssemblies = @()
 
 # Script files (.ps1) that are run in the caller's environment prior to importing this module.
-# ScriptsToProcess = @()
+#ScriptsToProcess = @()
 
 # Type files (.ps1xml) to be loaded when importing this module
 # TypesToProcess = @()
@@ -57,11 +57,12 @@ CompatiblePSEditions = @('Core')
 # FormatsToProcess = @()
 
 # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-#NestedModules = @()
+# NestedModules = @()
 
 # Functions to export from this module
 FunctionsToExport = @(
-    'Format-CSemVer'
+    'Get-FunctionsToExport'
+    'Initialize-BuildEnvironment'
 )
 
 # Cmdlets to export from this module

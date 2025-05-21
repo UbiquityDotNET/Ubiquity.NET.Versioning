@@ -3,7 +3,7 @@
 RootModule = 'CommonBuild.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.0.0'
+ModuleVersion = '2.0.0'
 
 # ID used to uniquely identify this module
 GUID = '6da1bba8-442f-4bc3-9991-9c8783df06a4'
@@ -15,7 +15,7 @@ Author = 'Ubiquity.NET Contributors'
 CompanyName = 'Ubquity.NET'
 
 # Copyright statement for this module
-Copyright = '(c) 2020 Ubiquity.NET Contributors. All rights reserved.'
+Copyright = '(c) 2020-2025 Ubiquity.NET Contributors. All rights reserved.'
 
 # Description of the functionality provided by this module
 Description = 'Common build support functions for Ubiquity.NET projects'
@@ -57,37 +57,36 @@ CompatiblePSEditions = @('Core')
 # FormatsToProcess = @()
 
 # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-#NestedModules = @()
+# NestedModules = @()
 
 # Functions to export from this module
 FunctionsToExport = @(
+    'Get-FunctionsToExport'
+    'Assert-CmakeInfo',
+    'Assert-CMakeList',
+    'Assert-OfficialGitRemote',
+    'Get-BuildVersionTag',
+    'Assert-IsCMakeConfig',
+    'New-CMakeConfig',
+    'Invoke-GenerateCMakeConfig',
+    'Build-CmakeConfig',
     'ConvertTo-NormalizedPath',
     'ConvertTo-PropertyList',
-    'Expand-7zArchive',
     'Expand-ArchiveStream',
     'Expand-StreamFromUri',
-    'Find-7Zip',
-    'Find-MSBuild',
     'Find-OnPath',
-    'Find-VSInstance',
-    'Get-CurrentBuildKind'
+    'Get-BuildVersionTag',
+    'Get-CurrentBuildKind',
+    'Get-GitRemotes',
+    'Get-GitRemoteName',
     'Get-GitHubReleases',
     'Get-GitHubTaggedRelease',
-    'Invoke-TimedBlock',
-    'Invoke-MSBuild',
-    'Invoke-NuGet',
-    'Update-Submodules',
-    'Invoke-DotNetTest',
     'Initialize-CommonBuildEnvironment',
-    'Show-FullBuildInfo',
-    'Invoke-Git',
-    'Get-BuildVersionTag',
-    'Assert-CmakeInfo',
-    'Assert-OfficialGitRemote',
-    'Get-BuildVersionXML',
-    'Get-ParsedBuildVersionXML'
+    'Invoke-External',
+    'Invoke-TimedBlock',
+    'New-CmakeSettings',
+    'Show-FullBuildInfo'
 )
-
 # Cmdlets to export from this module
 CmdletsToExport = '*'
 

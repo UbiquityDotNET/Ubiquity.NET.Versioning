@@ -7,6 +7,7 @@
     <File Path="../Directory.Packages.props" />
     <File Path="../global.json" />
     <File Path="../Nuget.Config" />
+    <File Path="../Push-Nuget.ps1" />
     <File Path="../README.md" />
     <File Path="../stylecop.json" />
     <File Path="../Ubiquity.NET.ruleset" />

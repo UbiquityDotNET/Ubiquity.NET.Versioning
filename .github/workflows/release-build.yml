@@ -17,12 +17,12 @@ env:
 jobs:
   build_target:
     runs-on: windows-latest
-      steps:
-        - name: Checkout Repo
-          uses: actions/checkout@v2
-          with:
-            persist-credentials: false
-            fetch-depth: 0
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
 
       - name: Build Source
         run: .\Build-All.ps1 -FullInit

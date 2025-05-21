@@ -6,8 +6,8 @@ defaults:
 # only comes into play on a PUSH of a tag to the repository
 on:
   push:
-  tags:
-    - 'v*'
+    tags:
+      - 'v*'
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
@@ -16,13 +16,13 @@ env:
 
 jobs:
   build_target:
-  runs-on: windows-latest
-  steps:
-    - name: Checkout Repo
-      uses: actions/checkout@v2
-      with:
-        persist-credentials: false
-        fetch-depth: 0
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
 
     - name: Build Source
       run: .\Build-All.ps1 -FullInit
@@ -30,7 +30,7 @@ jobs:
     - name: Publish Artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: Nuget Packages
+        name: nuget-packages
         path: .\BuildOutput\Nuget
 
     - name: Show asset names
@@ -46,6 +46,3 @@ jobs:
         tag_name: ${{ github.ref }}
         release_name: Release ${{ github.ref }}
         draft: true
-        prerelease: false
-
-

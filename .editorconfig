@@ -18,6 +18,12 @@ vsspell_ignored_words_1c7003ec377c4bd9bb3c509d29770210 = File:.\IgnoredWords.dic
 
 # match VS generated formatting for MSBuild project files
 [*.*proj,*.props,*.targets]
+indent_style = space
+indent_size = 2
+tab_width = 2
+
+[*.yml,*.yaml]
+indent_style = space
 indent_size = 2
 tab_width = 2
 

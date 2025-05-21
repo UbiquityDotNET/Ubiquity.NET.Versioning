@@ -1,4 +1,8 @@
 name: CI-Build
+defaults:
+    run:
+        shell: pwsh
+
 on:
   push:
     branches:
@@ -15,8 +19,9 @@ on:
     paths-ignore:
       - '**.md'
       - '**.dic'
+
 jobs:
-  build:
+  build_target:
     runs-on: windows-latest
     steps:
       - name: Checkout Repo
@@ -26,16 +31,16 @@ jobs:
            fetch-depth: 0
 
       - name: Build Source
-        run: ./Build-All.ps1 -ForceClean -BuildMode Source
+        run: ./Build-All.ps1 -ForceClean
 
-      - name: Publish build logs
+      - name: Upload build logs
         if: always() && github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4
         with:
             name: Build Logs
             path: ./BuildOutput/BinLogs
 
-      - name: Publish NuGET Packages
+      - name: Upload NuGET Packages
         uses: actions/upload-artifact@v4
         with:
             name: Nuget Packages

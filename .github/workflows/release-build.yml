@@ -1,11 +1,21 @@
 name: Release-Build
+defaults:
+    run:
+        shell: pwsh
+
+# only comes into play on a PUSH of a tag to the repository
 on:
   push:
     tags:
         - 'v*'
 
+env:
+    DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+    DOTNET_CLI_TELEMETRY_OPTOUT: 1
+    DOTNET_NOLOGO: true
+
 jobs:
-  release-build:
+  build_target:
     runs-on: windows-latest
     steps:
       - name: Checkout Repo
@@ -15,7 +25,7 @@ jobs:
           fetch-depth: 0
 
       - name: Build Source
-        run: .\Build-All.ps1
+        run: .\Build-All.ps1 -FullInit
 
       - name: Publish Artifacts
         uses: actions/upload-artifact@v4
@@ -23,27 +33,11 @@ jobs:
           name: Nuget Packages
           path: .\BuildOutput\Nuget
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: true
-          prerelease: false
+      - name: Show asset names
+        run: dir BuildOutput/Nuget
 
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./BuildOutput/Nuget.Packages.zip
-          asset_name: Nuget.Packages.zip
-          asset_content_type: application/zip
+      - name: Publish packages to NuGet.org
+          run: dir ./BuildOutput/NuGet/*.nupkg | .\Push-Nuget.ps1 -apiKey ${{ secrets.NUGETPUSH_ACCESS_TOKEN }}
 
       - name: Publish packages to NuGet.org
         env:
@@ -51,3 +45,14 @@ jobs:
           DOTNET_CLI_TELEMETRY_OPTOUT: 1
         run: |
             dir .\BuildOutput\NuGet\*.nupkg | %{dotnet nuget push $_ -k $env:NUGET_AUTH_TOKEN -s 'https://api.nuget.org/v3/index.json' -n true}
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: true
+          prerelease: false
+
+

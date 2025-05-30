@@ -1,57 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <!-- Consumed by MSBuild in VS which only builds on .NET Framework -->
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <!-- This "package" is Consumed by MSBuild in VS which only builds on .NET Framework -->
+        <TargetFrameworks>netstandard2.0;net48</TargetFrameworks>
+        <LangVersion>13</LangVersion>
         <Nullable>enable</Nullable>
-        <PackageId>Ubiquity.NET.Versioning.Build.Tasks</PackageId>
+
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Authors>UbiquityDotNET</Authors>
-        <Copyright>Copyright (C) 2017-2020, Ubiquity.NET Contributors</Copyright>
+        <Copyright>Copyright (C) 2017-2025, Ubiquity.NET Contributors</Copyright>
         <Title>CSemVer Build version generator for MSBuild based builds</Title>
         <Description>Automatic build versioning with support for consistent build versioning across developer builds, CI builds and official release builds.</Description>
         <LicenseUrl>https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/master/LICENSE</LicenseUrl>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <!-- Specifies the location of the items built by this project in the generated package -->
-        <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
         <PackageProjectUrl>https://github.com/UbiquityDotNET/CSemVer.GitBuild</PackageProjectUrl>
         <RepositoryUrl>https://github.com/UbiquityDotNET/CSemVer.GitBuild</RepositoryUrl>
         <RepositoryType>GitHub</RepositoryType>
         <PackageTags>CSemVer;CI;SemVer</PackageTags>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageReadmeFile>ReadMe.md</PackageReadmeFile>
-        <LangVersion>13</LangVersion>
         <!-- [NU5100] By design, tasks are NOT placed in the "lib" folder of the package -->
-        <!-- [NU5128] Since the task is ONLY consumed by MSbuild, it is NOT using the lib folder, and therefore no TFM needs creation or labeling there -->
-        <NoWarn>NU5100, NU5128</NoWarn>
+        <NoWarn>NU5100</NoWarn>
+        <PackageReadmeFile>ReadMe.md</PackageReadmeFile>
+        <!-- Set output assembly into the "tasks" folder so it is usable as a "task"-->
+        <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
+        <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     </PropertyGroup>
-    <!--
-    For local builds of this project in IDE, FORCE the BuildInfo as there is no lib to rely on; (This repo builds it!)
-    Automated builds/Command line builds use the PowerShell scripts to setup the variables for use in the build. This,
-    handles the case of builds directly from the IDE so that can complete a compilation. [Though, it should ONLY be
-    used for local testing. Running the scripts locally from a command line is the final best test of a given set of
-    changes to the source]
-    -->
-    <PropertyGroup Condition="'$(IsAutomatedBuild)' != 'true' AND '$(CiBuildIndex)'==''">
-        <CiBuildIndex>$([System.UInt32]::MaxValue)</CiBuildIndex>
-        <CiBuildName>IDE</CiBuildName>
-        <BuildMajor>4</BuildMajor>
-        <BuildMinor>0</BuildMinor>
-        <BuildPatch>0</BuildPatch>
-        <PreReleaseName>alpha</PreReleaseName>
-        <PreReleaseNumber>0</PreReleaseNumber>
-        <PreReleaseFix>0</PreReleaseFix>
-        <!-- File Version for v4.0.0.alpha (See: https://csemver.org/playground/site/#/) -->
-        <FileVersionMajor>1</FileVersionMajor>
-        <FileVersionMinor>8970</FileVersionMinor>
-        <FileVersionBuild>48319</FileVersionBuild>
-        <FileVersionRevision>10242</FileVersionRevision>
-        <FullBuildNumber>$(BuildMajor).$(BuildMinor).$(BuildPatch)-$(PreReleaseName).ci-ZZZ.$(CiBuildIndex)</FullBuildNumber>
-        <PackageVersion>$(BuildMajor).$(BuildMinor).$(BuildPatch)-a.ci-ZZZ.$(CiBuildIndex)</PackageVersion>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <Content Include="build\**" PackagePath="build" />
-        <Content Include="buildMultiTargeting\**" PackagePath="buildMultiTargeting" />
-    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Build.Framework" PrivateAssets="All" />
@@ -59,13 +30,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="ReadMe.md">
-            <Pack>True</Pack>
-            <PackagePath>\</PackagePath>
-        </None>
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\Ubiquity.NET.Versioning\Ubiquity.NET.Versioning.csproj" PrivateAssets="All" />
+        <Content Include="PackageReadMe.md" PackagePath="ReadMe.md"/>
+        <Content Include="build\**" PackagePath="build"/>
+        <Content Include="buildMultiTargeting\**" PackagePath="buildMultiTargeting"/>
+        <!--<Content Include="_._" PackagePath="lib\net48"/>
+        <Content Include="_._" PackagePath="lib\netstandard2.0"/>-->
     </ItemGroup>
 </Project>

@@ -3,17 +3,14 @@ using module "PSModules/RepoBuild/RepoBuild.psd1"
 
 <#
 .SYNOPSIS
-    Script to build all of the code in this repo
+    Script to invoke tests of all the code in this repo
 
 .PARAMETER Configuration
     This sets the build configuration to use, default is "Release" though for inner loop development this
     may be set to "Debug".
 
-.PARAMETER ForceClean
-    Forces a complete clean (Recursive delete of the build output)
-
 .DESCRIPTION
-    This script is used by the automated build to perform the actual build. The Ubiquity.NET
+    This script is used by the automated build to run tests for the actual build. The Ubiquity.NET
     family of projects all employ a PowerShell driven build that is generally divorced from the
     automated build infrastructure used. This is done for several reasons, but the most
     important ones are the ability to reproduce the build locally for inner development and
@@ -24,8 +21,7 @@ using module "PSModules/RepoBuild/RepoBuild.psd1"
 #>
 [cmdletbinding()]
 Param(
-    [string]$Configuration="Release",
-    [switch]$ForceClean
+    [string]$Configuration="Release"
 )
 
 Set-StrictMode -Version 3.0
@@ -34,23 +30,14 @@ Push-Location $PSScriptRoot
 $oldPath = $env:Path
 try
 {
-    # Pull in the repo specific support and force a full initialization of all the environment
-    # as this is a top level build command.
-    $buildInfo = Initialize-BuildEnvironment -FullInit
-    if(!$buildInfo -or $buildInfo -isnot [hashtable])
-    {
-        throw "build scripts BUSTED; Got null buildinfo hashtable..."
-    }
+    # Pull in the repo specific support but don't force a full initialization of all the environment
+    # as this assumes a build is already complete. This does NOT restore or build ANYTHING. It just
+    # runs the tests.
+    $buildInfo = Initialize-BuildEnvironment
+    Set-Location $buildInfo["SrcRootPath"]
 
-    if((Test-Path -PathType Container $buildInfo['BuildOutputPath']) -and $ForceClean )
-    {
-        Write-Information "Cleaning output folder from previous builds"
-        Remove-Item -Recurse -Force $buildInfo['BuildOutputPath'] -ProgressAction SilentlyContinue | Out-Null
-    }
-
-    mkdir $buildInfo['NuGetOutputPath'] -ErrorAction SilentlyContinue | Out-Null
-
-    dotnet build -c $Configuration 'src/Ubiquity.NET.Versioning.slnx'
+    # Just run the tests, everything should be built already; if not, then it is an error
+    dotnet test -s .runsettings -c $Configuration --no-build --no-restore
 }
 catch
 {
@@ -67,4 +54,4 @@ finally
     $env:Path = $oldPath
 }
 
-Write-Information "Done build"
+Write-Information "Done tests"

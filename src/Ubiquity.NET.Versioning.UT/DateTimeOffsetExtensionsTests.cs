@@ -1,13 +1,19 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="DateTimeOffsetExtensionsTests.cs" company="Ubiquity.NET Contributors">
+// Copyright (c) Ubiquity.NET Contributors. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Ubiquity.NET.Versioning.UT
 {
-    [TestClass()]
+    [TestClass]
     public class DateTimeOffsetExtensionsTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void ToBuildIndexTest( )
         {
             string index = DateTimeOffset.Now.ToBuildIndex();

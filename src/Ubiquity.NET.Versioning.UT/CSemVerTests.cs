@@ -1,4 +1,10 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="CSemVerTests.cs" company="Ubiquity.NET Contributors">
+// Copyright (c) Ubiquity.NET Contributors. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Runtime.CompilerServices;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -58,73 +64,73 @@ namespace Ubiquity.NET.Versioning.UT
             var ciInfo = new CiBuildInfo("BuildIndex", "BuildName");
 
             // Validate ToString(null, null); // same as ToString("M")
-            Assert.AreEqual("v20.1.4+buildMeta", new CSemVer(20, 1, 4, default, default, "buildMeta").ToString(null, null));
-            Assert.AreEqual("v20.1.4+buildMeta", new CSemVer(20, 1, 4, default, default, "buildMeta").ToString("M", null));
-            Assert.AreEqual("v20.1.4+buildMeta", new CSemVer(20, 1, 4, default, default, "buildMeta").ToString());
+            Assert.AreEqual("20.1.4+buildMeta", new CSemVer(20, 1, 4, default, default, "buildMeta").ToString(null, null));
+            Assert.AreEqual("20.1.4+buildMeta", new CSemVer(20, 1, 4, default, default, "buildMeta").ToString("M", null));
+            Assert.AreEqual("20.1.4+buildMeta", new CSemVer(20, 1, 4, default, default, "buildMeta").ToString());
 
             // Validate ToString("M") P=0; CI=0
-            Assert.AreEqual("v20.1.4+buildMeta", new CSemVer(20, 1, 4, default, default, "buildMeta").ToString("M", null));
+            Assert.AreEqual("20.1.4+buildMeta", new CSemVer(20, 1, 4, default, default, "buildMeta").ToString("M", null));
 
             // Validate ToString("M") P=0; CI=1
-            Assert.AreEqual("v20.1.4--ci.BuildIndex.BuildName+buildMeta", new CSemVer(20, 1, 4, default, ciInfo, "buildMeta").ToString("M", null));
+            Assert.AreEqual("20.1.4--ci.BuildIndex.BuildName+buildMeta", new CSemVer(20, 1, 4, default, ciInfo, "buildMeta").ToString("M", null));
 
             // Validate ToString("M") P=1; CI=0
-            Assert.AreEqual("v20.1.4-alpha+buildMeta", new CSemVer(20, 1, 4, alpha_0_0, default, "buildMeta").ToString("M", null));
-            Assert.AreEqual("v20.1.4-beta.1+buildMeta", new CSemVer(20, 1, 4, beta_1_0, default, "buildMeta").ToString("M", null));
-            Assert.AreEqual("v20.1.4-delta.0.1+buildMeta", new CSemVer(20, 1, 4, delta_0_1, default, "buildMeta").ToString("M", null));
+            Assert.AreEqual("20.1.4-alpha+buildMeta", new CSemVer(20, 1, 4, alpha_0_0, default, "buildMeta").ToString("M", null));
+            Assert.AreEqual("20.1.4-beta.1+buildMeta", new CSemVer(20, 1, 4, beta_1_0, default, "buildMeta").ToString("M", null));
+            Assert.AreEqual("20.1.4-delta.0.1+buildMeta", new CSemVer(20, 1, 4, delta_0_1, default, "buildMeta").ToString("M", null));
 
             // Validate ToString("M") P=1; CI=1
-            Assert.AreEqual("v20.1.4-alpha.ci.BuildIndex.BuildName+buildMeta", new CSemVer(20, 1, 4, alpha_0_0, ciInfo, "buildMeta").ToString("M", null));
-            Assert.AreEqual("v20.1.4-beta.1.ci.BuildIndex.BuildName+buildMeta", new CSemVer(20, 1, 4, beta_1_0, ciInfo, "buildMeta").ToString("M", null));
-            Assert.AreEqual("v20.1.4-delta.0.1.ci.BuildIndex.BuildName+buildMeta", new CSemVer(20, 1, 4, delta_0_1, ciInfo, "buildMeta").ToString("M", null));
+            Assert.AreEqual("20.1.4-alpha.ci.BuildIndex.BuildName+buildMeta", new CSemVer(20, 1, 4, alpha_0_0, ciInfo, "buildMeta").ToString("M", null));
+            Assert.AreEqual("20.1.4-beta.1.ci.BuildIndex.BuildName+buildMeta", new CSemVer(20, 1, 4, beta_1_0, ciInfo, "buildMeta").ToString("M", null));
+            Assert.AreEqual("20.1.4-delta.0.1.ci.BuildIndex.BuildName+buildMeta", new CSemVer(20, 1, 4, delta_0_1, ciInfo, "buildMeta").ToString("M", null));
 
             // Validate ToString("S") P=0; CI=0
-            Assert.AreEqual("v20.1.4", new CSemVer(20, 1, 4, default, default, "buildMeta").ToString("S", null));
+            Assert.AreEqual("20.1.4", new CSemVer(20, 1, 4, default, default, "buildMeta").ToString("S", null));
 
             // Validate ToString("S") P=0; CI=1
-            Assert.AreEqual("v20.1.4--ci.BuildIndex.BuildName", new CSemVer(20, 1, 4, default, ciInfo, "buildMeta").ToString("S", null));
+            Assert.AreEqual("20.1.4--ci.BuildIndex.BuildName", new CSemVer(20, 1, 4, default, ciInfo, "buildMeta").ToString("S", null));
 
             // Validate ToString("S") P=1; CI=0
-            Assert.AreEqual("v20.1.4-a", new CSemVer(20, 1, 4, alpha_0_0, default, "buildMeta").ToString("S", null));
-            Assert.AreEqual("v20.1.4-b.1", new CSemVer(20, 1, 4, beta_1_0, default, "buildMeta").ToString("S", null));
-            Assert.AreEqual("v20.1.4-d.0.1", new CSemVer(20, 1, 4, delta_0_1, default, "buildMeta").ToString("S", null));
+            Assert.AreEqual("20.1.4-a", new CSemVer(20, 1, 4, alpha_0_0, default, "buildMeta").ToString("S", null));
+            Assert.AreEqual("20.1.4-b.1", new CSemVer(20, 1, 4, beta_1_0, default, "buildMeta").ToString("S", null));
+            Assert.AreEqual("20.1.4-d.0.1", new CSemVer(20, 1, 4, delta_0_1, default, "buildMeta").ToString("S", null));
 
             // Validate ToString("S") P=1; CI=1
-            Assert.AreEqual("v20.1.4-a.ci.BuildIndex.BuildName", new CSemVer(20, 1, 4, alpha_0_0, ciInfo, "buildMeta").ToString("S", null));
-            Assert.AreEqual("v20.1.4-b.1.ci.BuildIndex.BuildName", new CSemVer(20, 1, 4, beta_1_0, ciInfo, "buildMeta").ToString("S", null));
-            Assert.AreEqual("v20.1.4-d.0.1.ci.BuildIndex.BuildName", new CSemVer(20, 1, 4, delta_0_1, ciInfo, "buildMeta").ToString("S", null));
+            Assert.AreEqual("20.1.4-a.ci.BuildIndex.BuildName", new CSemVer(20, 1, 4, alpha_0_0, ciInfo, "buildMeta").ToString("S", null));
+            Assert.AreEqual("20.1.4-b.1.ci.BuildIndex.BuildName", new CSemVer(20, 1, 4, beta_1_0, ciInfo, "buildMeta").ToString("S", null));
+            Assert.AreEqual("20.1.4-d.0.1.ci.BuildIndex.BuildName", new CSemVer(20, 1, 4, delta_0_1, ciInfo, "buildMeta").ToString("S", null));
 
             // Validate ToString("MS") P=0; CI=0
-            Assert.AreEqual("v20.1.4+buildMeta", new CSemVer(20, 1, 4, default, default, "buildMeta").ToString("MS", null));
+            Assert.AreEqual("20.1.4+buildMeta", new CSemVer(20, 1, 4, default, default, "buildMeta").ToString("MS", null));
 
             // Validate ToString("S") P=0; CI=1
-            Assert.AreEqual("v20.1.4--ci.BuildIndex.BuildName+buildMeta", new CSemVer(20, 1, 4, default, ciInfo, "buildMeta").ToString("MS", null));
+            Assert.AreEqual("20.1.4--ci.BuildIndex.BuildName+buildMeta", new CSemVer(20, 1, 4, default, ciInfo, "buildMeta").ToString("MS", null));
 
             // Validate ToString("S") P=1; CI=0
-            Assert.AreEqual("v20.1.4-a+buildMeta", new CSemVer(20, 1, 4, alpha_0_0, default, "buildMeta").ToString("MS", null));
-            Assert.AreEqual("v20.1.4-b.1+buildMeta", new CSemVer(20, 1, 4, beta_1_0, default, "buildMeta").ToString("MS", null));
-            Assert.AreEqual("v20.1.4-d.0.1+buildMeta", new CSemVer(20, 1, 4, delta_0_1, default, "buildMeta").ToString("MS", null));
+            Assert.AreEqual("20.1.4-a+buildMeta", new CSemVer(20, 1, 4, alpha_0_0, default, "buildMeta").ToString("MS", null));
+            Assert.AreEqual("20.1.4-b.1+buildMeta", new CSemVer(20, 1, 4, beta_1_0, default, "buildMeta").ToString("MS", null));
+            Assert.AreEqual("20.1.4-d.0.1+buildMeta", new CSemVer(20, 1, 4, delta_0_1, default, "buildMeta").ToString("MS", null));
 
             // Validate ToString("S") P=1; CI=1
-            Assert.AreEqual("v20.1.4-a.ci.BuildIndex.BuildName+buildMeta", new CSemVer(20, 1, 4, alpha_0_0, ciInfo, "buildMeta").ToString("MS", null));
-            Assert.AreEqual("v20.1.4-b.1.ci.BuildIndex.BuildName+buildMeta", new CSemVer(20, 1, 4, beta_1_0, ciInfo, "buildMeta").ToString("MS", null));
-            Assert.AreEqual("v20.1.4-d.0.1.ci.BuildIndex.BuildName+buildMeta", new CSemVer(20, 1, 4, delta_0_1, ciInfo, "buildMeta").ToString("MS", null));
+            Assert.AreEqual("20.1.4-a.ci.BuildIndex.BuildName+buildMeta", new CSemVer(20, 1, 4, alpha_0_0, ciInfo, "buildMeta").ToString("MS", null));
+            Assert.AreEqual("20.1.4-b.1.ci.BuildIndex.BuildName+buildMeta", new CSemVer(20, 1, 4, beta_1_0, ciInfo, "buildMeta").ToString("MS", null));
+            Assert.AreEqual("20.1.4-d.0.1.ci.BuildIndex.BuildName+buildMeta", new CSemVer(20, 1, 4, delta_0_1, ciInfo, "buildMeta").ToString("MS", null));
 
             // Validate ToString("SM") P=0; CI=0
-            Assert.AreEqual("v20.1.4+buildMeta", new CSemVer(20, 1, 4, default, default, "buildMeta").ToString("SM", null));
+            Assert.AreEqual("20.1.4+buildMeta", new CSemVer(20, 1, 4, default, default, "buildMeta").ToString("SM", null));
 
             // Validate ToString("S") P=0; CI=1
-            Assert.AreEqual("v20.1.4--ci.BuildIndex.BuildName+buildMeta", new CSemVer(20, 1, 4, default, ciInfo, "buildMeta").ToString("SM", null));
+            Assert.AreEqual("20.1.4--ci.BuildIndex.BuildName+buildMeta", new CSemVer(20, 1, 4, default, ciInfo, "buildMeta").ToString("SM", null));
 
             // Validate ToString("S") P=1; CI=0
-            Assert.AreEqual("v20.1.4-a+buildMeta", new CSemVer(20, 1, 4, alpha_0_0, default, "buildMeta").ToString("SM", null));
-            Assert.AreEqual("v20.1.4-b.1+buildMeta", new CSemVer(20, 1, 4, beta_1_0, default, "buildMeta").ToString("SM", null));
-            Assert.AreEqual("v20.1.4-d.0.1+buildMeta", new CSemVer(20, 1, 4, delta_0_1, default, "buildMeta").ToString("SM", null));
+            Assert.AreEqual("20.1.4-a+buildMeta", new CSemVer(20, 1, 4, alpha_0_0, default, "buildMeta").ToString("SM", null));
+            Assert.AreEqual("20.1.4-b.1+buildMeta", new CSemVer(20, 1, 4, beta_1_0, default, "buildMeta").ToString("SM", null));
+            Assert.AreEqual("20.1.4-d.0.1+buildMeta", new CSemVer(20, 1, 4, delta_0_1, default, "buildMeta").ToString("SM", null));
 
             // Validate ToString("S") P=1; CI=1
-            Assert.AreEqual("v20.1.4-a.ci.BuildIndex.BuildName+buildMeta", new CSemVer(20, 1, 4, alpha_0_0, ciInfo, "buildMeta").ToString("SM", null));
-            Assert.AreEqual("v20.1.4-b.1.ci.BuildIndex.BuildName+buildMeta", new CSemVer(20, 1, 4, beta_1_0, ciInfo, "buildMeta").ToString("SM", null));
-            Assert.AreEqual("v20.1.4-d.0.1.ci.BuildIndex.BuildName+buildMeta", new CSemVer(20, 1, 4, delta_0_1, ciInfo, "buildMeta").ToString("SM", null));
+            Assert.AreEqual("20.1.4-a.ci.BuildIndex.BuildName+buildMeta", new CSemVer(20, 1, 4, alpha_0_0, ciInfo, "buildMeta").ToString("SM", null));
+            Assert.AreEqual("20.1.4-b.1.ci.BuildIndex.BuildName+buildMeta", new CSemVer(20, 1, 4, beta_1_0, ciInfo, "buildMeta").ToString("SM", null));
+            Assert.AreEqual("20.1.4-d.0.1.ci.BuildIndex.BuildName+buildMeta", new CSemVer(20, 1, 4, delta_0_1, ciInfo, "buildMeta").ToString("SM", null));
         }
 
         [TestMethod]

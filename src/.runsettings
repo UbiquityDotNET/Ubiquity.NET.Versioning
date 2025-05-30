@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file provides overrides/settings for ALL tests in the solution IN THIS DIRECTORY!
+.runsettings file auto detection is VERY finicky. It must be named '.runsettings' [Exactly]
+AND it must exist as a sibling of the solution file in the FS hierarchy.
+
+Most importantly, it overrides the test output directory location to use a proper build
+output location. (Source tree is NOT polluted by test results!).
+
+NOTE: Successful test runs will cleanup the subdirectory, but failed runs leave it behind!
+-->
+<RunSettings>
+  <RunConfiguration>
+    <ResultsDirectory>..\BuildOutput\Test-Output</ResultsDirectory>
+  </RunConfiguration>
+</RunSettings>

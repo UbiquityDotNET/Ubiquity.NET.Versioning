@@ -1,4 +1,10 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="FileVersionQuadTests.cs" company="Ubiquity.NET Contributors">
+// Copyright (c) Ubiquity.NET Contributors. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -22,6 +28,7 @@ namespace Ubiquity.NET.Versioning.Tests
         {
             var x = new FileVersionQuad(0x1234, 0x5678, 0x9ABC, 0xDEF0 );
             UInt64 y = x.ToUInt64();
+
             // NOTE: Major contains the Most significant "16 bits" of the result
             //       Minor the next...
             Assert.AreEqual(0x123456789ABCDEF0ul, y);

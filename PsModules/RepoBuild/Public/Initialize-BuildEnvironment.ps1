@@ -1,12 +1,12 @@
-class PrereleaseVersion
+class PreReleaseVersion
 {
-    [ValidateSet("", "alpha", "beta", "delta", "epsilon", "gamma", "kappa", "prerelease", "rc")]
+    [ValidateSet("alpha", "beta", "delta", "epsilon", "gamma", "kappa", "prerelease", "rc")]
     [string] $Name;
 
-    [ValidateSet("", "a", "b", "d", "e", "g", "k", "p", "r")]
+    [ValidateSet("a", "b", "d", "e", "g", "k", "p", "r")]
     [string] $ShortName;
 
-    [ValidateRange(-1,8)]
+    [ValidateRange(-1,7)]
     [int] $Index;
 
     [ValidateRange(0,99)]
@@ -15,50 +15,30 @@ class PrereleaseVersion
     [ValidateRange(0,99)]
     [int] $Fix;
 
-    [string] $CiBuildName;
-
-    [string] $CiBuildIndex;
-
-    PrereleaseVersion([hashtable]$buildInfo)
+    PreReleaseVersion([hashtable]$buildVersionXmlData)
     {
-        $preRelName = $buildInfo['PreReleaseName']
-        $preRelNumber = $buildInfo['PreReleaseNumber']
-        $preRelFix = $buildInfo['PreReleaseFix']
-        $this.CiBuildName = $buildInfo["CiBuildName"];
-        $this.CiBuildIndex = $buildInfo["CiBuildIndex"];
-
-        if( (![string]::IsNullOrEmpty($this.CiBuildName)) -and !($this.CiBuildName -match '\A[a-z0-9-]+\Z') )
-        {
-            throw "CiBuildName is invalid"
-        }
-
-        if( (![string]::IsNullOrEmpty($this.CiBuildIndex)) -and !($this.CiBuildIndex -match '\A[a-z0-9-]+\Z') )
-        {
-            throw "CiBuildIndex is invalid"
-        }
+        $preRelName = $buildVersionXmlData['PreReleaseName']
 
         if( ![string]::IsNullOrWhiteSpace( $preRelName ) )
         {
-            $this.Index = [PrereleaseVersion]::GetPrerelIndex($preRelName)
-            $this.Name = ($this.Index -ge 0) ? [PrereleaseVersion]::PreReleaseNames[$this.Index] : ""
-            $this.ShortName = ($this.Index -ge 0) ? [PrereleaseVersion]::PreReleaseShortNames[$this.Index] : ""
-            $this.Number = $preRelNumber;
-            $this.Fix = $preRelFix;
+            $this.Index = [PreReleaseVersion]::GetPrerelIndex($preRelName)
+            if($this.Index -ge 0)
+            {
+                $this.Name = [PreReleaseVersion]::PreReleaseNames[$this.Index]
+                $this.ShortName = [PreReleaseVersion]::PreReleaseShortNames[$this.Index]
+            }
+
+            $this.Number = $buildVersionXmlData['PreReleaseNumber'];
+            $this.Fix = $buildVersionXmlData['PreReleaseFix'];
         }
         else
         {
             $this.Index = -1;
         }
-
-        if( (![string]::IsNullOrEmpty( $this.CiBuildName )) -and [string]::IsNullOrEmpty( $this.CiBuildIndex ) )
-        {
-            throw "CiBuildIndex is required if CiBuildName is provided";
-        }
     }
 
     [string] ToString([bool] $useShortForm = $false)
     {
-        $hasCIBuild = ![string]::IsNullOrEmpty($this.CiBuildName)
         $hasPreRel = $this.Index -ge 0
 
         $bldr = [System.Text.StringBuilder]::new()
@@ -76,12 +56,6 @@ class PrereleaseVersion
             }
         }
 
-        if($hasCIBuild)
-        {
-            $bldr.Append($hasPreRel ? '.' : '--')
-            $bldr.AppendFormat('ci.{0}.{1}', $this.CiBuildIndex, $this.CiBuildName)
-        }
-
         return $bldr.ToString()
     }
 
@@ -90,7 +64,7 @@ class PrereleaseVersion
         $preRelIndex = -1
         if(![string]::IsNullOrWhiteSpace($preRelName))
         {
-            $preRelIndex = [PrereleaseVersion]::PreRleaseNames |
+            $preRelIndex = [PreReleaseVersion]::PreRleaseNames |
                          ForEach-Object {$index=0} {@{Name = $_; Index = $index++}} |
                          Where-Object {$_["Name"] -ieq $preRelName} |
                          ForEach-Object {$_["Index"]} |
@@ -99,7 +73,7 @@ class PrereleaseVersion
             # if not found in long names, test against the short names
             if($preRelIndex -lt 0)
             {
-                $preRelIndex = [PrereleaseVersion]::PreReleaseShortNames |
+                $preRelIndex = [PreReleaseVersion]::PreReleaseShortNames |
                              ForEach-Object {$index=0} {@{Name = $_; Index = $index++}} |
                              Where-Object {$_["Name"] -ieq $preRelName} |
                              ForEach-Object {$_["Index"]} |
@@ -127,30 +101,71 @@ class CSemVer
     [ValidateLength(0,20)]
     [string] $BuildMetadata;
 
+    [ValidatePattern('\A[a-z0-9-]+\Z')]
+    [string] $CiBuildIndex;
+
+    [ValidatePattern('\A[a-z0-9-]+\Z')]
+    [string] $CiBuildName;
+
     [ulong] $OrderedVersion;
 
     [Version] $FileVersion;
 
-    [PrereleaseVersion] $PrereleaseVersion;
+    [PreReleaseVersion] $PreReleaseVersion;
 
-    CSemVer([hashtable]$buildInfo)
+    CSemVer([hashtable]$buildVersionXmlData)
     {
-        $this.Major = $buildInfo["BuildMajor"]
-        $this.Minor = $buildInfo["BuildMinor"]
-        $this.Patch = $buildInfo["BuildPatch"]
-        $this.PrereleaseVersion = [PrereleaseVersion]::new($buildInfo)
-        $this.BuildMetadata = $buildInfo["BuildMetadata"]
-        $this.OrderedVersion = [CSemVer]::GetOrderedVersion($this.Major, $this.Minor, $this.Patch, $this.PreleaseVersion)
-        $this.FileVersion = [CSemVer]::ConvertToVersion($this.OrderedVersion -shl 1)
+        $this.Major = $buildVersionXmlData["BuildMajor"]
+        $this.Minor = $buildVersionXmlData["BuildMinor"]
+        $this.Patch = $buildVersionXmlData["BuildPatch"]
+        if($buildVersionXmlData["PreReleaseName"])
+        {
+            $this.PreReleaseVersion = [PreReleaseVersion]::new($buildVersionXmlData)
+            if(!$this.PreReleaseVersion)
+            {
+                throw "Internal ERROR: PreReleaseVersion version is NULL!"
+            }
+        }
+
+        $this.BuildMetadata = $buildVersionXmlData["BuildMetadata"]
+
+        $this.CiBuildName = $buildVersionXmlData["CiBuildName"];
+        $this.CiBuildIndex = $buildVersionXmlData["CiBuildIndex"];
+
+        if( (![string]::IsNullOrEmpty( $this.CiBuildName )) -and [string]::IsNullOrEmpty( $this.CiBuildIndex ) )
+        {
+            throw "CiBuildIndex is required if CiBuildName is provided";
+        }
+
+        if( (![string]::IsNullOrEmpty( $this.CiBuildIndex )) -and [string]::IsNullOrEmpty( $this.CiBuildName ) )
+        {
+            throw "CiBuildName is required if CiBuildIndex is provided";
+        }
+
+        $this.OrderedVersion = [CSemVer]::GetOrderedVersion($this.Major, $this.Minor, $this.Patch, $this.PreReleaseVersion)
+        $fileVer64 = $this.OrderedVersion -shl 1
+        if($this.CiBuildIndex -and $this.CiBuildName)
+        {
+            $fileVer64 += 1;
+        }
+
+        $this.FileVersion = [CSemVer]::ConvertToVersion($fileVer64)
     }
 
     [string] ToString([bool] $includeMetadata, [bool]$useShortForm)
     {
         $bldr = [System.Text.StringBuilder]::new()
         $bldr.AppendFormat('{0}.{1}.{2}', $this.Major, $this.Minor, $this.Patch)
-        if($this.PrereleaseVersion)
+        if($this.PreReleaseVersion)
         {
-            $bldr.Append($this.PrereleaseVersion.ToString($useShortForm))
+            $bldr.Append($this.PreReleaseVersion.ToString($useShortForm))
+        }
+
+        $hasPreRel = $this.PreReleaseVersion -and $this.PreReleaseVersion.Index -ge 0
+        if($this.CiBuildIndex -and $this.CiBuildName)
+        {
+            $bldr.Append($hasPreRel ? '.' : '--')
+            $bldr.AppendFormat('ci.{0}.{1}', $this.CiBuildIndex, $this.CiBuildName)
         }
 
         if(![string]::IsNullOrWhitespace($this.BuildMetadata) -and $includeMetadata)
@@ -166,7 +181,7 @@ class CSemVer
         return $this.ToString($true, $false);
     }
 
-    hidden static [ulong] GetOrderedVersion($Major, $Minor, $Patch, [PrereleaseVersion] $PreReleaseVersion)
+    hidden static [ulong] GetOrderedVersion($Major, $Minor, $Patch, [PreReleaseVersion] $PreReleaseVersion)
     {
         [ulong] $MulNum = 100;
         [ulong] $MulName = $MulNum * 100;
@@ -175,12 +190,12 @@ class CSemVer
         [ulong] $MulMajor = $MulMinor * 50000;
 
         [ulong] $retVal = (([ulong]$Major) * $MulMajor) + (([ulong]$Minor) * $MulMinor) + ((([ulong]$Patch) + 1) * $MulPatch);
-        if( $PrereleaseVersion -and $PrereleaseVersion.Index -gt 0 )
+        if( $PreReleaseVersion -and $PreReleaseVersion.Index -ge 0 )
         {
             $retVal -= $MulPatch - 1;
-            $retVal += [ulong]($PrereleaseVersion.Index) * $MulName;
-            $retVal += [ulong]($PrereleaseVersion.Number) * $MulNum;
-            $retVal += [ulong]($PrereleaseVersion.Fix);
+            $retVal += [ulong]($PreReleaseVersion.Index) * $MulName;
+            $retVal += [ulong]($PreReleaseVersion.Number) * $MulNum;
+            $retVal += [ulong]($PreReleaseVersion.Fix);
         }
         return $retVal;
     }
@@ -276,40 +291,74 @@ function Initialize-BuildEnvironment
         # information and generally makes it HARDER to see what's going on, not easier as it claims.
         $env:MSBUILDTERMINALLOGGER='off'
 
-        $verInfo = Get-ParsedBuildVersionXML -BuildInfo $buildInfo
-        $verInfo['CiBuildIndex'] = ConvertTo-BuildIndex $env:BuildTime
-        $verInfo['CiBuildName'] = $buildInfo['CiBuildName']
-
-        # force env overloads of variables, normally generated by tasks
-        # but the tasks cannot be used in this build as it is building the tasks
-        $csemVer = [CSemVer]::New($verInfo)
-        $env:BuildMajor = $csemVer.Major
-        $env:BuildMinor = $csemVer.Minor
-        $env:BuildPatch = $csemVer.Patch
-        $env:BuildMeta = $csemVer.BuildMetadata
-        $env:FullBuildNumber = $csemVer.ToString()
-        $env:PackageVersion = $csemVer.ToString($false,$true)
-
-        $fileVer = $csemVer.FileVersion
-        $env:FileVersion = $fileVer.ToString()
-        $env:FileVersionMajor = $fileVer.Major
-        $env:FileVersionMinor = $fileVer.Minor
-        $env:FileVersionBuild = $fileVer.Build
-        $env:FileVersionRevision = $fileVer.Revision
-
-        if($csemVer.PrereleaseVersion)
-        {
-            $env:PreReleaseName = $csemVer.PrereleaseVersion.Name
-            $env:PreReleaseNumber = $csemVer.PrereleaseVersion.Number
-            $env:PreReleaseFix = $csemVer.PrereleaseVersion.Fix
-            $env:CiBuildName = $csemVer.PrereleaseVersion.CiBuildName
-            $env:CiBuildIndex = $csemVer.PrereleaseVersion.CiBuildIndex
-        }
-
         if($FullInit)
         {
-            Write-Information (Show-FullBuildInfo $buildInfo | out-string)
+            # PowerShell doesn't export enums from a script module, so the type of this return is
+            # "unpronounceable" [In C++ terminology]. So, convert it to a string so it is usable in this
+            # script.
+            [string] $buildKind = Get-CurrentBuildKind
+
+            $verInfo = Get-ParsedBuildVersionXML -BuildInfo $buildInfo
+            if($buildKind -ne "ReleaseBuild")
+            {
+                $verInfo['CiBuildIndex'] = ConvertTo-BuildIndex $env:BuildTime
+            }
+
+            switch($buildKind)
+            {
+                "LocalBuild" { $verInfo['CiBuildName'] = "ZZZ" }
+                "PullRequestBuild" { $verInfo['CiBuildName'] = "PRQ" }
+                "CiBuild" { $verInfo['CiBuildName'] = "BLD" }
+                "ReleaseBuild" { }
+                default {throw "unknown build kind" }
+            }
+
+            # Generate props file with the version information for this build
+            # While it is plausible to use ENV vars to overload or set properties
+            # that leads to dangling values during development, which makes for
+            # a LOT of wasted time chasing down why a change didn't work...
+            $csemVer = [CSemVer]::New($verInfo)
+            $xmlDoc = [System.Xml.XmlDocument]::new()
+            $projectElement = $xmlDoc.CreateElement("Project")
+            $xmlDoc.AppendChild($projectElement) | Out-Null
+
+            $propGroupElement = $xmlDoc.CreateElement("PropertyGroup")
+            $projectElement.AppendChild($propGroupElement) | Out-Null
+
+            $fileVersionElement = $xmlDoc.CreateElement("FileVersion")
+            $fileVersionElement.InnerText = $csemVer.FileVersion.ToString()
+            $propGroupElement.AppendChild($fileVersionElement) | Out-Null
+
+            $packageVersionElement = $xmlDoc.CreateElement("PackageVersion")
+            $packageVersionElement.InnerText = $csemVer.ToString($false,$true) # short form of version
+            $propGroupElement.AppendChild($packageVersionElement) | Out-Null
+
+            $productVersionElement = $xmlDoc.CreateElement("ProductVersion")
+            $productVersionElement.InnerText = $csemVer.ToString($true, $false) # long form of version
+            $propGroupElement.AppendChild($productVersionElement) | Out-Null
+
+            $assemblyVersionElement = $xmlDoc.CreateElement("AssemblyVersion")
+            $assemblyVersionElement.InnerText = $csemVer.FileVersion.ToString()
+            $propGroupElement.AppendChild($assemblyVersionElement) | Out-Null
+
+            $informationalVersionElement = $xmlDoc.CreateElement("InformationalVersion")
+            $informationalVersionElement.InnerText = $csemVer.ToString($true, $false) # long form of version
+            $propGroupElement.AppendChild($informationalVersionElement) | Out-Null
+
+            $buildGeneratedPropsPath = Join-Path $buildInfo["RepoRootPath"] "GeneratedVersion.props"
+            $xmlDoc.Save($buildGeneratedPropsPath)
+
         }
+
+        Write-Information 'Deleting common build versioning env vars'
+        # override the build version related values set from CommonBuild
+        # This repo is unique in that it CREATES the package that uses these.
+        # The actual build of these packages use `GeneratedVersion.props`
+        $env:IsAutomatedBuild = $null
+        $env:IsPullRequestBuild =$null
+        $env:IsReleaseBuild =$null
+        $env:CiBuildName =$null
+        $env:BuildTime =$null
 
         return $buildInfo
     }

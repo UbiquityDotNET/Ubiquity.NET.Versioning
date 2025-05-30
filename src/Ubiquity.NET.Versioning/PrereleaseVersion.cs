@@ -1,4 +1,10 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="PrereleaseVersion.cs" company="Ubiquity.NET Contributors">
+// Copyright (c) Ubiquity.NET Contributors. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -43,7 +49,7 @@ namespace Ubiquity.NET.Versioning
             preRelFix.ThrowIfOutOfRange(0, 99);
 
             var q = from name in PreReleaseNames.Select( ( n, i ) => new { Name = n, Index = i } )
-                    where 0 == string.Compare( name.Name, preRelName, StringComparison.OrdinalIgnoreCase )
+                    where string.Equals( name.Name, preRelName, StringComparison.OrdinalIgnoreCase )
                     select name;
 
             var nameIndex = q.FirstOrDefault( ) ?? throw new ArgumentException("Invalid pre-release name", nameof(preRelName));
@@ -89,6 +95,7 @@ namespace Ubiquity.NET.Versioning
         /// <remarks>
         /// This assumes the Full (F) format of the pre-release information
         /// </remarks>
+        /// <returns>The formatted version information</returns>
         public override string ToString( ) => ToString( "F", CultureInfo.InvariantCulture );
 
         /// <summary>Formats this instance as a string according to the rules of a Constrained Semantic Version</summary>
@@ -134,7 +141,7 @@ namespace Ubiquity.NET.Versioning
             }
 
             // Format provider is ignored; string form is well defined externally based on invariant culture
-            //formatProvider ??= CultureInfo.InvariantCulture;
+            // formatProvider ??= CultureInfo.InvariantCulture;
             var bldr = new StringBuilder( );
 
             bldr.Append( '-' )

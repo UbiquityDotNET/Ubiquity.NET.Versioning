@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+      <TargetFramework>net9.0</TargetFramework>
+      <IsPackable>false</IsPackable>
+      <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+      <IsCiBuild>true</IsCiBuild>
+      <IsCiBuild Condition="'$(IsReleaseBuild)'=='true'">false</IsCiBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+      <PackageReference Include="Microsoft.NET.Test.Sdk" />
+      <PackageReference Include="MSBuild.ProjectCreation" />
+      <PackageReference Include="MSTest.TestFramework" />
+      <PackageReference Include="MSTest.TestAdapter" />
+  </ItemGroup>
+</Project>

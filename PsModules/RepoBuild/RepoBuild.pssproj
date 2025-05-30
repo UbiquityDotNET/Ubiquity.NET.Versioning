@@ -52,6 +52,9 @@
     <Folder Include="Private\" />
     <Folder Include="Public\" />
   </ItemGroup>
+
+  <Target Name="VSTest"/>
+
   <!-- prevents NU1503 -->
   <Target Name="_IsProjectRestoreSupported"
           Returns="@(_ValidProjectsForRestore)">

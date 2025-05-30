@@ -1,5 +1,26 @@
 <Project>
-    <Import Project="$(MSBuildThisFileDirectory)src\Ubiquity.NET.Versioning.Build.Tasks\build\Ubiquity.NET.Versioning.Build.Tasks.props"/>
+    <!--
+    For local builds of this project in IDE ONLY
+    FORCE the Build Versioning Info as there is no lib to rely on; (This repo builds it!) and the automated build
+    scripts aren't used to build from within an IDE. Automated builds/Command line builds use the PowerShell
+    scripts to setup the variables for use in the build. This, handles the case of builds directly from the IDE
+    so that can complete a compilation.
+
+    Though, it should ONLY be used for local testing. Running the scripts locally from a command line is
+    the final best test of a given set of changes to the source.
+    -->
+    <PropertyGroup Condition="'$(BuildingInsideVisualStudio)'=='true'">
+        <!-- File Version for v5.0.0-alpha (See: https://csemver.org/playground/site/#/) [1.27597.27630.61954]-->
+        <!-- +1 to revision to account for CI build -->
+        <FileVersion>1.27597.27630.61955</FileVersion>
+        <PackageVersion>5.0.0-a.ci-4294967295.IDE</PackageVersion>
+        <ProductVersion>5.0.0-alpha.ci-4294967295.IDE</ProductVersion>
+        <AssemblyVersion>$(FileVersion)</AssemblyVersion>
+        <InformationalVersion>$(ProductVersion)</InformationalVersion>
+    </PropertyGroup>
+
+    <Import Condition="'$(BuildingInsideVisualStudio)'!='true'" Project="GeneratedVersion.props" />
+
     <!--
     Description:
         This property file is imported by the projects in this repository to set global locations
@@ -46,11 +67,8 @@
         <IsPullRequestBuild Condition="'$(IsPullRequestBuild)'==''">false</IsPullRequestBuild>
         <IsReleaseBuild Condition="'$(IsReleaseBuild)'==''">false</IsReleaseBuild>
         <BuildTime Condition="'$(BuildTime)'=='' AND '$(APPVEYOR_REPO_COMMIT_TIMESTAMP)'!=''">$(APPVEYOR_REPO_COMMIT_TIMESTAMP)</BuildTime>
-        <!--
-        Prevent importing of tasks that don't yet exist in this build, while still leveraging the rest of the infrastructure.
-        The build MUST set FullBuildNumber property for this to work.
-        -->
-        <BuildingCSemVerBuildTask>true</BuildingCSemVerBuildTask>
+        <!-- Disable defaulted, and sadly OPT-OUT, addition of GIT build Metadata to the informational version -->
+        <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     </PropertyGroup>
     <Choose>
         <!-- Apply standard properties for all C# projects -->
@@ -61,6 +79,7 @@
                 <Nullable>enable</Nullable>
                 <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
                 <EnableNETAnalyzers>true</EnableNETAnalyzers>
+                <UseStyleCop>true</UseStyleCop>
                 <!--
                 DO NOT ALLOW Implicit using msbuild feature - EVIL; causes mass issues and frustration moving code between projects when one doesn't
                 support it or uses a different framework version. Not to mention hiding the actual namespaces involved, making resolving conflicts HARDER.
@@ -68,13 +87,14 @@
                 <ImplicitUsings>disable</ImplicitUsings>
                 <!-- NOTE: Top-Level statements blocked as an error in .editorconfig and ImplicitUsings 'feature' VERIFIED in the targets file -->
             </PropertyGroup>
-            <!--<ItemGroup Condition="'$(NoCommonAnalyzers)'!='true'">
+            <ItemGroup Condition="'$(UseStyleCop)'=='true'">
                 <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="stylecop.json" />
-            </ItemGroup>-->
+            </ItemGroup>
         </When>
         <When Condition="'$(MSBuildProjectExtension)'=='.vcxproj'">
             <!-- vcxproj uses a different pattern for output paths -->
             <PropertyGroup>
+                <UseStyleCop>false</UseStyleCop>
                 <OutputPath Condition="'$(OutputPath)'==''">$([MSBuild]::NormalizeDirectory("$(BaseOutputPath)", "$(Configuration)", "$(UnifiedPlatformPathName)"))</OutputPath>
                 <OutputPath>$([MSBuild]::EnsureTrailingSlash("$(OutputPath)"))</OutputPath>
                 <OutDir Condition="'$(OutDir)'==''">$(OutputPath)</OutDir>

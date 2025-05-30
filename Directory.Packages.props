@@ -11,7 +11,7 @@
         to follow the rules is a recipe for failures. Automation is how that works. (With occasional overrides that should
         get the attention of a reviewer).
         -->
-    <!--<GlobalPackageReference Include="StyleCop.Analyzers" Version="1.1.118" Condition="'$(NoCommonAnalyzers)' != 'true'" />-->
+    <GlobalPackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556" Condition="'$(UseStyleCop)' != 'false'" />
   </ItemGroup>
   <!--
     Package versions made consistent across all packages referenced in this repository
@@ -20,10 +20,11 @@
     <PackageVersion Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
     <PackageVersion Include="Microsoft.Build.Framework" Version="17.14.8" />
     <PackageVersion Include="Microsoft.Build.Utilities.Core" Version="17.14.8" />
+    <PackageVersion Include="MSBuild.ProjectCreation" Version="14.0.5" />
     <!-- Tests all use the same framework versions -->
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
-    <PackageVersion Include="MSTest.TestAdapter" Version="3.8.3" />
-    <PackageVersion Include="MSTest.TestFramework" Version="3.8.3" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.0" />
+    <PackageVersion Include="MSTest.TestAdapter" Version="3.9.1" />
+    <PackageVersion Include="MSTest.TestFramework" Version="3.9.1" />
     <PackageVersion Include="Polyfill" Version="7.31.0" />
   </ItemGroup>
 </Project>

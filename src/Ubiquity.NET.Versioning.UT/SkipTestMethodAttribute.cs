@@ -1,4 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿// -----------------------------------------------------------------------
+// <copyright file="SkipTestMethodAttribute.cs" company="Ubiquity.NET Contributors">
+// Copyright (c) Ubiquity.NET Contributors. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Ubiquity.NET.Versioning.UT
 {

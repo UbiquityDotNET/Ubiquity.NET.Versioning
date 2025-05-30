@@ -1,4 +1,10 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="CiBuildInfo.cs" company="Ubiquity.NET Contributors">
+// Copyright (c) Ubiquity.NET Contributors. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Text.RegularExpressions;
 
 namespace Ubiquity.NET.Versioning
@@ -8,9 +14,9 @@ namespace Ubiquity.NET.Versioning
     public readonly partial record struct CiBuildInfo
         : IFormattable
     {
-        /// <summary></summary>
-        /// <param name="index"></param>
-        /// <param name="name"></param>
+        /// <summary>Initializes a new instance of the <see cref="CiBuildInfo"/> struct.</summary>
+        /// <param name="index">Build index for the build</param>
+        /// <param name="name">Build Name for the build</param>
         /// <remarks>
         /// The syntax for the <paramref name="index"/> and <paramref name="name"/> are restricted to only values that
         /// match the regular expression '\A[0-9a-zA-Z\-]+\Z' (ASCII alphanumeric plus a Hyphen).
@@ -70,10 +76,10 @@ namespace Ubiquity.NET.Versioning
             !string.IsNullOrWhiteSpace(BuildIndex)
           && !string.IsNullOrWhiteSpace(BuildName);
 
-        /// <summary>Build Index for this build</summary>
+        /// <summary>Gets the Build Index for this build</summary>
         public string BuildIndex { get; } = string.Empty;
 
-        /// <summary>Build name for this build</summary>
+        /// <summary>Gets the Build name for this build</summary>
         public string BuildName { get; } = string.Empty;
 
         private static readonly Regex CiBuildIdRegEx = new(@"\A[0-9a-zA-Z\-]+\Z");

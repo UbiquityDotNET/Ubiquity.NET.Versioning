@@ -1,8 +1,12 @@
-﻿
+﻿// -----------------------------------------------------------------------
+// <copyright file="ParseBuildVersionXml.cs" company="Ubiquity.NET Contributors">
+// Copyright (c) Ubiquity.NET Contributors. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-
+using System.IO;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
@@ -32,24 +36,61 @@ namespace Ubiquity.NET.Versioning.Build.Tasks
         [Output]
         public string? PreReleaseFix { get; private set; }
 
-        [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "External API invoker doesn't process exceptions")]
+        [SuppressMessage( "Design", "CA1031:Do not catch general exception types", Justification = "Caught exceptions are logged as errors" )]
         public override bool Execute( )
         {
             try
             {
-                if(string.IsNullOrWhiteSpace(BuildVersionXml))
+                using var stream = File.OpenText( BuildVersionXml );
+                var xdoc = System.Xml.Linq.XDocument.Load( stream, System.Xml.Linq.LoadOptions.None );
+                var data = xdoc.Element( "BuildVersionData" );
+
+                foreach( var attrib in data.Attributes( ) )
                 {
-                    Log.LogError("PreReleaseName is required, and cannot be empty or all whitespace");
-                    return false;
+                    switch( attrib.Name.LocalName )
+                    {
+                    case "BuildMajor":
+                        BuildMajor = attrib.Value;
+                        break;
+
+                    case "BuildMinor":
+                        BuildMinor = attrib.Value;
+                        break;
+
+                    case "BuildPatch":
+                        BuildPatch = attrib.Value;
+                        break;
+
+                    case "PreReleaseName":
+                        PreReleaseName = attrib.Value;
+                        break;
+
+                    case "PreReleaseNumber":
+                        PreReleaseNumber = attrib.Value;
+                        break;
+
+                    case "PreReleaseFix":
+                        PreReleaseFix = attrib.Value;
+                        break;
+
+                    default:
+                        Log.LogWarning( "Unexpected attribute {0}", attrib.Name.LocalName );
+                        break;
+                    }
                 }
 
-                var parsedVersion = ParsedBuildVersionXml.ParseFile(BuildVersionXml!);
-                BuildMajor = parsedVersion.BuildMajor.ToString(CultureInfo.InvariantCulture);
-                BuildMinor = parsedVersion.BuildMinor.ToString(CultureInfo.InvariantCulture);
-                BuildPatch = parsedVersion.BuildPatch.ToString(CultureInfo.InvariantCulture);
-                PreReleaseName = parsedVersion.PreReleaseName;
-                PreReleaseNumber = parsedVersion.PreReleaseNumber.ToString(CultureInfo.InvariantCulture);
-                PreReleaseFix = parsedVersion.PreReleaseFix.ToString(CultureInfo.InvariantCulture);
+                // correct malformed values
+                if( string.IsNullOrWhiteSpace( PreReleaseName ) )
+                {
+                    PreReleaseNumber = "0";
+                    PreReleaseFix = "0";
+                }
+
+                if( PreReleaseNumber == "0" )
+                {
+                    PreReleaseFix = "0";
+                }
+
                 return true;
             }
             catch(Exception ex)

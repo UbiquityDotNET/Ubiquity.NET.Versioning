@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <!-- Consumed by MSBuild Task in VS which only builds on .NET Framework -->
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <PackageId>Ubiquity.NET.Versioning</PackageId>
         <Authors>UbiquityDotNET</Authors>
@@ -20,26 +19,31 @@
         <LangVersion>13</LangVersion>
     </PropertyGroup>
     <!--
-    For local builds of this project in IDE, FORCE the BuildInfo as there is no lib to rely on; (This repo builds it!)
-    Automated builds/Command line builds use the PowerShell scripts to setup the variables for use in the build. This,
-    handles the case of builds directly from the IDE so that can complete a compilation. [Though, it should ONLY be
-    used for local testing. Running the scripts locally from a command line is the final best test of a given set of
-    changes to the source]
+    For local builds of this project in IDE ONLY
+    FORCE the Build Versioning Info as there is no lib to rely on; (This repo builds it!) and the automated build
+    scripts aren't used to build from within an IDE. Automated builds/Command line builds use the PowerShell
+    scripts to setup the variables for use in the build. This, handles the case of builds directly from the IDE
+    so that can complete a compilation.
+
+    Though, it should ONLY be used for local testing. Running the scripts locally from a command line is
+    the final best test of a given set of changes to the source.
     -->
     <PropertyGroup Condition="'$(IsAutomatedBuild)' != 'true' AND '$(CiBuildIndex)'==''">
         <CiBuildIndex>$([System.UInt32]::MaxValue)</CiBuildIndex>
         <CiBuildName>IDE</CiBuildName>
-        <BuildMajor>4</BuildMajor>
+        <BuildMajor>5</BuildMajor>
         <BuildMinor>0</BuildMinor>
         <BuildPatch>0</BuildPatch>
         <PreReleaseName>alpha</PreReleaseName>
         <PreReleaseNumber>0</PreReleaseNumber>
         <PreReleaseFix>0</PreReleaseFix>
-        <!-- File Version for v4.0.0.alpha (See: https://csemver.org/playground/site/#/) -->
+        <!-- File Version for v5.0.0-alpha (See: https://csemver.org/playground/site/#/) [1.27597.27630.61954]-->
         <FileVersionMajor>1</FileVersionMajor>
-        <FileVersionMinor>8970</FileVersionMinor>
-        <FileVersionBuild>48319</FileVersionBuild>
-        <FileVersionRevision>10242</FileVersionRevision>
+        <FileVersionMinor>27597</FileVersionMinor>
+        <FileVersionBuild>27630</FileVersionBuild>
+        <FileVersionRevision>61954</FileVersionRevision>
+
+        <!-- Force a local CI build for all IDE builds -->
         <FullBuildNumber>$(BuildMajor).$(BuildMinor).$(BuildPatch)-$(PreReleaseName).ci-ZZZ.$(CiBuildIndex)</FullBuildNumber>
         <PackageVersion>$(BuildMajor).$(BuildMinor).$(BuildPatch)-a.ci-ZZZ.$(CiBuildIndex)</PackageVersion>
     </PropertyGroup>

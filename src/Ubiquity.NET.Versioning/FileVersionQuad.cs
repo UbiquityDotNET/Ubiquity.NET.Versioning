@@ -1,4 +1,10 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="FileVersionQuad.cs" company="Ubiquity.NET Contributors">
+// Copyright (c) Ubiquity.NET Contributors. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 
 namespace Ubiquity.NET.Versioning
 {
@@ -13,12 +19,13 @@ namespace Ubiquity.NET.Versioning
     /// and has grown as it is simple, and naturally fits (maps to) an unsigned 64bit value. Thus,
     /// CSemVer defines a specific mapping of values to this common format.</para>
     /// <para>A standard .NET <see cref="Version"/> is very similar except that the bit width of each
-    /// field is larger AND they are signed values.
+    /// field is larger AND they are signed values. That is, every <see cref="FileVersionQuad"/> can
+    /// produce a valid .NET <see cref="Version"/>. However, not every <see cref="Version"/> can result
+    /// in a valid <see cref="FileVersionQuad"/>.
     /// </para>
     /// </remarks>
     public readonly record struct FileVersionQuad( UInt16 Major, UInt16 Minor, UInt16 Build, UInt16 Revision )
         : IComparable<FileVersionQuad>
-        //, IComparisonOperators<FileVersionQuad, FileVersionQuad, bool>
     {
         /// <summary>Gets the UInt64 representation of the version</summary>
         /// <returns>UInt64 version of the version</returns>
@@ -42,16 +49,28 @@ namespace Ubiquity.NET.Versioning
             return ToUInt64().CompareTo(other.ToUInt64());
         }
 
-        /// <inheritdoc/>
+        /// <summary>Compares versions (Less than)</summary>
+        /// <param name="left">Left hand side of the comparison</param>
+        /// <param name="right">Right hand side of the comparison</param>
+        /// <returns>Result of the comparison</returns>
         public static bool operator <( FileVersionQuad left, FileVersionQuad right ) => left.CompareTo( right ) < 0;
 
-        /// <inheritdoc/>
+        /// <summary>Compares versions (Less than or Equal)</summary>
+        /// <param name="left">Left hand side of the comparison</param>
+        /// <param name="right">Right hand side of the comparison</param>
+        /// <returns>Result of the comparison</returns>
         public static bool operator <=( FileVersionQuad left, FileVersionQuad right ) => left.CompareTo( right ) <= 0;
 
-        /// <inheritdoc/>
+        /// <summary>Compares versions (Greater than)</summary>
+        /// <param name="left">Left hand side of the comparison</param>
+        /// <param name="right">Right hand side of the comparison</param>
+        /// <returns>Result of the comparison</returns>
         public static bool operator >( FileVersionQuad left, FileVersionQuad right ) => left.CompareTo( right ) > 0;
 
-        /// <inheritdoc/>
+        /// <summary>Compares versions (Greater than or equal)</summary>
+        /// <param name="left">Left hand side of the comparison</param>
+        /// <param name="right">Right hand side of the comparison</param>
+        /// <returns>Result of the comparison</returns>
         public static bool operator >=( FileVersionQuad left, FileVersionQuad right ) => left.CompareTo( right ) >= 0;
 
         /// <summary>Converts this instance to a <see cref="Version"/></summary>
@@ -59,6 +78,20 @@ namespace Ubiquity.NET.Versioning
         public Version ToVersion( )
         {
             return new Version( Major, Minor, Build, Revision );
+        }
+
+        /// <summary>Converts a <see cref="Version"/> value to a <see cref="FileVersionQuad"/> if possible</summary>
+        /// <param name="v">Version to convert</param>
+        /// <returns>Resulting <see cref="FileVersionQuad"/></returns>
+        /// <exception cref="ArgumentOutOfRangeException">At least one of the members of <paramref name="v"/> is out of range of a <see cref="UInt16"/></exception>
+        public static FileVersionQuad From( Version v)
+        {
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(v.Major, UInt16.MaxValue);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(v.Minor, UInt16.MaxValue);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(v.Build, UInt16.MaxValue);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(v.Revision, UInt16.MaxValue);
+
+            return new((UInt16)v.Major, (UInt16)v.Minor, (UInt16)v.Build, (UInt16)v.Revision);
         }
 
         /// <summary>Converts a version integral value into a <see cref="FileVersionQuad"/></summary>

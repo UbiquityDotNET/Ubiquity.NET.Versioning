@@ -1,4 +1,10 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="CSemVer.cs" company="Ubiquity.NET Contributors">
+// Copyright (c) Ubiquity.NET Contributors. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Globalization;
 using System.Linq;
 
@@ -12,7 +18,7 @@ namespace Ubiquity.NET.Versioning
         , IComparable<CSemVer>
         , IEquatable<CSemVer>
     {
-        /// <summary>Initializes a new instance of the <see cref="CSemVer"/> struct</summary>
+        /// <summary>Initializes a new instance of the <see cref="CSemVer"/> class</summary>
         /// <param name="major">Major version value [0-99999]</param>
         /// <param name="minor">Minor version value [0-49999]</param>
         /// <param name="patch">Patch version value [0-9999]</param>
@@ -99,10 +105,11 @@ namespace Ubiquity.NET.Versioning
         /// </remarks>
         public bool IsCIBuild { get; }
 
-        /// <summary>Gets a value indicating if this is a pre-release version</summary>
+        /// <summary>Gets a value indicating whether this is a pre-release version</summary>
         public bool IsPrerelease => PrereleaseVersion.IsValid;
 
         #region Comparison operators
+
         /// <inheritdoc/>
         public bool Equals( CSemVer? other ) => other is not null && CompareTo(other) == 0;
 
@@ -125,22 +132,40 @@ namespace Ubiquity.NET.Versioning
             return other is null ? 1 : FileVersion.CompareTo( other.FileVersion );
         }
 
-        /// <inheritdoc/>
+        /// <summary>Compares two <see cref="CSemVer"/> values (Less than)</summary>
+        /// <param name="left">Left hand side of the operation</param>
+        /// <param name="right">Right hand side of the operation</param>
+        /// <returns>Result of the comparison</returns>
         public static bool operator <( CSemVer left, CSemVer right ) => left.CompareTo( right ) < 0;
 
-        /// <inheritdoc/>
+        /// <summary>Compares two <see cref="CSemVer"/> values (Less than or equal)</summary>
+        /// <param name="left">Left hand side of the operation</param>
+        /// <param name="right">Right hand side of the operation</param>
+        /// <returns>Result of the comparison</returns>
         public static bool operator <=( CSemVer left, CSemVer right ) => left.CompareTo( right ) <= 0;
 
-        /// <inheritdoc/>
+        /// <summary>Compares two <see cref="CSemVer"/> values (Greater than)</summary>
+        /// <param name="left">Left hand side of the operation</param>
+        /// <param name="right">Right hand side of the operation</param>
+        /// <returns>Result of the comparison</returns>
         public static bool operator >( CSemVer left, CSemVer right ) => left.CompareTo( right ) > 0;
 
-        /// <inheritdoc/>
+        /// <summary>Compares two <see cref="CSemVer"/> values (Greater than or equal)</summary>
+        /// <param name="left">Left hand side of the operation</param>
+        /// <param name="right">Right hand side of the operation</param>
+        /// <returns>Result of the comparison</returns>
         public static bool operator >=( CSemVer left, CSemVer right ) => left.CompareTo( right ) >= 0;
 
-        /// <inheritdoc/>
-        public static bool operator ==( CSemVer? left, CSemVer? right ) => ReferenceEquals(left, right) || left is not null && left.Equals(right);
+        /// <summary>Compares two <see cref="CSemVer"/> values (Equals)</summary>
+        /// <param name="left">Left hand side of the operation</param>
+        /// <param name="right">Right hand side of the operation</param>
+        /// <returns>Result of the comparison</returns>
+        public static bool operator ==( CSemVer? left, CSemVer? right ) => ReferenceEquals(left, right) || (left is not null && left.Equals(right));
 
-        /// <inheritdoc/>
+        /// <summary>Compares two <see cref="CSemVer"/> values (Not Equal)</summary>
+        /// <param name="left">Left hand side of the operation</param>
+        /// <param name="right">Right hand side of the operation</param>
+        /// <returns>Result of the comparison</returns>
         public static bool operator !=( CSemVer? left, CSemVer? right ) => !(left == right);
         #endregion
 
@@ -162,8 +187,9 @@ namespace Ubiquity.NET.Versioning
         public string ToString( string? format, IFormatProvider? formatProvider )
         {
             format ??= "M";
+
             // Format provider is ignored; Representation is well defined externally and not dependent on culture
-            //formatProvider ??= CultureInfo.InvariantCulture;
+            // formatProvider ??= CultureInfo.InvariantCulture;
             if(format.Length > 2 || format.Any( c => c != 'M' && c != 'S' ))
             {
                 throw new ArgumentException( $"Invalid format '{format}'", nameof( format ) );
@@ -173,7 +199,6 @@ namespace Ubiquity.NET.Versioning
             bool useShortNames = format.Contains('S', StringComparison.Ordinal);
 
             var bldr = new System.Text.StringBuilder( );
-            bldr.Append( 'v' );
 
             bldr.AppendFormat( CultureInfo.InvariantCulture, "{0}.{1}.{2}", Major, Minor, Patch );
 
@@ -193,34 +218,6 @@ namespace Ubiquity.NET.Versioning
             }
 
             return bldr.ToString();
-        }
-
-        /// <summary>Initializes a new instance of the <see cref="CSemVer"/> struct</summary>
-        /// <param name="major">Major version value [0-99999]</param>
-        /// <param name="minor">Minor version value [0-49999]</param>
-        /// <param name="patch">Patch version value [0-9999]</param>
-        /// <param name="isCIBuild">Indicates whether this is a CI build</param>
-        /// <param name="preRelVersion">Pre-release version information (if a pre-release build)</param>
-        /// <param name="buildMetaData">[Optional]Additional build meta data [default: empty string]</param>
-        /// <remarks>
-        /// This is used internally when converting from a File Version as those only have a single bit
-        /// to indicate they are a CI build. The rest of the information, which doesn't participate in sort
-        /// ordering, is lost.
-        /// </remarks>
-        private CSemVer( int major
-                       , int minor
-                       , int patch
-                       , bool isCIBuild
-                       , PrereleaseVersion preRelVersion = default
-                       , string buildMetaData = ""
-                       )
-        {
-            Major = major.ThrowIfOutOfRange(0, 99999 );
-            Minor = minor.ThrowIfOutOfRange(0, 49999 );
-            Patch = patch.ThrowIfOutOfRange(0, 9999 );
-            PrereleaseVersion = preRelVersion;
-            BuildMetaData = buildMetaData.ThrowIfNullOrWhitespaceOrLongerThan(20);
-            IsCIBuild = isCIBuild;
         }
 
         /// <summary>Converts a file version form (as a <see cref="UInt64"/>) of a CSemVer into a full <see cref="CSemVer"/></summary>
@@ -316,6 +313,34 @@ namespace Ubiquity.NET.Versioning
                               , ciBuildInfo
                               , buildMeta
                               );
+        }
+
+        /// <summary>Initializes a new instance of the <see cref="CSemVer"/> class.</summary>
+        /// <param name="major">Major version value [0-99999]</param>
+        /// <param name="minor">Minor version value [0-49999]</param>
+        /// <param name="patch">Patch version value [0-9999]</param>
+        /// <param name="isCIBuild">Indicates whether this is a CI build</param>
+        /// <param name="preRelVersion">Pre-release version information (if a pre-release build)</param>
+        /// <param name="buildMetaData">[Optional]Additional build meta data [default: empty string]</param>
+        /// <remarks>
+        /// This is used internally when converting from a File Version as those only have a single bit
+        /// to indicate they are a CI build. The rest of the information, which doesn't participate in sort
+        /// ordering, is lost.
+        /// </remarks>
+        private CSemVer( int major
+                       , int minor
+                       , int patch
+                       , bool isCIBuild
+                       , PrereleaseVersion preRelVersion = default
+                       , string buildMetaData = ""
+                       )
+        {
+            Major = major.ThrowIfOutOfRange(0, 99999 );
+            Minor = minor.ThrowIfOutOfRange(0, 49999 );
+            Patch = patch.ThrowIfOutOfRange(0, 9999 );
+            PrereleaseVersion = preRelVersion;
+            BuildMetaData = buildMetaData.ThrowIfNullOrLongerThan(20);
+            IsCIBuild = isCIBuild;
         }
 
         private const ulong MulNum = 100;

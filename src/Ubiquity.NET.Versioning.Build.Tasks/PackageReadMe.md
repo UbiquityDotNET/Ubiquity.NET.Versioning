@@ -2,6 +2,22 @@
 The Ubiquity.NET.Versioning.Build.Tasks package provides automated support for build versioning
 using a Constrained Semantic Version ([CSemVer](https://csemver.org/)).
 
+>[!IMPORTANT]
+> As a [Breaking change in .NET SDK 8](https://learn.microsoft.com/en-us/dotnet/core/compatibility/sdk/8.0/source-link)
+> is now forcing the build meta data for the Assembly Informational version without any user
+> consent. (A Highly controversial choice that was more easily handled via an OPT-IN pattern)
+> Unfortunately, this was set ON by default and made into an 'OPT-OUT' scenario. This library
+> will honor such a setting and does not alter/interfere with it in any way. (Though the results
+> can, unfortunately, produce surprising behavior).
+>
+> If you wish to disable this behavior you can set an MSBUILD property to OPT-OUT as follows:  
+> `<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>`  
+>  
+> This is considered to have the least impact on those who are aware of the change and those who
+> use this library to set an explicit build meta data string. (Principle of least surprise for
+> what this library can control) 
+
+
 ## Overview
 Officially, NUGET Packages use a SemVer 2.0 (see http://semver.org).
 However, SemVer 2.0 doesn't consider or account for publicly available CI builds.

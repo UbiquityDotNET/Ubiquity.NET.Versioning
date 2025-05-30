@@ -1,4 +1,10 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="DateTimeOffsetExtensions.cs" company="Ubiquity.NET Contributors">
+// Copyright (c) Ubiquity.NET Contributors. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Globalization;
 
 namespace Ubiquity.NET.Versioning
@@ -23,8 +29,10 @@ namespace Ubiquity.NET.Versioning
         {
             // establish an increasing build index based on the number of seconds from a common UTC date
             timeStamp = timeStamp.ToUniversalTime( );
+
             // Upper 16 bits of the build number is the number of days since the common base value
             uint buildNumber = ((uint)(timeStamp - CommonBaseDate).Days) << 16;
+
             // Lower 16 bits is the number of seconds (divided by 2) since midnight (on the date of the time stamp)
             var midnightTodayUtc = new DateTime( timeStamp.Year, timeStamp.Month, timeStamp.Day, 0, 0, 0, DateTimeKind.Utc );
             buildNumber += (ushort)((timeStamp - midnightTodayUtc).TotalSeconds / 2);

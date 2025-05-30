@@ -1,4 +1,10 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="PrereleaseVersionTests.cs" company="Ubiquity.NET Contributors">
+// Copyright (c) Ubiquity.NET Contributors. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -74,6 +80,7 @@ namespace Ubiquity.NET.Versioning.Tests
 
             prv = new PrereleaseVersion( "beta", 1, 0);
             Assert.AreEqual("-b.1",prv.ToString("S", null));
+
             // The Z format is used when there is CI build info available
             Assert.AreEqual("-beta.1.0",prv.ToString("Z", null));
             Assert.AreEqual("-b.1.0",prv.ToString("SZ", null), "format combinations are allowed");

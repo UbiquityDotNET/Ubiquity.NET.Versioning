@@ -1,7 +1,13 @@
-﻿<Project>
-    <UsingTask TaskName="CreateVersionInfo" AssemblyFile="$(UbiquityDotNetVersioningBuildTasksAssembly)" Condition="'$(BuildingCSemVerBuildTask)'!='true'"/>
-    <UsingTask TaskName="GetBuildIndexFromTime" AssemblyFile="$(UbiquityDotNetVersioningBuildTasksAssembly)" Condition="'$(BuildingCSemVerBuildTask)'!='true'"/>
-    <UsingTask TaskName="ParseBuildVersionXml" AssemblyFile="$(UbiquityDotNetVersioningBuildTasksAssembly)" Condition="'$(BuildingCSemVerBuildTask)'!='true'"/>
+﻿<Project TreatAsLocalProperty="_TaskFolder;_Ubiquity_NET_Versioning_Build_Tasks;__FileVersion">
+    <PropertyGroup>
+        <_TaskFolder Condition=" '$(MSBuildRuntimeType)' == 'Core' ">tasks\netstandard2.0\</_TaskFolder>
+        <_TaskFolder Condition=" '$(MSBuildRuntimeType)' != 'Core' ">tasks\net48\</_TaskFolder>
+        <_Ubiquity_NET_Versioning_Build_Tasks>$([MSBuild]::NormalizePath($(MSBuildThisFileDirectory)..\$(_TaskFolder)Ubiquity.NET.Versioning.Build.Tasks.dll))</_Ubiquity_NET_Versioning_Build_Tasks>
+    </PropertyGroup>
+
+    <UsingTask TaskName="CreateVersionInfo" AssemblyFile="$(_Ubiquity_NET_Versioning_Build_Tasks)"/>
+    <UsingTask TaskName="GetBuildIndexFromTime" AssemblyFile="$(_Ubiquity_NET_Versioning_Build_Tasks)"/>
+    <UsingTask TaskName="ParseBuildVersionXml" AssemblyFile="$(_Ubiquity_NET_Versioning_Build_Tasks)"/>
 
     <Target Name="PrepareVersioningForBuild"
             BeforeTargets="PrepareForBuild;_IntermediatePack"
@@ -9,8 +15,12 @@
             />
 
     <Target Name="GetRepositoryInfo">
-        <!-- Convert a time stamp into a usable CI Build index-->
-        <GetBuildIndexFromTime Condition="'$(CiBuildIndex)'==''"
+        <!--
+        Convert a time stamp into a usable CI Build index unless it is a release build.
+        By definition, a release build is NOT a CI build so it should not get a default
+        generated value for the index.
+        -->
+        <GetBuildIndexFromTime Condition="'$(CiBuildIndex)'=='' AND !$(IsReleaseBuild)"
                                TimeStamp="$(BuildTime)"
                                >
             <Output TaskParameter="BuildIndex" PropertyName="CiBuildIndex"/>
@@ -26,6 +36,10 @@
             <Output TaskParameter="PreReleaseNumber" PropertyName="PreReleaseNumber" />
             <Output TaskParameter="PreReleaseFix" PropertyName="PreReleaseFix" />
         </ParseBuildVersionXml>
+
+        <Error Condition="'$(BuildMajor)'==''" Code="CSM001" Text="BuildMajor is a required property, either set it as a global or in the build version XML"/>
+        <Error Condition="'$(BuildMinor)'==''" Code="CSM002" Text="BuildMinor is a required property, either set it as a global or in the build version XML"/>
+        <Error Condition="'$(BuildPatch)'==''" Code="CSM003" Text="BuildPatch is a required property, either set it as a global or in the build version XML"/>
 
         <!-- If FullBuildNumber not provided then generate version numbers/parts -->
         <CreateVersionInfo Condition ="'$(FullBuildNumber)'==''"
@@ -50,23 +64,24 @@
 
     <Target Name="SetVersionDependentProperties">
         <PropertyGroup>
-            <FileVersion Condition="'$(FileVersion)'==''">$(FileVersionMajor).$(FileVersionMinor).$(FileVersionBuild).$(FileVersionRevision)</FileVersion>
-            <AssemblyVersion>$(FileVersion)</AssemblyVersion>
-            <InformationalVersion>$(FullBuildNumber)</InformationalVersion>
+            <__FileVersion>$(FileVersionMajor).$(FileVersionMinor).$(FileVersionBuild).$(FileVersionRevision)</__FileVersion>
+            <FileVersion Condition="'$(FileVersion)'==''">$(__FileVersion)</FileVersion>
+            <AssemblyVersion Condition="'$(AssemblyVersion)'==''">$(__FileVersion)</AssemblyVersion>
+            <InformationalVersion Condition="$(InformationalVersion)==''">$(FullBuildNumber)</InformationalVersion>
         </PropertyGroup>
     </Target>
 
     <Target Name="VerifyProvidedBuildVersion" Condition="'$(FullBuildNumber)'!=''" >
-        <Error Condition="'$(FileVersionMajor)'==''" Text="FileVersionMajor property not found"/>
-        <Error Condition="'$(FileVersionMinor)'==''" Text="FileVersionMinor property not found"/>
-        <Error Condition="'$(FileVersionRevision)'==''" Text="FileVersionRevision property not found"/>
-        <Error Condition="'$(PackageVersion)'==''" Text="PackageVersion property not found"/>
+        <Error Condition="'$(FileVersionMajor)'==''" Code="CSM004" Text="FileVersionMajor property not found"/>
+        <Error Condition="'$(FileVersionMinor)'==''" Code="CSM005" Text="FileVersionMinor property not found"/>
+        <Error Condition="'$(FileVersionRevision)'==''" Code="CSM006" Text="FileVersionRevision property not found"/>
+        <Error Condition="'$(PackageVersion)'==''" Code="CSM007" Text="PackageVersion property not found"/>
     </Target>
 
-    <!-- Generates include header for native code Win32 Resource (.RC) -->
+    <!-- Generates include header for native code [Including Win32 Resource (.RC) ] -->
     <Target Name="GenerateVesionInfoHeader"
-            Condition="'$(MSBuildProjectExtension)'=='.vcxproj'"
-            BeforeTargets="ResourceCompile"
+            Condition="'$(MSBuildProjectExtension)'=='.vcxproj' AND '$(GeneratedVersionInfoHeader)'!=''"
+            BeforeTargets="ClCompile"
             >
         <ItemGroup>
             <VersionInfoGeneratedLine Include='#define FILE_VERSION_MAJOR $(FileVersionMajor)'/>
@@ -103,11 +118,5 @@
         <ItemGroup>
             <Compile Include="$(IntermediateOutputPath)AssemblyVersionInfo.g.cs"/>
         </ItemGroup>
-    </Target>
-
-    <Target Name="ShowBuildParams" BeforeTargets="Build;Pack">
-        <Message Importance="High" Text="FullBuildNumber: $(FullBuildNumber)"/>
-        <Message Importance="High" Text=" PackageVersion: $(PackageVersion)"/>
-        <Message Importance="High" Text="    FileVersion: $(FileVersion)"/>
     </Target>
 </Project>

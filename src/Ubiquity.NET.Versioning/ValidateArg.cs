@@ -1,11 +1,16 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="ValidateArg.cs" company="Ubiquity.NET Contributors">
+// Copyright (c) Ubiquity.NET Contributors. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace Ubiquity.NET.Versioning
 {
-
     // TODO: With C#14 extensions it should be possible to make these a static method extension to the exception types
     //       so that it appears as a static method to that class. Allowing syntax like:
     //       ArgumentException.ThrowIfNotMatch(inputStr, myRegEx);
@@ -25,7 +30,7 @@ namespace Ubiquity.NET.Versioning
             self.ThrowIfNull(exp);
             if(self.CompareTo( min ) < 0 || self.CompareTo( max ) > 0)
             {
-                throw new ArgumentOutOfRangeException( exp );
+                throw new ArgumentOutOfRangeException( exp, self, $"Value is outside of range [{min}-{max}]");
             }
 
             return self;
@@ -33,18 +38,24 @@ namespace Ubiquity.NET.Versioning
 
         public static T ThrowIfNull<T>([NotNull] this T? self, [CallerArgumentExpression( nameof( self ) )] string? exp = null)
         {
-            return self is not null ? self : throw new ArgumentException(exp);
+            return self is not null ? self : throw new ArgumentNullException(exp);
         }
 
         public static string ThrowIfNullOrWhiteSpace( [NotNull] this string? self, [CallerArgumentExpression( nameof( self ) )] string? exp = null )
         {
-            self.ThrowIfNull();
-            return !string.IsNullOrWhiteSpace(self) ? self : throw new ArgumentException(exp);
+            self.ThrowIfNull(exp);
+            return !string.IsNullOrWhiteSpace(self) ? self : throw new ArgumentException("Argument is Null or White Space", exp);
         }
 
         public static string ThrowIfNullOrWhitespaceOrLongerThan([NotNull] this string? self, int length, [CallerArgumentExpression( nameof( self ) )] string? exp = null)
         {
             self.ThrowIfNullOrWhiteSpace(exp);
+            return self.Length <= length ? self : throw new ArgumentException($"Length of {self.Length} exceeds limit {length}", exp);
+        }
+
+        public static string ThrowIfNullOrLongerThan([NotNull] this string? self, int length, [CallerArgumentExpression( nameof( self ) )] string? exp = null)
+        {
+            self.ThrowIfNull(exp);
             return self.Length <= length ? self : throw new ArgumentException($"Length of {self.Length} exceeds limit {length}", exp);
         }
     }

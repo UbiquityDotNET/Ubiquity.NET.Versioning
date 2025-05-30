@@ -1,4 +1,4 @@
-﻿<Project TreatAsLocalProperty="TaskFolder">
+﻿<Project>
     <PropertyGroup>
         <!--
         Force the time-stamp into ISO 8601 format so it is locale neutral
@@ -7,16 +7,19 @@
         -->
         <BuildTime Condition="'$(BuildTime)'==''">$([System.DateTime]::UtcNow.ToString("o"))</BuildTime>
 
+        <!-- Default to a 'false' state if not defined or not true -->
+        <IsPullRequestBuild Condition="'$(IsPullRequestBuild)'!='true'">false</IsPullRequestBuild>
+        <IsAutomatedBuild Condition="'$(IsAutomatedBuild)'!='true'">false</IsAutomatedBuild>
+        <IsReleaseBuild Condition="'$(IsReleaseBuild)'!='true'">false</IsReleaseBuild>
+
         <!--
         While these names can be overridden it is important to keep in mind the sort ordering,
         ideally a local dev build should have a higher order than any other build (all other elements on
         the left being equal). This ensures that local edit, build, debug cycles are really using what was built.
         -->
-        <CiBuildName Condition="'$(CiBuildName)'=='' AND '$(IsPullRequestBuild)'=='true' AND '$(IsReleaseBuild)'!='true'">PRQ</CiBuildName>
-        <CiBuildName Condition="'$(CiBuildName)'=='' AND '$(IsAutomatedBuild)'=='true' AND '$(IsReleaseBuild)'!='true'">BLD</CiBuildName>
-        <CiBuildName Condition="'$(CiBuildName)'=='' AND '$(IsReleaseBuild)'!='true'">ZZZ</CiBuildName>
+        <CiBuildName Condition="'$(CiBuildName)'=='' AND $(IsPullRequestBuild) AND !$(IsReleaseBuild)">PRQ</CiBuildName>
+        <CiBuildName Condition="'$(CiBuildName)'=='' AND $(IsAutomatedBuild) AND !$(IsReleaseBuild)">BLD</CiBuildName>
+        <CiBuildName Condition="'$(CiBuildName)'=='' AND !$(IsReleaseBuild)">ZZZ</CiBuildName>
 
-        <TaskFolder Condition=" '$(MSBuildRuntimeType)' == 'Core' ">netstandard2.0</TaskFolder>
-        <UbiquityDotNetVersioningBuildTasksAssembly>$(MSBuildThisFileDirectory)..\tasks\$(TaskFolder)\Ubiquity.NET.Versioning.Build.Tasks.dll</UbiquityDotNetVersioningBuildTasksAssembly>
     </PropertyGroup>
 </Project>

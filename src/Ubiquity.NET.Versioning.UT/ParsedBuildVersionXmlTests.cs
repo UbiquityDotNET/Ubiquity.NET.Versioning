@@ -1,4 +1,10 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="ParsedBuildVersionXmlTests.cs" company="Ubiquity.NET Contributors">
+// Copyright (c) Ubiquity.NET Contributors. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.IO;
 using System.Xml.Linq;
 
@@ -6,7 +12,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Ubiquity.NET.Versioning.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class ParsedBuildVersionXmlTests
     {
         [TestMethod]
@@ -21,7 +27,7 @@ namespace Ubiquity.NET.Versioning.Tests
             Assert.AreEqual(5, parsedData.PreReleaseFix);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ParseExtraAttributeShouldFail( )
         {
             var ex = Assert.ThrowsExactly<InvalidDataException>(
@@ -31,7 +37,7 @@ namespace Ubiquity.NET.Versioning.Tests
             Assert.AreEqual("Unexpected attribute foo", ex.Message);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ParseEmptyDocShouldFail( )
         {
             var ex = Assert.ThrowsExactly<FormatException>(

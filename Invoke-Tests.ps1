@@ -34,10 +34,10 @@ try
     # as this assumes a build is already complete. This does NOT restore or build ANYTHING. It just
     # runs the tests.
     $buildInfo = Initialize-BuildEnvironment
-    Set-Location $buildInfo["SrcRootPath"]
+    Set-Location $buildInfo['SrcRootPath']
 
     # Just run the tests, everything should be built already; if not, then it is an error
-    dotnet test -s .runsettings -c $Configuration --no-build --no-restore
+    dotnet test -c $Configuration --results-directory $buildInfo['TestResultsPath'] --no-build --no-restore --logger 'trx;LogFilePrefix=TestResults'
 }
 catch
 {

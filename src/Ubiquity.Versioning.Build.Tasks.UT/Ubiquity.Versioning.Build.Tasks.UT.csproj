@@ -2,9 +2,6 @@
   <PropertyGroup>
       <TargetFramework>net9.0</TargetFramework>
       <IsPackable>false</IsPackable>
-      <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-      <IsCiBuild>true</IsCiBuild>
-      <IsCiBuild Condition="'$(IsReleaseBuild)'=='true'">false</IsCiBuild>
   </PropertyGroup>
 
   <ItemGroup>

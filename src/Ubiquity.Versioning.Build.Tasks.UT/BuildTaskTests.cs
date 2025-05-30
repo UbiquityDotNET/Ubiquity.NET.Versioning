@@ -6,10 +6,10 @@
 
 using System;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Runtime.Loader;
 using System.Xml.Linq;
 
+using Microsoft.Build.Evaluation;
 using Microsoft.Build.Utilities.ProjectCreation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -21,24 +21,33 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
     {
         public BuildTaskTests( TestContext ctx )
         {
-            Context = ctx;
+            ArgumentNullException.ThrowIfNull(ctx);
             ArgumentException.ThrowIfNullOrWhiteSpace( ctx.TestResultsDirectory );
+
+            Context = ctx;
         }
 
         public TestContext Context { get; }
 
+        // Repo assembly versions are defined via PowerShell (Or hard coded in the project file
+        // for IDE builds) as the build task is not usable for itself. This verifies the build
+        // versioning used in the scripts matches what is expected for an end-consumer by testing
+        // the assemblies versioning information against the output from THAT task assembly. This
+        // should be identical for IDE builds AND command line builds. Basically this verifies the
+        // manual IDE properties as well as the automated build scripting matches what the task
+        // itself produces. If anything is out of whack, this will complain.
         [TestMethod]
-        public void ValidateRepoAssemblyVersion( )
+        [DataRow("netstandard2.0")]
+        [DataRow("net48")]
+        [DataRow("net8.0")]
+        public void ValidateRepoAssemblyVersion( string targetFramework)
         {
-            // Repo assembly versions are defined via PowerShell (Or hard coded in the project file
-            // for IDE builds) as the build task is not usable for itself. This verifies the build
-            // versioning matches what is expected for an end-consumer by testing the assemblies
-            // versioning information against the output from THAT task assembly. This should be identical
-            // for IDE builds AND command line builds. Basically this verifies the manual IDE properties
-            // AND/OR the automated build scripting matches what the task itself expects. If anything is
-            // out of whack, this will complain.
+            using var collection = new ProjectCollection();
+
             var (testProject, props) = CreateTestProjectAndInvokeTestedPackage(
-                pc => pc.Property( "BuildVersionXml", Path.Combine(RepoRoot, "BuildVersion.xml"))
+                targetFramework,
+                pc => pc.Property( "BuildVersionXml", Path.Combine(RepoRoot, "BuildVersion.xml")),
+                collection
             );
             string? taskAssembly = testProject.ProjectInstance.GetOptionalProperty("_Ubiquity_NET_Versioning_Build_Tasks");
             Assert.IsNotNull( taskAssembly, "Task assembly property should contain full path to the task DLL (Not NULL)" );
@@ -75,14 +84,20 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         }
 
         [TestMethod]
-        public void GoldenPathTest( )
+        [DataRow("netstandard2.0")]
+        [DataRow("net48")]
+        [DataRow("net8.0")]
+        public void GoldenPathTest( string targetFramework )
         {
+            using var collection = new ProjectCollection();
             var (testProject, props) = CreateTestProjectAndInvokeTestedPackage(
+                targetFramework,
                 pc => pc.PropertyGroup()
                         .Property("BuildMajor", "20")
                         .Property("BuildMinor", "1")
                         .Property("BuildPatch", "4")
-                        .Property("PreReleaseName", "alpha")
+                        .Property("PreReleaseName", "alpha"),
+                collection
             );
 
             // v20.1.4-alpha => 5.44854.3875.59946 [see: https://csemver.org/playground/site/#/]
@@ -137,18 +152,23 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         }
 
         [TestMethod]
-        public void BuildVersionXmlIsUsed( )
+        [DataRow("netstandard2.0")]
+        [DataRow("net48")]
+        [DataRow("net8.0")]
+        public void BuildVersionXmlIsUsed( string targetFramework)
         {
-            string buildVersionXml = CreateTempBuildVersionXml(20, 1, 5);
+            using var collection = new ProjectCollection();
+            string buildVersionXml = CreateBuildVersionXml(20, 1, 5);
             string buildTime = DateTime.UtcNow.ToString( "o" );
             const string buildIndex = "ABCDEF12";
 
             var (testProject, props) = CreateTestProjectAndInvokeTestedPackage(
-                pc =>
-                    pc.PropertyGroup()
-                      .Property( "BuildTime", buildTime )
-                      .Property( "CiBuildIndex", buildIndex )
-                      .Property( "BuildVersionXml", buildVersionXml )
+                targetFramework,
+                pc => pc.PropertyGroup()
+                        .Property( "BuildTime", buildTime )
+                        .Property( "CiBuildIndex", buildIndex )
+                        .Property( "BuildVersionXml", buildVersionXml ),
+                collection
             );
 
             // v20.1.5 => 5.44854.3880.52268 [see: https://csemver.org/playground/site/#/]
@@ -200,16 +220,17 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             Assert.AreEqual( expectedFullBuildNumber, props.InformationalVersion );
         }
 
-        internal string RepoRoot => Context.TestRunDirectory is null
-                                    ? string.Empty
-                                    : Path.GetFullPath( Path.Combine( Context.TestRunDirectory, "..", "..", ".." ) );
+        internal string RepoRoot => !string.IsNullOrWhiteSpace(Context.TestRunDirectory)
+                                    ? Path.GetFullPath( Path.Combine( Context.TestRunDirectory, "..", "..", ".." ) )
+                                    : throw new InvalidOperationException("Context.TestRunDirectory is not available");
 
         private (ProjectCreator Project, BuildProperties ResultProps) CreateTestProjectAndInvokeTestedPackage(
+            string targetFramework,
             Action<ProjectCreator>? action = null,
-            [CallerMemberName] string? testName = null
+            ProjectCollection? projectCollection = null
             )
         {
-            var (testProject, resolveResult) = CreateAndResolveTestProject( action, testName );
+            var (testProject, resolveResult) = CreateAndResolveTestProject( targetFramework, action, projectCollection );
             Assert.IsTrue( resolveResult );
 
             // Since this project uses an imported target, it won't even exist until AFTER ResolvePackageDependencies[DesignTime|ForBuild] comes along.
@@ -220,11 +241,26 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             return (testProject, new BuildProperties( result ));
         }
 
-        private (ProjectCreator Project, bool ResolveResult) CreateAndResolveTestProject( Action<ProjectCreator>? action = null, [CallerMemberName] string? testName = null )
+        private (ProjectCreator Project, bool ResolveResult) CreateAndResolveTestProject(
+            string targetFramework,
+            Action<ProjectCreator>? action = null,
+            ProjectCollection? projectCollection = null
+            )
         {
+            if (string.IsNullOrWhiteSpace(Context.TestResultsDirectory))
+            {
+                throw new InvalidOperationException("TestResultsDirectory is not available!");
+            }
+
+            if (string.IsNullOrWhiteSpace(Context.TestName))
+            {
+                throw new InvalidOperationException("TestName is not available!");
+            }
+
+            string projectPath = Path.Combine( Context.TestResultsDirectory, $"{nameof(BuildTaskTests)}-{Context.TestName}-{targetFramework}.csproj");
             var project = ProjectCreator.Templates
-                                        .VersioningProject( customAction: action )
-                                        .Save( Path.Combine( Context.TestResultsDirectory!, $"{nameof( BuildTaskTests )}-{testName}.csproj" ) )
+                                        .VersioningProject(targetFramework, customAction: action, projectCollection: projectCollection )
+                                        .Save( projectPath )
                                         .TryBuild(
                                             restore: true,
                                             "ResolvePackageDependenciesDesignTime",
@@ -234,23 +270,23 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
 
             using(resolveBuildOutput)
             {
-                ShowBuildErrors( resolveBuildOutput );
+                LogBuildErrors( resolveBuildOutput );
             }
 
             return (project, resolveResult);
         }
 
-        private void ShowBuildErrors( BuildOutput buildOutput )
+        private void LogBuildErrors( BuildOutput buildOutput )
         {
             foreach(var err in buildOutput.ErrorEvents)
             {
-                // output build errors in standard MSBuild format
+                // Log build errors in standard MSBuild format
                 // see: https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-diagnostic-format-for-tasks?view=vs-2022
                 Context.WriteLine( $"{err.ProjectFile}({err.LineNumber},{err.ColumnNumber}) : {err.Subcategory} error {err.Code} : {err.Message}" );
             }
         }
 
-        private string CreateTempBuildVersionXml(
+        private string CreateBuildVersionXml(
             int buildMajor,
             int buildMinor,
             int buildPatch,

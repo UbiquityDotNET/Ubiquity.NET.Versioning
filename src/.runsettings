@@ -11,6 +11,6 @@ NOTE: Successful test runs will cleanup the subdirectory, but failed runs leave 
 -->
 <RunSettings>
   <RunConfiguration>
-    <ResultsDirectory>..\BuildOutput\Test-Output</ResultsDirectory>
+    <ResultsDirectory>..\BuildOutput\Test-Results</ResultsDirectory>
   </RunConfiguration>
 </RunSettings>

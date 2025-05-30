@@ -33,12 +33,10 @@ jobs:
       - name: Build Source
         run: ./Build-All.ps1 -ForceClean
 
-      - name: Upload build logs
-        if: always() && github.event_name == 'pull_request'
-        uses: actions/upload-artifact@v4
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action/windows@v2
         with:
-            name: Build Logs
-            path: ./BuildOutput/BinLogs
+          files: BuildOutput/Test-Results/*.trx
 
       - name: Upload NuGET Packages
         uses: actions/upload-artifact@v4

@@ -22,6 +22,11 @@
         <!-- Set output assembly into the "tasks" folder so it is usable as a "task"-->
         <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
         <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+        <!--
+        Explicitly declaring no docs for this build only assembly. Even though it is used by consumers there
+        is no API to document, only the task itself is documented (And that is pure markdown)
+        -->
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -33,7 +38,5 @@
         <Content Include="PackageReadMe.md" PackagePath="ReadMe.md"/>
         <Content Include="build\**" PackagePath="build"/>
         <Content Include="buildMultiTargeting\**" PackagePath="buildMultiTargeting"/>
-        <!--<Content Include="_._" PackagePath="lib\net48"/>
-        <Content Include="_._" PackagePath="lib\netstandard2.0"/>-->
     </ItemGroup>
 </Project>

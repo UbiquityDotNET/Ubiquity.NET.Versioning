@@ -33,6 +33,9 @@ jobs:
       - name: Build Source
         run: ./Build-All.ps1 -ForceClean
 
+      - name: Run Tests
+        run: ./Invoke-Tests.ps1
+
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action/windows@v2
         with:
@@ -43,4 +46,3 @@ jobs:
         with:
             name: Nuget Packages
             path: ./BuildOutput/NuGet
-

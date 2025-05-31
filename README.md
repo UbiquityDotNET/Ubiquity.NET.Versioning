@@ -1,12 +1,17 @@
 # CSemVer.Build.Tasks
 Automated Constrained Semantic Versioning for MSBuild projects
 
-### Nuget
 ![Nuget](https://img.shields.io/nuget/dt/CSemVer.Build.Tasks.svg)
+![PR/CI Workflow Status](https://img.shields.io/github/actions/workflow/status/UbiquityDotNET/CSemVer.GitBuild/pr-build.yml?label=PR%2FCI%20Build%20Status)
+![Release Workflow Status](https://img.shields.io/github/actions/workflow/status/UbiquityDotNET/CSemVer.GitBuild/release-build.yml?label=Release%20Build%20Status)
 
-## Build Status
-[![Build status](https://ci.appveyor.com/api/projects/status/nfixkakus282t06u?svg=true)](https://ci.appveyor.com/project/UbiquityDotNet/csemver-gitbuild)
-
+>[!NOTE]
+> This repository is historically named for only the build tasks but that name is not very
+> very representative of reality anymore. The repo does contain actual build tasks, but also
+> a library for working with CSemVer that includes a number of unit tests to ensure it is
+> operating correctly. Previous releases of only the tasks had some errors on edge cases where
+> it wasn't reporting the correct version for a build. This warranted an update and re-work to
+> support actual testing of the task itself.
 
 ## Overview
 Officially, NUGET Packages use a SemVer 2.0 (see http://semver.org).
@@ -89,27 +94,29 @@ the build definition or determined on the fly based on values set by the build. 
 for a repository will specify these. The following is an example for setting them based on an AppVeyor build in
 the `Directory.Build.props` file:
 
-```xml
-    <PropertyGroup>
-        <!-- If running in APPVEYOR it is an automated build -->
-        <IsAutomatedBuild Condition="'$(IsAutomatedBuild)'=='' AND '$(APPVEYOR)'!=''">true</IsAutomatedBuild>
-        <IsAutomatedBuild Condition="'$(IsAutomatedBuild)'==''">false</IsAutomatedBuild>
+``` xml
+<PropertyGroup>
+    <!-- If running in APPVEYOR it is an automated build -->
+    <IsAutomatedBuild Condition="'$(IsAutomatedBuild)'=='' AND '$(APPVEYOR)'!=''">true</IsAutomatedBuild>
+    <IsAutomatedBuild Condition="'$(IsAutomatedBuild)'==''">false</IsAutomatedBuild>
 
-        <!-- If it has a PR number associated it is a PR build -->
-        <IsPullRequestBuild Condition="'$(IsPullRequestBuild)'=='' AND '$(APPVEYOR_PULL_REQUEST_NUMBER)'!=''">true</IsPullRequestBuild>
-        <IsPullRequestBuild Condition="'$(IsPullRequestBuild)'==''">false</IsPullRequestBuild>
+    <!-- If it has a PR number associated it is a PR build -->
+    <IsPullRequestBuild Condition="'$(IsPullRequestBuild)'=='' AND '$(APPVEYOR_PULL_REQUEST_NUMBER)'!=''">true</IsPullRequestBuild>
+    <IsPullRequestBuild Condition="'$(IsPullRequestBuild)'==''">false</IsPullRequestBuild>
 
-        <!-- Tags applied without a PR are release builds -->
-        <IsReleaseBuild Condition="'$(IsReleaseBuild)'=='' AND '$(APPVEYOR_REPO_TAG)'=='true' AND '$(APPVEYOR_PULL_REQUEST_NUMBER)'==''">true</IsReleaseBuild>
-        <IsReleaseBuild Condition="'$(IsReleaseBuild)'==''">false</IsReleaseBuild>
-    </PropertyGroup>
+    <!-- Tags applied without a PR are release builds -->
+    <IsReleaseBuild Condition="'$(IsReleaseBuild)'=='' AND '$(APPVEYOR_REPO_TAG)'=='true' AND '$(APPVEYOR_PULL_REQUEST_NUMBER)'==''">true</IsReleaseBuild>
+    <IsReleaseBuild Condition="'$(IsReleaseBuild)'==''">false</IsReleaseBuild>
+</PropertyGroup>
 ```
 
 ## BuildVersion.xml
-If the MSBuild property `BuildMajor` is not set, then the base build version is read from the repository file specified in the BuildVersion.xml, typically this is located 
-at the root of a repository so that any child projects share the same versioning information. The location of the file
-is specified by an MSBuild property `BuildVersionXml`. The contents of the file are fairly simple and only requires
-a single `BuildVersionData` element with a set of attributes. The available attributes are:
+If the MSBuild property `BuildMajor` is not set, then the base build version is read from the
+repository file specified in the BuildVersion.xml, typically this is located at the root of a
+repository so that any child projects share the same versioning information. The location of the
+file is specified by an MSBuild property `BuildVersionXml`. The contents of the file are fairly
+simple and only requires a single `BuildVersionData` element with a set of attributes. The
+available attributes are:
 
 |Name               |Description|
 |-------------------|-----------|
@@ -122,6 +129,20 @@ a single `BuildVersionData` element with a set of attributes. The available attr
 
 Only the Major, minor and Patch numbers are required.
 
+### Example BuildVersion.XML
+``` xml
+<BuildVersionData
+    BuildMajor = "5"
+    BuildMinor = "0"
+    BuildPatch = "0"
+    PreReleaseName = "alpha"
+/>
+```
+This will set the build version to `5.0.0-alpha` for all projects in the repository
+
 ## Building the tasks
-The tasks are pure C# so building the package simply involves building the
-src\CSemVer.Build.Tasks.sln
+The build uses a common PowerShell module pattern for Ubiquity.NET projects. To build the sources
+use the `Build-All.ps1` script. You can also open the `src/Ubiquity.NET.Versioning.slnx` in any
+editor/IDE that has support for the slnx solution format. (Visual Studio 2022 is used but other
+options may work, though they are not supported. If you have experience then PRs are welcome for
+additional support - but such PRs ***MUST NOT*** break the VS support.)

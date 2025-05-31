@@ -40,7 +40,7 @@ jobs:
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action/windows@v2
-        if: ${{  github.event_name == "push" }}
+        if: ${{  github.event_name == 'push' }}
         with:
           files: BuildOutput/Test-Results/*.trx
 

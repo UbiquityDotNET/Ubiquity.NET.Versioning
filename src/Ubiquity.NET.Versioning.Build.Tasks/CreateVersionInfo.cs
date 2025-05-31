@@ -20,6 +20,7 @@ using Microsoft.Build.Utilities;
 //       the least of changes to the consumer (Update to package name and version, gets updated/corrected
 //       version)
 //
+// For gory details of the problems of creating a task with dependencies
 // See: https://natemcmaster.com/blog/2017/11/11/msbuild-task-with-dependencies/
 namespace Ubiquity.NET.Versioning.Build.Tasks
 {

@@ -1,0 +1,87 @@
+{
+    "$schema": "https://raw.githubusercontent.com/dotnet/docfx/main/schemas/docfx.schema.json",
+    "metadata": [
+        {
+            "memberLayout":"separatePages",
+            "namespaceLayout":"nested",
+            "src": [
+                {
+                    "src": "../src/Ubiquity.NET.Versioning",
+                    "files": ["**.csproj"]
+                }
+            ],
+            "dest": "versioning-lib/api"
+        }
+    ],
+    "build": {
+        // xref YAML files that contain mappings from an XREF ID to the actual URL for the content in an external source
+        "xref": [
+            "https://learn.microsoft.com/en-us/dotnet/.xrefmap.json"
+        ],
+        // NOTE: Unless overridden by a "src" key, All File paths are relative to the location of this docfx.json file
+        "content": [
+            {
+                // Root of the site; only uses the index and TOC explicitly named (NO GLOBS to confuse things!)
+                "files": [
+                    "index.md",
+                    "Attributions.md",
+                    "toc.yml"
+                ]
+            },
+            {
+                // Versioning project additional content, Includes the generated metadata API folder
+                "files": [
+                    "versioning-lib/**.{md,yml}"
+                ],
+                // Exclude the namespace overwrites and XREF maps as they are listed explicitly elsewhere
+                "exclude": [
+                    "**/namespaces/**.md",
+                    "**/*-xref.yml"
+                ]
+            },
+            {
+                // Build tasks project additional content
+                // There is no API generated for this, it's just consumable for the build tasks.
+                "files": [
+                    "build-tasks/**.{md,yml}"
+                ]
+            }
+        ],
+        "resource": [
+            {
+                // General site resources
+                "files": [
+                    "favicon.ico",
+                    "**.png",
+                    "**.svg"
+                ]
+            }
+        ],
+        "overwrite": [
+            {
+                "files": [
+                    "**/apidocs/**.md",
+                    "**/namespaces/**.md"
+                ]
+            }
+        ],
+        "template": [
+            "default",
+            "modern"
+        ],
+        "globalMetadataFiles": [],
+        "fileMetadataFiles": [],
+        "postProcessors": [],
+        "globalMetadata": {
+            "_appTitle": "Ubiquity.NET",
+            "_appFooter": "Copyright (C) 2017-2025, Ubiquity.NET Contributors",
+            "_appLogoPath": "llvm/DragonSharp48x48.png", // TODO: change this to something more generic...
+            "_disableBreadcrumb": true,
+            "_gitContribute": {
+                "repo": "https://github.com/UbiquityDotNET/Llvm.NET",
+                "branch": "develop"
+            },
+            "_gitUrlPattern": "github"
+        }
+    }
+}

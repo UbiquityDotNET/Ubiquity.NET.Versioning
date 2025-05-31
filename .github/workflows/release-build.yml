@@ -27,6 +27,14 @@ jobs:
       - name: Build Source
         run: .\Build-All.ps1
 
+      - name: Run Tests
+        run: ./Invoke-Tests.ps1
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action/windows@v2
+        with:
+          files: BuildOutput/Test-Results/*.trx
+
       - name: Publish Artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -36,11 +44,23 @@ jobs:
       - name: Show asset names
         run: dir BuildOutput/Nuget
 
+      - name: Commit Docs
+        env:
+          docspush_email: 32618965+cibuild-telliam@users.noreply.github.com
+          docspush_username: cibuild-telliam
+        run: .\Push-Docs.ps1 -SkipPush
+
+      - name: Push Docs
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          directory: .\BuildOutput\docs
+          branch: gh-pages
+
       - name: Publish packages to NuGet.org
         run: dir .\BuildOutput\NuGet\*.nupkg | .\Push-Nuget.ps1 -apiKey ${{ secrets.NUGETPUSH_ACCESS_TOKEN }}
 
       - name: Create Release
-        id: create_release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref }}

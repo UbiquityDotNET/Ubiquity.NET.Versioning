@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.Build.NoTargets">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+  <!--
+  This projects serves as a convenient placeholder to reference the doc files. It uses project relative include
+  and exclude patterns to simplify referencing ALL files but skipping over the generated API files.
+  (Getting docfx to generate files into a folder outside of the build tree (IntermediateOutputPath) but then
+  reference content from that is an exercise in frustration - problem unsolved. So this is used instead.)
+  -->
+  <ItemGroup>
+    <!--Every FILE in this folder except this project file itself-->
+    <None Include="*.*" Exclude="$(MSBuildThisFile)" />
+    <None Include="templates/**" />
+  </ItemGroup>
+  <ItemGroup>
+    <!--Everything in the versioning-lib sub-folder except the API folder as that contains generated files -->
+    <None Include="versioning-lib/**" Exclude="versioning-lib/api/**" />
+    <!-- Explicitly call out the non-generated files in the API folder-->
+    <None Include="versioning-lib/api/index.md" />
+    <None Include="versioning-lib/api/.gitignore" />
+  </ItemGroup>
+  <ItemGroup>
+    <!--Everything in the build-tasks sub-folder except the API folder as that contains generated files -->
+    <None Include="build-tasks/**" Exclude="build-tasks/api/**" />
+    <!-- Explicitly call out the non-generated files in the API folder-->
+  </ItemGroup>
+  <Target Name="AlwaysRun" BeforeTargets="AfterBuild">
+    <Message Importance="High" Text="NOTE: Building $(MSBuildProjectFile) does NOTHING, docs are built using the docfx tool. This project is simply a convenient placeholder for organizing/editing files" />
+  </Target>
+</Project>

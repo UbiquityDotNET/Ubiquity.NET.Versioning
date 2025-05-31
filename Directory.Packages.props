@@ -5,12 +5,9 @@
   -->
   <ItemGroup>
     <!--
-        While some aspects of this analyzer are helpful, it hasn't been without issues. Worse, the last non-preview release
-        was Apr of 2019, That's a LONG time ago. Even the most recent preview (beta) was back in Dec. of 2023. So not much
-        sign of life/activity nor hope of updates to bug fixes. It's sad to see this go as relying on a developer/reviewers
-        to follow the rules is a recipe for failures. Automation is how that works. (With occasional overrides that should
-        get the attention of a reviewer).
-        -->
+    NOTE: This analyzer is sadly, perpetually in "pre-release mode". There have been many issues/discussion on the point
+    and it has all fallen on deaf ears. So policies regarding "NO-Prerelease" components need to be overruled on this one
+    -->
     <GlobalPackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556" Condition="'$(UseStyleCop)' != 'false'" />
   </ItemGroup>
   <!--

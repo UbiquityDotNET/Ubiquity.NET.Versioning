@@ -1,4 +1,9 @@
 name: Release-Build
+permissions:
+  contents: write
+  pages: write
+  packages: write
+  actions: read
 defaults:
   run:
     shell: pwsh

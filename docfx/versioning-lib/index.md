@@ -18,5 +18,5 @@ if (actual < expectedMinimum)
 ```
 
 ## Formatting
-The library also contains support for  proper formatting of strings based on the rules
+The library also contains support for proper formatting of strings based on the rules
 of a CSemVer

@@ -2,9 +2,9 @@
 The Ubiquity.NET.Versioning.Build.Tasks package provides automated support for build versioning
 using a Constrained Semantic Version ([CSemVer](https://csemver.org/)).
 
->[!IMPORTANT]
+>[!WARNING]
 > As a [Breaking change in .NET SDK 8](https://learn.microsoft.com/en-us/dotnet/core/compatibility/sdk/8.0/source-link)
-> is now forcing the build meta data for the Assembly Informational version without any user
+> is now setting the build meta data for the `InformationalVersion` property without user
 > consent. (A Highly controversial choice that was more easily handled via an OPT-IN pattern)
 > Unfortunately, this was set ON by default and made into an 'OPT-OUT' scenario. This library
 > will honor such a setting and does not alter/interfere with it in any way. (Though the results
@@ -13,14 +13,21 @@ using a Constrained Semantic Version ([CSemVer](https://csemver.org/)).
 > If you wish to disable this behavior you can set an MSBUILD property to OPT-OUT as follows:  
 > `<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>`  
 >  
-> This is considered to have the least impact on those who are aware of the change and those who
-> use this library to set an explicit build meta data string. (Principle of least surprise for
-> what this library can control) 
-
+> This choice of ignoring the additional data is considered to have the least impact on those
+> who are aware of the change and those who use this library to set an explicit build meta data
+> string. (Principle of least surprise for what this library can control).
+>
+> The default OPT-OUT behavior is to use the Repository ID (usually a GIT commit hash). This
+> is appended with a leading `+` if one isn't already in the `InformationalVersion` property. If
+> build metadata is already included (Like from use of this task) the id is appended using a `.`
+> instead. Unless the project has opted out of this behavior by setting the property as
+> previously described.
+>
+>Thus, it is ***strongly recommended*** that projects using this package OPT-OUT
+> of the new behavior.
 
 ## Overview
-Officially, NUGET Packages use a SemVer 2.0 (see http://semver.org).
-However, SemVer 2.0 doesn't consider or account for publicly available CI builds.
+Officially, SemVer 2.0 doesn't consider or account for publicly available CI builds.
 SemVer is only concerned with official releases. This makes CI builds producing 
 versioned packages challenging. Fortunately, someone has already defined a solution
 to using SemVer in a specially constrained way to ensure compatibility, while also 
@@ -43,10 +50,10 @@ The following is a list of the version formats in descending order of precedence
 | Build Type | Format |
 |------------|--------|
 | Local build  | `{BuildMajor}.{BuildMinor}.{BuildPatch}--ci-{UTCTIME of build }-ZZZ` |
-| Pull Request | `{BuildMajor}.{BuildMinor}.{BuildPatch}--ci-{UTCTIME of PR Commit}-PRQ+{COMMIT ID}` |
-| Official CI builds | `{BuildMajor}.{BuildMinor}.{BuildPatch}--ci-{UTCTIME of HEAD Commit}-BLD+{COMMIT ID}` |
+| Pull Request | `{BuildMajor}.{BuildMinor}.{BuildPatch}--ci-{UTCTIME of PR Commit}-PRQ+{BuildMeta}` |
+| Official CI builds | `{BuildMajor}.{BuildMinor}.{BuildPatch}--ci-{UTCTIME of HEAD Commit}-BLD+{BuildMeta}` |
 | Official PreRelease | `{BuildMajor}.{BuildMinor}.{BuildPatch}-{PreReleaseName}[.PreReleaseNumber][.PreReleaseFix]+{COMMIT ID}` |
-| Official Release | `{BuildMajor}.{BuildMinor}.{BuildPatch}+{COMMIT ID}` |
+| Official Release | `{BuildMajor}.{BuildMinor}.{BuildPatch}+{BuildMeta}` |
 
 This package provides a single package to automate the generation of these versions in an easy
 to use NuGet Package.
@@ -70,67 +77,5 @@ The Major, Minor and Patch versions are only updated in the primary branch at th
 of a release. This ensures the concept that SemVer versions define released products. The
 version numbers used are stored in the repository in the BuildVersion.xml
 
-## Properties used to determine the version
-CSemVer.Build uses MSBuild properties to determine the final version number.
-
-|Name               |Default Value                                                 | Description|
-|-------------------|--------------------------------------------------------------|------------|
-| BuildMajor        | Read from BuildVersion.xml                                   | Major portion of the build number |
-| BuildMinor        | Read from BuildVersion.xml                                   | Minor portion of the build number |
-| BuildPatch        | Read from BuildVersion.xml                                   | Patch portion of the build number |
-| PreReleaseName    | `<Undefined>` or value read from BuildVersion.xml if present | PreRelease Name of the CSemVer |
-| PreReleaseNumber  | `<Undefined>` or value read from BuildVersion.xml if present | PreRelease Number of the CSemVer |
-| PreReleaseFix     | `<Undefined>` or value read from BuildVersion.xml if present | PreRelease Fix of the CSemVer |
-| BuildMeta         | `<undefined>`                                                | Build meta for the version
-| CiBuildIndex      | ISO 8601 formated UTC time-stamp for the build               | Provides a unique build to build value guaranteed to increase with each build
-| CiBuildName       | `<see notes>`                                                | CSemVer CI name
-
-### CiBuildName
-Unless explicitly provided, the CiBuildName is determined by a set of properties that indicate
-the nature of the build. The properties used (in evaluation order) are:
-
-|Name               |Default Value  |CiBuildName    | Description|
-|-------------------|---------------|---------------|------------|
-|IsPullRequestBuild | `<Undefined>` |`PRQ` if true  | Used to indicate if the build is from a pull request |
-|IsAutomatedBuild   | `<Undefined>` |`BLD` if true  | Used to indicate if the build is an automated build |
-|IsReleaseBuild     | `<Undefined>` |`ZZZ` if !true | Used to indicate if the build is an official release build |
-
-These three values are determined by the automated build in some form. These are either explicit
-variables set for the build definition or determined on the fly based on values set by the build.
-Commonly a `directory.build.props` for a repository will specify these. The following is an
-example for setting them based on an AppVeyor build in the `Directory.Build.props` file:
-
-```xml
-<PropertyGroup>
-    <!-- If running in APPVEYOR it is an automated build -->
-    <IsAutomatedBuild Condition="'$(IsAutomatedBuild)'=='' AND '$(APPVEYOR)'!=''">true</IsAutomatedBuild>
-    <IsAutomatedBuild Condition="'$(IsAutomatedBuild)'==''">false</IsAutomatedBuild>
-
-    <!-- If it has a PR number associated it is a PR build -->
-    <IsPullRequestBuild Condition="'$(IsPullRequestBuild)'=='' AND '$(APPVEYOR_PULL_REQUEST_NUMBER)'!=''">true</IsPullRequestBuild>
-    <IsPullRequestBuild Condition="'$(IsPullRequestBuild)'==''">false</IsPullRequestBuild>
-
-    <!-- Tags applied without a PR are release builds -->
-    <IsReleaseBuild Condition="'$(IsReleaseBuild)'=='' AND '$(APPVEYOR_REPO_TAG)'=='true' AND '$(APPVEYOR_PULL_REQUEST_NUMBER)'==''">true</IsReleaseBuild>
-    <IsReleaseBuild Condition="'$(IsReleaseBuild)'==''">false</IsReleaseBuild>
-</PropertyGroup>
-```
-
-## BuildVersion.xml
-If the MSBuild property `BuildMajor` is not set, then the base build version is read from the
-repository file specified in the BuildVersion.xml, typically this is located at the root of a
-repository so that any child projects share the same versioning information. The location of
-the file is specified by an MSBuild property `BuildVersionXml`. The contents of the file are
-fairly simple and only requires a single `BuildVersionData` element with a set of attributes.
-The available attributes are:
-
-|Name               |Description|
-|-------------------|-----------|
-| BuildMajor        | Major portion of the build number |
-| BuildMinor        | Minor portion of the build number |
-| BuildPatch        | Patch portion of the build number |
-| PreReleaseName    | PreRelease Name of the CSemVer |
-| PreReleaseNumber  | PreRelease Number of the CSemVer |
-| PreReleaseFix     | PreRelease Fix of the CSemVer |
-
-Only the Major, minor and Patch numbers are required.
+Full [documentation](https://ubiquitydotnet.github.io/CSemVer.GitBuild/) is available at
+the project's documentation site.

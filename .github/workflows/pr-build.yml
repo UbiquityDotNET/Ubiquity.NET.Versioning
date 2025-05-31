@@ -38,14 +38,10 @@ jobs:
       - name: Run Tests
         run: ./Invoke-Tests.ps1
 
-      - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action/windows@v2
-        if: ${{  github.event_name == 'push' }}
-        with:
-          files: BuildOutput/Test-Results/*.trx
-
       - name: Upload NuGET Packages
         uses: actions/upload-artifact@v4
         with:
-            name: Nuget Packages
-            path: ./BuildOutput/NuGet
+            name: Build Results
+            path: |
+              ./BuildOutput/NuGet
+              BuildOutput/Test-Results/*.trx

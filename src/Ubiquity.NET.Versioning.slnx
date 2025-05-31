@@ -29,6 +29,7 @@
   <Folder Name="/Solution Items/GitHub/workflows/" Id="f17836ca-4919-4f99-9bfc-659da632e39b">
     <File Path="../.github/workflows/pr-build.yml" />
     <File Path="../.github/workflows/release-build.yml" />
+    <File Path="../.github/workflows/test-results.yml" />
   </Folder>
   <Folder Name="/Solution Items/OneFlow/" Id="02ea681e-c7d8-13c7-8484-4ac65e1b71e8">
     <File Path="../OneFlow/Publish-Release.ps1" />

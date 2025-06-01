@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Loader;
 using System.Xml.Linq;
@@ -42,12 +43,16 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         [DataRow("net8.0")]
         public void ValidateRepoAssemblyVersion( string targetFramework)
         {
-            using var collection = new ProjectCollection();
+            var globalProperties = new Dictionary<string,string>
+            {
+                ["BuildVersionXml"] = Path.Combine(RepoRoot, "BuildVersion.xml"),
+            };
+
+            using var collection = new ProjectCollection(globalProperties);
 
             var (testProject, props) = CreateTestProjectAndInvokeTestedPackage(
                 targetFramework,
-                pc => pc.Property( "BuildVersionXml", Path.Combine(RepoRoot, "BuildVersion.xml")),
-                collection
+                projectCollection: collection
             );
             string? taskAssembly = testProject.ProjectInstance.GetOptionalProperty("_Ubiquity_NET_Versioning_Build_Tasks");
             Assert.IsNotNull( taskAssembly, "Task assembly property should contain full path to the task DLL (Not NULL)" );
@@ -89,15 +94,18 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         [DataRow("net8.0")]
         public void GoldenPathTest( string targetFramework )
         {
-            using var collection = new ProjectCollection();
+            var globalProperties = new Dictionary<string,string>
+            {
+                ["BuildMajor"] = "20",
+                ["BuildMinor"] = "1",
+                ["BuildPatch"] = "4",
+                ["PreReleaseName"] = "alpha",
+            };
+
+            using var collection = new ProjectCollection(globalProperties);
             var (testProject, props) = CreateTestProjectAndInvokeTestedPackage(
                 targetFramework,
-                pc => pc.PropertyGroup()
-                        .Property("BuildMajor", "20")
-                        .Property("BuildMinor", "1")
-                        .Property("BuildPatch", "4")
-                        .Property("PreReleaseName", "alpha"),
-                collection
+                projectCollection: collection
             );
 
             // v20.1.4-alpha => 5.44854.3875.59946 [see: https://csemver.org/playground/site/#/]
@@ -157,18 +165,21 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         [DataRow("net8.0")]
         public void BuildVersionXmlIsUsed( string targetFramework)
         {
-            using var collection = new ProjectCollection();
             string buildVersionXml = CreateBuildVersionXml(20, 1, 5);
             string buildTime = DateTime.UtcNow.ToString( "o" );
             const string buildIndex = "ABCDEF12";
+            var globalProperties = new Dictionary<string, string>
+            {
+                ["BuildTime"] = buildTime,
+                ["CiBuildIndex"] = buildIndex,
+                ["BuildVersionXml"] = buildVersionXml
+            };
+
+            using var collection = new ProjectCollection(globalProperties);
 
             var (testProject, props) = CreateTestProjectAndInvokeTestedPackage(
                 targetFramework,
-                pc => pc.PropertyGroup()
-                        .Property( "BuildTime", buildTime )
-                        .Property( "CiBuildIndex", buildIndex )
-                        .Property( "BuildVersionXml", buildVersionXml ),
-                collection
+                projectCollection: collection
             );
 
             // v20.1.5 => 5.44854.3880.52268 [see: https://csemver.org/playground/site/#/]

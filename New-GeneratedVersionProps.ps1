@@ -348,9 +348,9 @@ try
     # to set some env vars etc...
     if($buildKind -ne "ReleaseBuild")
     {
-        $buildTimeElement = $xmlDoc.CreateElement("BuildTime")
-        $buildTimeElement.InnerText = $env:BuildTime
-        $propGroupElement.AppendChild($buildTimeElement) | Out-Null
+        $ciBuildIndexElement = $xmlDoc.CreateElement("CiBuildIndex")
+        $ciBuildIndexElement.InnerText = $verInfo['CiBuildIndex']
+        $propGroupElement.AppendChild($ciBuildIndexElement) | Out-Null
 
         $ciBuildNameElement = $xmlDoc.CreateElement("CiBuildName")
         $ciBuildNameElement.InnerText = $verInfo['CiBuildName']

@@ -50,22 +50,24 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
                 ["BuildVersionXml"] = Path.Combine(RepoRoot, "BuildVersion.xml"),
             };
 
-            // For a CI build load the build time and ciBuild name from the generatedversion.props file
-            // so the test knows what to expect. This verifies that the task creation of versions agrees
-            // with how the build scripts created the version information. (Not the task in general)
-            // That is, this test case is NOT free of the build environment and MUST take it into consideration
-            // to properly verify the build scripts are doing things correctly. The CI Index is created from
-            // the time stamp and the name is either provided directly as a build property or computed in the
-            // Ubiquity.NET.Versioning.Build.Tasks.props file.
-            var (buildTime, ciBuildName) = GetGeneratedCiBuildInfo();
+            // For a CI build load the ciBuildIndex d time and ciBuildName from the generatedversion.props file
+            // so the test knows what to expect. This does NOT verify the behavior of the tasks exactly unfortunately.
+            // There is a non-determinism in computing the index based on a time stamp in particular a single date/time
+            // string is converted based on seconds since midnight today (in UTC) so if two different implementations
+            // compute a value at a different time that varies by as much as 2 seconds, then they will produce different
+            // results even if behaving correctly. The use of seconds since midnight today makes it non-deterministic...
+            // Unfortunately that's the algorithm chosen, though since this is a major release (and a full rename that
+            // is something to re-visit) Until, that is deterministic, use the generated CI info all up. Other tests will
+            // need to validate the behavior of the task.
+            var (ciBuildIndex, ciBuildName) = GetGeneratedCiBuildInfo();
             if(!string.IsNullOrWhiteSpace(ciBuildName))
             {
                 globalProperties["CiBuildName"] = ciBuildName;
             }
 
-            if(!string.IsNullOrWhiteSpace(buildTime))
+            if(!string.IsNullOrWhiteSpace(ciBuildIndex))
             {
-                globalProperties["BuildTime"] = buildTime;
+                globalProperties["CiBuildIndex"] = ciBuildIndex;
             }
 
             using var collection = new ProjectCollection(globalProperties);
@@ -378,7 +380,7 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             return retVal;
         }
 
-        private static (string BuildTime, string CiBuildName) GetGeneratedCiBuildInfo( )
+        private static (string CiBuildIndex, string CiBuildName) GetGeneratedCiBuildInfo( )
         {
             using var dummyCollection = new ProjectCollection();
             var options = new ProjectOptions()
@@ -387,7 +389,7 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             };
 
             var project = Project.FromFile(Path.Combine(TestModuleFixtures.RepoRoot, "GeneratedVersion.props"), options);
-            return (project.GetPropertyValue("BuildTime"), project.GetPropertyValue("CiBuildName"));
+            return (project.GetPropertyValue("CiBuildIndex"), project.GetPropertyValue("CiBuildName"));
         }
     }
 }

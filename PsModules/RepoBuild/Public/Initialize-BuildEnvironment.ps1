@@ -350,16 +350,6 @@ function Initialize-BuildEnvironment
 
         }
 
-        Write-Information 'Deleting common build versioning env vars'
-        # override the build version related values set from CommonBuild
-        # This repo is unique in that it CREATES the package that uses these.
-        # The actual build of these packages use `GeneratedVersion.props`
-        $env:IsAutomatedBuild = $null
-        $env:IsPullRequestBuild =$null
-        $env:IsReleaseBuild =$null
-        $env:CiBuildName =$null
-        $env:BuildTime =$null
-
         return $buildInfo
     }
     catch

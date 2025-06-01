@@ -10,4 +10,5 @@
       <PackageReference Include="MSTest.TestFramework" />
       <PackageReference Include="MSTest.TestAdapter" />
   </ItemGroup>
+
 </Project>

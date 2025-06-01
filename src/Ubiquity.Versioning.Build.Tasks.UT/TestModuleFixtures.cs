@@ -48,6 +48,13 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
                 string? value = Environment.GetEnvironmentVariable(envVar);
                 if(value is not null)
                 {
+                    // Save the environment build time for use with task assembly builds as that
+                    // value is needed to determine the build index used for non-IDE builds
+                    if(envVar == "BuildTime")
+                    {
+                        EnvBuildTime = value;
+                    }
+
                     Environment.SetEnvironmentVariable(envVar, null);
                 }
             }
@@ -66,6 +73,8 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             PackageRepo?.Dispose();
         }
+
+        internal static string EnvBuildTime { get; private set; } = string.Empty;
 
         private static void CopyFile(string srcDir, string fileName, string dstDir)
         {

@@ -53,8 +53,6 @@
     <Folder Include="Public\" />
   </ItemGroup>
 
-  <Target Name="VSTest"/>
-
   <!-- prevents NU1503 -->
   <Target Name="_IsProjectRestoreSupported"
           Returns="@(_ValidProjectsForRestore)">
@@ -62,7 +60,9 @@
       <_ValidProjectsForRestore Include="$(MSBuildProjectFullPath)" />
     </ItemGroup>
   </Target>
+  <Target Name="VSTest"/>
   <Target Name="Restore"/>
   <Target Name="Build"/>
+  <Target Name="Rebuild"/>
   <Import Project="$(MSBuildExtensionsPath)\PowerShell Tools for Visual Studio\PowerShellTools.targets" Condition="Exists('$(MSBuildExtensionsPath)\PowerShell Tools for Visual Studio\PowerShellTools.targets')" />
 </Project>

@@ -72,10 +72,10 @@
     </Target>
 
     <Target Name="VerifyProvidedBuildVersion" Condition="'$(FullBuildNumber)'!=''" >
-        <Error Condition="'$(FileVersionMajor)'==''" Code="CSM004" Text="FileVersionMajor property not found"/>
-        <Error Condition="'$(FileVersionMinor)'==''" Code="CSM005" Text="FileVersionMinor property not found"/>
-        <Error Condition="'$(FileVersionRevision)'==''" Code="CSM006" Text="FileVersionRevision property not found"/>
-        <Error Condition="'$(PackageVersion)'==''" Code="CSM007" Text="PackageVersion property not found"/>
+        <Error Condition="'$(FileVersion)' != '' Or '$(FileVersionMajor)' == ''" Code="CSM004" Text="FileVersion property not provided AND FileVersionMajor property not found to create it from"/>
+        <Error Condition="'$(FileVersion)' != '' Or '$(FileVersionMinor)' == ''" Code="CSM005" Text="FileVersion property not provided AND FileVersionMinor property not found to create it from"/>
+        <Error Condition="'$(FileVersion)' != '' Or '$(FileVersionBuild)' == ''" Code="CSM006" Text="FileVersion property not provided AND FileVersionBuild property not found to create it from"/>
+        <Error Condition="'$(FileVersion)' != '' Or '$(FileVersionRevision)' == ''" Code="CSM007" Text="FileVersion property not provided AND FileVersionRevision property not found to create it from"/>
     </Target>
 
     <!-- Generates include header for native code [Including Win32 Resource (.RC) ] -->

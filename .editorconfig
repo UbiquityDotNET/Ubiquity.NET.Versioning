@@ -94,6 +94,9 @@ csharp_style_unused_value_assignment_preference = discard_variable:suggestion
 csharp_style_allow_blank_line_after_token_in_arrow_expression_clause_experimental = true:silent
 dotnet_diagnostic.SA1005.severity = none
 
+# see: https://github.com/DotNetAnalyzers/StyleCopAnalyzers/issues/3920
+dotnet_diagnostic.SA1202.severity = none
+
 # Analysis and refactoring rules for Ubiquity.NET
 # Description: Code analysis rules for Ubiquity.NET projects
 
@@ -1407,8 +1410,6 @@ dotnet_diagnostic.SA1137.severity = silent
 dotnet_diagnostic.SA1200.severity = error
 
 dotnet_diagnostic.SA1201.severity = error
-
-dotnet_diagnostic.SA1202.severity = error
 
 dotnet_diagnostic.SA1203.severity = none
 

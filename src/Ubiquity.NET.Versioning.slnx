@@ -12,6 +12,7 @@
     <File Path="../GeneratedVersion.props" />
     <File Path="../global.json" />
     <File Path="../Invoke-Tests.ps1" />
+    <File Path="../New-GeneratedVersionProps.ps1" />
     <File Path="../Nuget.Config" />
     <File Path="../Push-Docs.ps1" />
     <File Path="../Push-Nuget.ps1" />

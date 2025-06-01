@@ -11,6 +11,7 @@ using System.Linq;
 using System.Runtime.Loader;
 using System.Xml.Linq;
 
+using Microsoft.Build.Definition;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Utilities.ProjectCreation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -47,15 +48,8 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             var globalProperties = new Dictionary<string,string>
             {
                 ["BuildVersionXml"] = Path.Combine(RepoRoot, "BuildVersion.xml"),
+                ["BuildTime"] = GetBuildTime()
             };
-
-            string envBuildTime = TestModuleFixtures.EnvBuildTime;
-            bool isIDEBuild = true;
-            if( !string.IsNullOrWhiteSpace(envBuildTime))
-            {
-                globalProperties["BuildTime"] = envBuildTime;
-                isIDEBuild = false;
-            }
 
             using var collection = new ProjectCollection(globalProperties);
 
@@ -113,35 +107,7 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
                                                 select val
                                               ).Single();
 
-                // Check for limited version information in an IDE run as the "BuildTime" environment,
-                // which is translated to CIBuildIndex, is hard coded to the max value. Additionally,
-                // in a release build there is NO CI information to extract so it is inconclusive.
-                // Full testing is formally inconclusive but at least validate what is plausible and
-                // treat the rest as inconclusive
-                if (isIDEBuild)
-                {
-                    Context.WriteLine($"AssemblyInformationalVersion {informationalVersion}");
-
-                    Assert.IsNotNull(props.InformationalVersion);
-
-                    // release builds won't have ANY CI information.
-                    int cipos = props.InformationalVersion.IndexOf(".ci", StringComparison.Ordinal);
-                    if(cipos > 0)
-                    {
-                        string propsVersion = props.InformationalVersion[ ..cipos];
-
-                        int ideCiBuildPos = informationalVersion.IndexOf(".ci");
-                        informationalVersion = informationalVersion[ ..ideCiBuildPos];
-
-                        Assert.AreEqual(propsVersion, informationalVersion);
-                    }
-
-                    Assert.Inconclusive("IDE build verification is inconclusive; but at least matches expectations");
-                }
-                else
-                {
-                    Assert.AreEqual(props.InformationalVersion, informationalVersion);
-                }
+                Assert.AreEqual(props.InformationalVersion, informationalVersion);
             }
             finally
             {
@@ -393,6 +359,18 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             element.Save( strm );
             Context.WriteLine( $"BuildVersionXML written to: '{retVal}'" );
             return retVal;
+        }
+
+        private static string GetBuildTime( )
+        {
+            using var dummyCollection = new ProjectCollection();
+            var options = new ProjectOptions()
+            {
+                ProjectCollection = dummyCollection
+            };
+
+            var project = Project.FromFile(Path.Combine(TestModuleFixtures.RepoRoot, "GeneratedVersion.props"), options);
+            return project.GetPropertyValue("BuildTime");
         }
     }
 }

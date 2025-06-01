@@ -49,7 +49,7 @@ try
     }
 
     mkdir $buildInfo['NuGetOutputPath'] -ErrorAction SilentlyContinue | Out-Null
-
+    .\New-GeneratedVersionProps.ps1 $buildInfo
     dotnet build -c $Configuration --no-incremental 'src/Ubiquity.NET.Versioning.slnx'
 }
 catch

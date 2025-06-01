@@ -15,14 +15,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Ubiquity.Versioning.Build.Tasks.UT
 {
-    internal enum BuildKind
-    {
-        LocalBuild,
-        PullRequestBuild,
-        CiBuild,
-        ReleaseBuild,
-    }
-
     // Provides common location for one time initialization for all tests in this assembly
     // Doing the package repo construction here, allows tests to run in parallel without
     // hitting access denied errors due to the use of the location in some other test.
@@ -83,56 +75,6 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         internal static string BuildOutputPath { get; private set; } = string.Empty;
 
         internal static string RepoRoot { get; private set; } = string.Empty;
-
-        // This mirrors the implementation in CommonBuild/GetCurrentBuildKind.ps1
-        // This is very build environment Back-end specific and currently only supports
-        // APPVEYOR (unused or tested in a LONG time!) and GitHub Actions (Currently active)
-        internal static BuildKind BuildKind
-        {
-            get
-            {
-                var retVal = BuildKind.LocalBuild;
-                bool appveyorBuild = Convert.ToBoolean(Environment.GetEnvironmentVariable("APPVEYOR") ?? "false", CultureInfo.InvariantCulture);
-                bool gitHubActionsBuild = Convert.ToBoolean(Environment.GetEnvironmentVariable("GITHUB_ACTIONS") ?? "false", CultureInfo.InvariantCulture);
-
-                // isAutomatedBuild is the top level gate (e.g. if it is false, all the others must be false)
-                bool isAutomatedBuild = Convert.ToBoolean(Environment.GetEnvironmentVariable("CI") ?? "false", CultureInfo.InvariantCulture)
-                                     || appveyorBuild
-                                     || gitHubActionsBuild;
-                if (isAutomatedBuild)
-                {
-                    // PR and release builds have externally detected indicators that are tested
-                    // below, so default to a CiBuild (e.g. not a PR, And not a RELEASE)
-                    retVal = BuildKind.CiBuild;
-                    bool isPullRequestBuild = Environment.GetEnvironmentVariable("GITHUB_BASE_REF") != null
-                                           || Environment.GetEnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER") != null;
-                    if (isPullRequestBuild)
-                    {
-                        retVal = BuildKind.PullRequestBuild;
-                    }
-                    else
-                    {
-                        bool isReleaseBuild = false;
-                        if (appveyorBuild)
-                        {
-                            isReleaseBuild = Environment.GetEnvironmentVariable("APPVEYOR_REPO_TAG") != null;
-                        }
-                        else if (gitHubActionsBuild)
-                        {
-                            string commitRef = Environment.GetEnvironmentVariable("GITHUB_REF") ?? string.Empty;
-                            isReleaseBuild = commitRef.StartsWith("refs/tags");
-                        }
-
-                        if (isReleaseBuild)
-                        {
-                            retVal = BuildKind.ReleaseBuild;
-                        }
-                    }
-                }
-
-                return retVal;
-            }
-        }
 
         internal static readonly Dictionary<string, string> OriginalInputVars = [];
 

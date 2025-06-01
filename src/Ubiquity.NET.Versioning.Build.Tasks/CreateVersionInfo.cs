@@ -71,7 +71,7 @@ namespace Ubiquity.NET.Versioning.Build.Tasks
         {
             try
             {
-                Log.LogMessage(MessageImportance.High, $"+{nameof(CreateVersionInfo)} Task");
+                Log.LogMessage(MessageImportance.Low, $"+{nameof(CreateVersionInfo)} Task");
 
                 if(!ValidateInput())
                 {
@@ -79,14 +79,21 @@ namespace Ubiquity.NET.Versioning.Build.Tasks
                     return false;
                 }
 
+                Log.LogMessage(MessageImportance.Low, "CiBuildIndex={0}", CiBuildIndex ?? string.Empty);
+                Log.LogMessage(MessageImportance.Low, "CiBuildName={0}", CiBuildName ?? string.Empty);
+                Log.LogMessage(MessageImportance.Low, "BuildMeta={0}", BuildMeta ?? string.Empty);
+                Log.LogMessage(MessageImportance.Low, "PreReleaseName={0}", PreReleaseName ?? string.Empty);
+                Log.LogMessage(MessageImportance.Low, "PreReleaseNumber={0}", PreReleaseNumber);
+                Log.LogMessage(MessageImportance.Low, "PreReleaseFix={0}", PreReleaseFix);
+
                 int preRelIndex = ComputePreReleaseIndex( PreReleaseName!);
-                Log.LogMessage(MessageImportance.High, "PreRelIndex={0}", preRelIndex);
+                Log.LogMessage(MessageImportance.Low, "PreRelIndex={0}", preRelIndex);
 
                 CSemVer = CreateSemVerString( preRelIndex );
-                Log.LogMessage(MessageImportance.High, "CSemVer={0}", CSemVer ?? string.Empty);
+                Log.LogMessage(MessageImportance.Low, "CSemVer={0}", CSemVer ?? string.Empty);
 
                 ShortCSemVer = CreateSemVerString( preRelIndex, useShortForm: true );
-                Log.LogMessage(MessageImportance.High, "ShortCSemVer={0}", ShortCSemVer ?? string.Empty);
+                Log.LogMessage(MessageImportance.Low, "ShortCSemVer={0}", ShortCSemVer ?? string.Empty);
 
                 SetFileVersion( preRelIndex );
                 return true;
@@ -98,7 +105,7 @@ namespace Ubiquity.NET.Versioning.Build.Tasks
             }
             finally
             {
-                Log.LogMessage(MessageImportance.High, $"-{nameof(CreateVersionInfo)} Task");
+                Log.LogMessage(MessageImportance.Low, $"-{nameof(CreateVersionInfo)} Task");
             }
         }
 

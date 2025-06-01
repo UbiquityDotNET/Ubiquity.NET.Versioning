@@ -48,8 +48,25 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             var globalProperties = new Dictionary<string,string>
             {
                 ["BuildVersionXml"] = Path.Combine(RepoRoot, "BuildVersion.xml"),
-                ["BuildTime"] = GetBuildTime()
             };
+
+            // For a CI build load the build time and ciBuild name from the generatedversion.props file
+            // so the test knows what to expect. This verifies that the task creation of versions agrees
+            // with how the build scripts created the version information. (Not the task in general)
+            // That is, this test case is NOT free of the build environment and MUST take it into consideration
+            // to properly verify the build scripts are doing things correctly. The CI Index is created from
+            // the time stamp and the name is either provided directly as a build property or computed in the
+            // Ubiquity.NET.Versioning.Build.Tasks.props file.
+            var (buildTime, ciBuildName) = GetGeneratedCiBuildInfo();
+            if(!string.IsNullOrWhiteSpace(ciBuildName))
+            {
+                globalProperties["CiBuildName"] = ciBuildName;
+            }
+
+            if(!string.IsNullOrWhiteSpace(buildTime))
+            {
+                globalProperties["BuildTime"] = buildTime;
+            }
 
             using var collection = new ProjectCollection(globalProperties);
 
@@ -272,7 +289,7 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             Assert.IsTrue( resolveResult );
 
             // Since this project uses an imported target, it won't even exist until AFTER ResolvePackageDependencies[DesignTime|ForBuild] comes along.
-            var result = testProject.ProjectInstance.Build("PrepareVersioningForBuild");
+            var (result, output) = testProject.ProjectInstance.Build("PrepareVersioningForBuild");
             Assert.IsNotNull( result );
             Assert.IsNotNull( result.ProjectStateAfterBuild );
 
@@ -361,7 +378,7 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             return retVal;
         }
 
-        private static string GetBuildTime( )
+        private static (string BuildTime, string CiBuildName) GetGeneratedCiBuildInfo( )
         {
             using var dummyCollection = new ProjectCollection();
             var options = new ProjectOptions()
@@ -370,7 +387,7 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             };
 
             var project = Project.FromFile(Path.Combine(TestModuleFixtures.RepoRoot, "GeneratedVersion.props"), options);
-            return project.GetPropertyValue("BuildTime");
+            return (project.GetPropertyValue("BuildTime"), project.GetPropertyValue("CiBuildName"));
         }
     }
 }

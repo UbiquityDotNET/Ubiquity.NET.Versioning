@@ -7,9 +7,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Loader;
 using System.Xml.Linq;
 
+using Microsoft.Build.Definition;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Utilities.ProjectCreation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -48,18 +50,41 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
                 ["BuildVersionXml"] = Path.Combine(RepoRoot, "BuildVersion.xml"),
             };
 
+            // For a CI build load the ciBuildIndex d time and ciBuildName from the generatedversion.props file
+            // so the test knows what to expect. This does NOT verify the behavior of the tasks exactly unfortunately.
+            // There is a non-determinism in computing the index based on a time stamp in particular a single date/time
+            // string is converted based on seconds since midnight today (in UTC) so if two different implementations
+            // compute a value at a different time that varies by as much as 2 seconds, then they will produce different
+            // results even if behaving correctly. The use of seconds since midnight today makes it non-deterministic...
+            // Unfortunately that's the algorithm chosen, though since this is a major release (and a full rename that
+            // is something to re-visit) Until, that is deterministic, use the generated CI info all up. Other tests will
+            // need to validate the behavior of the task.
+            var (ciBuildIndex, ciBuildName) = GetGeneratedCiBuildInfo();
+            if(!string.IsNullOrWhiteSpace(ciBuildName))
+            {
+                globalProperties["CiBuildName"] = ciBuildName;
+            }
+
+            if(!string.IsNullOrWhiteSpace(ciBuildIndex))
+            {
+                globalProperties["CiBuildIndex"] = ciBuildIndex;
+            }
+
             using var collection = new ProjectCollection(globalProperties);
 
             var (testProject, props) = CreateTestProjectAndInvokeTestedPackage(
                 targetFramework,
                 projectCollection: collection
             );
+
             string? taskAssembly = testProject.ProjectInstance.GetOptionalProperty("_Ubiquity_NET_Versioning_Build_Tasks");
             Assert.IsNotNull( taskAssembly, "Task assembly property should contain full path to the task DLL (Not NULL)" );
             Context.WriteLine( $"Task Assembly: '{taskAssembly}'" );
+
             Assert.IsFalse( string.IsNullOrWhiteSpace( taskAssembly ), "Task assembly property should contain full path to the task DLL (Not Whitespace)" );
             Assert.IsNotNull( props.FileVersion, "Generated properties should have a 'FileVersion'" );
             Context.WriteLine( $"Generated FileVersion: {props.FileVersion}" );
+
             var alc = new AssemblyLoadContext("TestALC", isCollectible: true);
             try
             {
@@ -70,6 +95,7 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
                 Assert.IsNotNull( asmVer, "Task assembly should have a version" );
                 Context.WriteLine( $"TaskAssemblyVersion: {asmVer}" );
                 Context.WriteLine( $"AssemblyName: {asmName}" );
+
                 Assert.IsNotNull( props.FileVersionMajor, "Property value for Major should exist" );
                 Assert.AreEqual( (int)props.FileVersionMajor, asmVer.Major, "Major value of assembly version should match" );
 
@@ -81,6 +107,26 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
 
                 Assert.IsNotNull( props.FileVersionRevision, "Property value for Revision should exist" );
                 Assert.AreEqual( (int)props.FileVersionRevision, asmVer.Revision, "Revision value of assembly version should match" );
+
+                // Test that AssemblyFileVersion attribute matches expected value
+                string fileVersion = ( from attr in asm.CustomAttributes
+                                       where attr.AttributeType.FullName == "System.Reflection.AssemblyFileVersionAttribute"
+                                       let val = attr.ConstructorArguments.Single().Value as string
+                                       where val is not null
+                                       select val
+                                     ).Single();
+
+                Assert.AreEqual(props.FileVersion, fileVersion);
+
+                // Test that AssemblyInformationalVersion attribute matches expected value
+                string informationalVersion = ( from attr in asm.CustomAttributes
+                                                where attr.AttributeType.FullName == "System.Reflection.AssemblyInformationalVersionAttribute"
+                                                let val = attr.ConstructorArguments.Single().Value as string
+                                                where val is not null
+                                                select val
+                                              ).Single();
+
+                Assert.AreEqual(props.InformationalVersion, informationalVersion);
             }
             finally
             {
@@ -245,7 +291,7 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             Assert.IsTrue( resolveResult );
 
             // Since this project uses an imported target, it won't even exist until AFTER ResolvePackageDependencies[DesignTime|ForBuild] comes along.
-            var result = testProject.ProjectInstance.Build("PrepareVersioningForBuild");
+            var (result, output) = testProject.ProjectInstance.Build("PrepareVersioningForBuild");
             Assert.IsNotNull( result );
             Assert.IsNotNull( result.ProjectStateAfterBuild );
 
@@ -332,6 +378,18 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             element.Save( strm );
             Context.WriteLine( $"BuildVersionXML written to: '{retVal}'" );
             return retVal;
+        }
+
+        private static (string CiBuildIndex, string CiBuildName) GetGeneratedCiBuildInfo( )
+        {
+            using var dummyCollection = new ProjectCollection();
+            var options = new ProjectOptions()
+            {
+                ProjectCollection = dummyCollection
+            };
+
+            var project = Project.FromFile(Path.Combine(TestModuleFixtures.RepoRoot, "GeneratedVersion.props"), options);
+            return (project.GetPropertyValue("CiBuildIndex"), project.GetPropertyValue("CiBuildName"));
         }
     }
 }

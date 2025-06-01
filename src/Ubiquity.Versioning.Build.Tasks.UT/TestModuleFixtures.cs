@@ -5,7 +5,9 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.IO;
 
 using Microsoft.Build.Utilities.ProjectCreation;
@@ -22,32 +24,35 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         [AssemblyInitialize]
         public static void AssemblyInitialize( TestContext ctx )
         {
-            ArgumentNullException.ThrowIfNull( ctx );
-            ArgumentException.ThrowIfNullOrWhiteSpace( ctx.TestRunDirectory );
+            ArgumentNullException.ThrowIfNull(ctx);
+            ArgumentException.ThrowIfNullOrWhiteSpace(ctx.TestRunDirectory);
 
             // This assumes the solutions '.runsettings' file has re-directed the run output
             // to a well known location. There's no way to "pass" in the location to the build
             // of this test.
-            string buildOutputPath = Path.GetFullPath( Path.Combine(ctx.TestRunDirectory, "..", ".."));
-            string buildRoot = Path.GetFullPath( Path.Combine(buildOutputPath, ".."));
+            BuildOutputPath = Path.GetFullPath(Path.Combine(ctx.TestRunDirectory, "..", ".."));
+            RepoRoot = Path.GetFullPath(Path.Combine(BuildOutputPath, ".."));
 
             // Generate fake directory.build.[props|targets] in the test run directory to prevent MSBUILD
             // from searching beyond these to find the REPO one in the root (It contains things that will
             // interfere with deterministic testing).
             ProjectCreator.Create()
-                          .Save( Path.Combine( ctx.TestRunDirectory, "Directory.Build.props" ) );
+                          .Save(Path.Combine(ctx.TestRunDirectory, "Directory.Build.props"));
 
             ProjectCreator.Create()
-                          .Save( Path.Combine( ctx.TestRunDirectory, "Directory.Build.targets" ) );
+                          .Save(Path.Combine(ctx.TestRunDirectory, "Directory.Build.targets"));
 
             // Ensure environment is clear of any overrides to ensure tests are validating the correct behavior
             // Individual tests MAY set these again. To prevent interference with other tests, any such test
             // needing to set these must restore them (even on exceptional exit) via a try/finally or using pattern.
-            foreach(string envVar in TaskInputPropertyNames)
+            foreach (string envVar in TaskInputPropertyNames)
             {
                 string? value = Environment.GetEnvironmentVariable(envVar);
-                if(value is not null)
+                if (value is not null)
                 {
+                    // Save the environment var value for use with task assembly build verification
+                    // as these are needed to verify the assembly build details
+                    OriginalInputVars.Add(envVar, value);
                     Environment.SetEnvironmentVariable(envVar, null);
                 }
             }
@@ -56,8 +61,8 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             // test project files or the settings will NOT apply!
             PackageRepo = PackageRepository.Create(
                 ctx.TestRunDirectory,                            // '.nuget/packages' repo folder goes here
-                new Uri( Path.Combine( buildOutputPath, "NuGet" ) ), // Local feed (Contains location of the build of the package under test)
-                new Uri( "https://api.nuget.org/v3/index.json" ) // standard NuGet Feed
+                new Uri(Path.Combine(BuildOutputPath, "NuGet")), // Local feed (Contains location of the build of the package under test)
+                new Uri("https://api.nuget.org/v3/index.json") // standard NuGet Feed
             );
         }
 
@@ -67,7 +72,13 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             PackageRepo?.Dispose();
         }
 
-        private static void CopyFile(string srcDir, string fileName, string dstDir)
+        internal static string BuildOutputPath { get; private set; } = string.Empty;
+
+        internal static string RepoRoot { get; private set; } = string.Empty;
+
+        internal static readonly Dictionary<string, string> OriginalInputVars = [];
+
+        private static void CopyFile( string srcDir, string fileName, string dstDir )
         {
             File.Copy(Path.Combine(srcDir, fileName), Path.Combine(dstDir, fileName), overwrite: true);
         }

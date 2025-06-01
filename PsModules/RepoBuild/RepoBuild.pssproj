@@ -7,7 +7,8 @@
     <RootNamespace>MyApplication</RootNamespace>
     <AssemblyName>MyApplication</AssemblyName>
     <Name>RepoBuild</Name>
-    <DebugArguments>LlvmCore</DebugArguments>
+    <DebugArguments>
+    </DebugArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -46,23 +47,19 @@
     within it.
     -->
     <Compile Include="Public\*.ps1" />
-    <Compile Include="Private\*.ps1" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Private\" />
     <Folder Include="Public\" />
   </ItemGroup>
-
-  <Target Name="VSTest"/>
-
   <!-- prevents NU1503 -->
-  <Target Name="_IsProjectRestoreSupported"
-          Returns="@(_ValidProjectsForRestore)">
+  <Target Name="_IsProjectRestoreSupported" Returns="@(_ValidProjectsForRestore)">
     <ItemGroup>
       <_ValidProjectsForRestore Include="$(MSBuildProjectFullPath)" />
     </ItemGroup>
   </Target>
-  <Target Name="Restore"/>
-  <Target Name="Build"/>
+  <Target Name="VSTest" />
+  <Target Name="Restore" />
+  <Target Name="Build" />
+  <Target Name="Rebuild" />
   <Import Project="$(MSBuildExtensionsPath)\PowerShell Tools for Visual Studio\PowerShellTools.targets" Condition="Exists('$(MSBuildExtensionsPath)\PowerShell Tools for Visual Studio\PowerShellTools.targets')" />
 </Project>

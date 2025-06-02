@@ -73,10 +73,10 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
 
             if(!string.IsNullOrWhiteSpace(buildTime))
             {
-                var parsedBuildTime = DateTime.ParseExact(buildTime, "o", CultureInfo.InvariantCulture,DateTimeStyles.RoundtripKind);
-                string iso8601RoundTrip = parsedBuildTime.ToString("o");
-                Assert.AreEqual(buildTime, iso8601RoundTrip, "Round tripping the time stamp should result in same string!");
-
+                // NOT using exact parsing as that's 'flaky' at best and doesn't actually handle all ISO-8601 formats
+                // Also, NOT using assumption of UTC as commit dates from repo are local time based. ToBuildIndex() will
+                // convert to UTC so that the resulting index is still consistent.
+                var parsedBuildTime = DateTime.Parse(buildTime, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
                 string indexFromLib = parsedBuildTime.ToBuildIndex();
                 Assert.AreEqual(indexFromLib, ciBuildIndex, "Index computed with versioning library should match the index computed by scripts");
 

@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.Loader;
@@ -15,6 +16,8 @@ using Microsoft.Build.Definition;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Utilities.ProjectCreation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Ubiquity.NET.Versioning;
 
 namespace Ubiquity.Versioning.Build.Tasks.UT
 {
@@ -59,15 +62,25 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             // Unfortunately that's the algorithm chosen, though since this is a major release (and a full rename that
             // is something to re-visit) Until, that is deterministic, use the generated CI info all up. Other tests will
             // need to validate the behavior of the task.
-            var (ciBuildIndex, ciBuildName) = GetGeneratedCiBuildInfo();
+            var (ciBuildIndex, ciBuildName, buildTime) = GetGeneratedCiBuildInfo();
+
+            // Build name depends on context of the build (Local, PR, CI, Release)
+            // and therefore is NOT hard-coded in the tests.
             if(!string.IsNullOrWhiteSpace(ciBuildName))
             {
                 globalProperties["CiBuildName"] = ciBuildName;
             }
 
-            if(!string.IsNullOrWhiteSpace(ciBuildIndex))
+            if(!string.IsNullOrWhiteSpace(buildTime))
             {
-                globalProperties["CiBuildIndex"] = ciBuildIndex;
+                // NOT using exact parsing as that's 'flaky' at best and doesn't actually handle all ISO-8601 formats
+                // Also, NOT using assumption of UTC as commit dates from repo are local time based. ToBuildIndex() will
+                // convert to UTC so that the resulting index is still consistent.
+                var parsedBuildTime = DateTime.Parse(buildTime, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+                string indexFromLib = parsedBuildTime.ToBuildIndex();
+                Assert.AreEqual(indexFromLib, ciBuildIndex, "Index computed with versioning library should match the index computed by scripts");
+
+                globalProperties["BuildTime"] = buildTime;
             }
 
             using var collection = new ProjectCollection(globalProperties);
@@ -108,7 +121,14 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
                 Assert.IsNotNull( props.FileVersionRevision, "Property value for Revision should exist" );
                 Assert.AreEqual( (int)props.FileVersionRevision, asmVer.Revision, "Revision value of assembly version should match" );
 
-                // Test that AssemblyFileVersion attribute matches expected value
+                // Release builds won't have a CI component by definition so nothing to validate for those
+                // Should get local, PR and CI builds before that to hit this case though.
+                if(!string.IsNullOrWhiteSpace(ciBuildIndex))
+                {
+                    Assert.AreEqual( ciBuildIndex, props.CiBuildIndex, "BuildIndex computed in scripts should match computed value from task");
+                }
+
+                // Test that AssemblyFileVersion on the task assembly matches expected value
                 string fileVersion = ( from attr in asm.CustomAttributes
                                        where attr.AttributeType.FullName == "System.Reflection.AssemblyFileVersionAttribute"
                                        let val = attr.ConstructorArguments.Single().Value as string
@@ -118,7 +138,7 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
 
                 Assert.AreEqual(props.FileVersion, fileVersion);
 
-                // Test that AssemblyInformationalVersion attribute matches expected value
+                // Test that AssemblyInformationalVersion on the task assembly matches expected value
                 string informationalVersion = ( from attr in asm.CustomAttributes
                                                 where attr.AttributeType.FullName == "System.Reflection.AssemblyInformationalVersionAttribute"
                                                 let val = attr.ConstructorArguments.Single().Value as string
@@ -380,7 +400,7 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             return retVal;
         }
 
-        private static (string CiBuildIndex, string CiBuildName) GetGeneratedCiBuildInfo( )
+        private static (string CiBuildIndex, string CiBuildName, string BuildTime) GetGeneratedCiBuildInfo( )
         {
             using var dummyCollection = new ProjectCollection();
             var options = new ProjectOptions()
@@ -389,7 +409,7 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             };
 
             var project = Project.FromFile(Path.Combine(TestModuleFixtures.RepoRoot, "GeneratedVersion.props"), options);
-            return (project.GetPropertyValue("CiBuildIndex"), project.GetPropertyValue("CiBuildName"));
+            return (project.GetPropertyValue("CiBuildIndex"), project.GetPropertyValue("CiBuildName"), project.GetPropertyValue("BuildTime"));
         }
     }
 }

@@ -28,18 +28,18 @@ namespace Ubiquity.NET.Versioning.Build.Tasks
             // establish an increasing build index based on the number of seconds from a common UTC date
             var timeStamp = TimeStamp.ToUniversalTime( );
             Log.LogMessage(MessageImportance.Low, $"Time Stamp(UTC; ISO-8601): {timeStamp:o}");
+            var midnightUtc = new DateTime( timeStamp.Year, timeStamp.Month, timeStamp.Day, 0, 0, 0, DateTimeKind.Utc );
+            Log.LogMessage(MessageImportance.Low, $"Midnight (UTC; ISO-8601): {midnightUtc:o}");
 
             // Upper 16 bits of the build number is the number of days since the common base value
-            uint buildNumber = ((uint)(timeStamp - CommonBaseDate).Days) << 16;
-            Log.LogMessage(MessageImportance.Low, $"BuildNumber (upper): 0x{buildNumber:X04}");
-
             // Lower 16 bits is the number of seconds (divided by 2) since midnight (on the date of the time stamp)
-            var midnightTodayUtc = new DateTime( timeStamp.Year, timeStamp.Month, timeStamp.Day, 0, 0, 0, DateTimeKind.Utc );
-            buildNumber += (ushort)((timeStamp - midnightTodayUtc).TotalSeconds / 2);
+            uint buildNumber = ((uint)(timeStamp - CommonBaseDate).Days) << 16;
+            buildNumber += (ushort)((timeStamp - midnightUtc).TotalSeconds / 2);
+
             Log.LogMessage(MessageImportance.Low, $"BuildNumber (full): 0x{buildNumber:X04}");
 
             BuildIndex = buildNumber.ToString( CultureInfo.InvariantCulture );
-            Log.LogMessage(MessageImportance.Low, $"BuildIndex set to: {BuildIndex}");
+            Log.LogMessage(MessageImportance.Low, $"BuildIndex (string) set to: {BuildIndex}");
             Log.LogMessage(MessageImportance.Low, $"-{nameof(GetBuildIndexFromTime)} Task");
             return true;
         }

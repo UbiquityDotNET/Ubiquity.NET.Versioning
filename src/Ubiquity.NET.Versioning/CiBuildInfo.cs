@@ -82,6 +82,9 @@ namespace Ubiquity.NET.Versioning
         /// <summary>Gets the Build name for this build</summary>
         public string BuildName { get; } = string.Empty;
 
-        private static readonly Regex CiBuildIdRegEx = new(@"\A[0-9a-zA-Z\-]+\Z");
+        private static readonly Regex CiBuildIdRegEx = GetGeneratedBuildIdRegex();
+
+        [GeneratedRegex( @"\A[0-9a-zA-Z\-]+\Z" )]
+        private static partial Regex GetGeneratedBuildIdRegex( );
     }
 }

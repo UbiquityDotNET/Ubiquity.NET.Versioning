@@ -28,12 +28,9 @@ namespace Ubiquity.NET.Versioning
             where T : IComparable<T>
         {
             self.ThrowIfNull(exp);
-            if(self.CompareTo( min ) < 0 || self.CompareTo( max ) > 0)
-            {
-                throw new ArgumentOutOfRangeException( exp, self, $"Value is outside of range [{min}-{max}]");
-            }
-
-            return self;
+            return self.CompareTo( min ) < 0 || self.CompareTo( max ) > 0
+                ? throw new ArgumentOutOfRangeException( exp, self, $"Value is outside of range [{min}-{max}]")
+                : self;
         }
 
         public static T ThrowIfNull<T>([NotNull] this T? self, [CallerArgumentExpression( nameof( self ) )] string? exp = null)

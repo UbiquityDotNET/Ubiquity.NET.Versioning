@@ -11,4 +11,8 @@
       <PackageReference Include="MSTest.TestAdapter" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Ubiquity.NET.Versioning\Ubiquity.NET.Versioning.csproj" />
+  </ItemGroup>
+
 </Project>

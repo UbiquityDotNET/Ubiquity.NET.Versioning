@@ -291,7 +291,7 @@ namespace Ubiquity.NET.Versioning
         /// <param name="ciBuildName">CI Build name for the build</param>
         /// <param name="buildMeta">Additional Build meta data for the build</param>
         /// <returns><see cref="CSemVer"/></returns>
-        public static CSemVer From( string buildVersionXmlPath, DateTimeOffset timeStamp, string ciBuildName, string buildMeta )
+        public static CSemVer From( string buildVersionXmlPath, DateTime timeStamp, string ciBuildName, string buildMeta )
         {
             string ciBuildIndex = timeStamp.ToBuildIndex( );
             var ciBuildInfo = new CiBuildInfo(ciBuildIndex, ciBuildName);

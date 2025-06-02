@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="DateTimeOffsetExtensions.cs" company="Ubiquity.NET Contributors">
+// <copyright file="DateTimeExtensions.cs" company="Ubiquity.NET Contributors">
 // Copyright (c) Ubiquity.NET Contributors. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -9,8 +9,8 @@ using System.Globalization;
 
 namespace Ubiquity.NET.Versioning
 {
-    /// <summary>Utility Class for <see cref="DateTimeOffset"/> extensions</summary>
-    public static class DateTimeOffsetExtensions
+    /// <summary>Utility Class for <see cref="DateTime"/> extensions</summary>
+    public static class DateTimeExtensions
     {
         /// <summary>Gets a build index based on a time stamp</summary>
         /// <param name="timeStamp">Time stamp to use to create the build index</param>
@@ -25,18 +25,18 @@ namespace Ubiquity.NET.Versioning
         /// is only used for local builds that's not realistically a problem. (Automated builds use the
         /// commit hash of the repo as the build index)
         /// </remarks>
-        public static string ToBuildIndex( this DateTimeOffset timeStamp )
+        public static string ToBuildIndex( this DateTime timeStamp )
         {
             // establish an increasing build index based on the number of seconds from a common UTC date
             timeStamp = timeStamp.ToUniversalTime( );
+            var midnightUtc = new DateTime( timeStamp.Year, timeStamp.Month, timeStamp.Day, 0, 0, 0, DateTimeKind.Utc );
 
-            // Upper 16 bits of the build number is the number of days since the common base value
-            uint buildNumber = ((uint)(timeStamp - CommonBaseDate).Days) << 16;
-
+            // Upper 16 bits of the build index is the number of days since the common base value
             // Lower 16 bits is the number of seconds (divided by 2) since midnight (on the date of the time stamp)
-            var midnightTodayUtc = new DateTime( timeStamp.Year, timeStamp.Month, timeStamp.Day, 0, 0, 0, DateTimeKind.Utc );
-            buildNumber += (ushort)((timeStamp - midnightTodayUtc).TotalSeconds / 2);
-            return buildNumber.ToString( CultureInfo.InvariantCulture );
+            uint buildIndex = ((uint)(timeStamp - CommonBaseDate).Days) << 16;
+            buildIndex += (ushort)((timeStamp - midnightUtc).TotalSeconds / 2);
+
+            return buildIndex.ToString( CultureInfo.InvariantCulture );
         }
 
         // Fixed point in time to use as reference for a build index.

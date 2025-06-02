@@ -22,7 +22,7 @@ using module "PSModules/RepoBuild/RepoBuild.psd1"
 [cmdletbinding()]
 Param(
     [hashtable]$buildInfo,
-    [string]$Configuration="Release",
+    [string]$Configuration='Release',
     [switch]$ForceClean
 )
 
@@ -42,23 +42,34 @@ function ConvertTo-BuildIndex
         [DateTime]$timeStamp
     )
 
+    # This is VERY EXPLICIT on type conversions and truncation as there's a difference in the implicit conversion
+    # between the C# for the tasks and library vs. PowerShell.
+    # PowerShell:
+    #> [UInt16]1.5
+    # 2 <== Rounded UP!
+    # But...
+    # C#
+    #> (ushort)1.5
+    # 1 <== Truncated!
+    # This needs to match the C# exactly so explicit behavior is used to unify the variances
+
     $commonBaseDate = [DateTime]::new(2000, 1, 1, 0, 0, 0, [DateTimeKind]::Utc)
 
     $timeStamp = $timeStamp.ToUniversalTime()
     $midnightTodayUtc = [DateTime]::new($timeStamp.Year, $timeStamp.Month, $timeStamp.Day, 0, 0, 0, [DateTimeKind]::Utc)
 
     $buildNumber = ([Uint32]($timeStamp - $commonBaseDate).Days) -shl 16
-    $buildNUmber += [UInt16](($timeStamp - $midnightTodayUtc).TotalSeconds / 2)
+    $buildNumber += [UInt16]([Math]::Truncate(($timeStamp - $midnightTodayUtc).TotalSeconds / 2))
 
     return $buildNumber
 }
 
 class PreReleaseVersion
 {
-    [ValidateSet("alpha", "beta", "delta", "epsilon", "gamma", "kappa", "prerelease", "rc")]
+    [ValidateSet('alpha', 'beta', 'delta', 'epsilon', 'gamma', 'kappa', 'prerelease', 'rc')]
     [string] $Name;
 
-    [ValidateSet("a", "b", "d", "e", "g", "k", "p", "r")]
+    [ValidateSet('a', 'b', 'd', 'e', 'g', 'k', 'p', 'r')]
     [string] $ShortName;
 
     [ValidateRange(-1,7)]
@@ -114,8 +125,8 @@ class PreReleaseVersion
         return $bldr.ToString()
     }
 
-    hidden static [string[]] $PreReleaseNames = @("alpha", "beta", "delta", "epsilon", "gamma", "kappa", "prerelease", "rc" );
-    hidden static [string[]] $PreReleaseShortNames = @("a", "b", "d", "e", "g", "k", "p", "r");
+    hidden static [string[]] $PreReleaseNames = @('alpha', 'beta', 'delta', 'epsilon', 'gamma', 'kappa', 'prerelease', 'rc' );
+    hidden static [string[]] $PreReleaseShortNames = @('a', 'b', 'd', 'e', 'g', 'k', 'p', 'r');
 
     hidden static [int] GetPrerelIndex([string] $preRelName)
     {
@@ -124,8 +135,8 @@ class PreReleaseVersion
         {
             $preRelIndex = [PreReleaseVersion]::PreReleaseNames |
                          ForEach-Object {$index=0} {@{Name = $_; Index = $index++}} |
-                         Where-Object {$_["Name"] -ieq $preRelName} |
-                         ForEach-Object {$_["Index"]} |
+                         Where-Object {$_['Name'] -ieq $preRelName} |
+                         ForEach-Object {$_['Index']} |
                          Select-Object -First 1
 
             # if not found in long names, test against the short names
@@ -133,8 +144,8 @@ class PreReleaseVersion
             {
                 $preRelIndex = [PreReleaseVersion]::PreReleaseShortNames |
                              ForEach-Object {$index=0} {@{Name = $_; Index = $index++}} |
-                             Where-Object {$_["Name"] -ieq $preRelName} |
-                             ForEach-Object {$_["Index"]} |
+                             Where-Object {$_['Name'] -ieq $preRelName} |
+                             ForEach-Object {$_['Index']} |
                              Select-Object -First 1
             }
         }
@@ -171,31 +182,31 @@ class CSemVer
 
     CSemVer([hashtable]$buildVersionData)
     {
-        $this.Major = $buildVersionData["BuildMajor"]
-        $this.Minor = $buildVersionData["BuildMinor"]
-        $this.Patch = $buildVersionData["BuildPatch"]
-        if($buildVersionData["PreReleaseName"])
+        $this.Major = $buildVersionData['BuildMajor']
+        $this.Minor = $buildVersionData['BuildMinor']
+        $this.Patch = $buildVersionData['BuildPatch']
+        if($buildVersionData['PreReleaseName'])
         {
             $this.PreReleaseVersion = [PreReleaseVersion]::new($buildVersionData)
             if(!$this.PreReleaseVersion)
             {
-                throw "Internal ERROR: PreReleaseVersion version is NULL!"
+                throw 'Internal ERROR: PreReleaseVersion version is NULL!'
             }
         }
 
-        $this.BuildMetadata = $buildVersionData["BuildMetadata"]
+        $this.BuildMetadata = $buildVersionData['BuildMetadata']
 
-        $this.CiBuildName = $buildVersionData["CiBuildName"];
-        $this.CiBuildIndex = $buildVersionData["CiBuildIndex"];
+        $this.CiBuildName = $buildVersionData['CiBuildName'];
+        $this.CiBuildIndex = $buildVersionData['CiBuildIndex'];
 
         if( (![string]::IsNullOrEmpty( $this.CiBuildName )) -and [string]::IsNullOrEmpty( $this.CiBuildIndex ) )
         {
-            throw "CiBuildIndex is required if CiBuildName is provided";
+            throw 'CiBuildIndex is required if CiBuildName is provided';
         }
 
         if( (![string]::IsNullOrEmpty( $this.CiBuildIndex )) -and [string]::IsNullOrEmpty( $this.CiBuildName ) )
         {
-            throw "CiBuildName is required if CiBuildIndex is provided";
+            throw 'CiBuildName is required if CiBuildIndex is provided';
         }
 
         $this.OrderedVersion = [CSemVer]::GetOrderedVersion($this.Major, $this.Minor, $this.Patch, $this.PreReleaseVersion)
@@ -286,7 +297,7 @@ try
         $buildInfo = Initialize-BuildEnvironment -FullInit
         if(!$buildInfo -or $buildInfo -isnot [hashtable])
         {
-            throw "build scripts BUSTED; Got null buildinfo hashtable..."
+            throw 'build scripts BUSTED; Got null buildinfo hashtable...'
         }
     }
 
@@ -296,18 +307,18 @@ try
     [string] $buildKind = Get-CurrentBuildKind
 
     $verInfo = Get-ParsedBuildVersionXML -BuildInfo $buildInfo
-    if($buildKind -ne "ReleaseBuild")
+    if($buildKind -ne 'ReleaseBuild')
     {
         $verInfo['CiBuildIndex'] = ConvertTo-BuildIndex $env:BuildTime
     }
 
     switch($buildKind)
     {
-        "LocalBuild" { $verInfo['CiBuildName'] = "ZZZ" }
-        "PullRequestBuild" { $verInfo['CiBuildName'] = "PRQ" }
-        "CiBuild" { $verInfo['CiBuildName'] = "BLD" }
-        "ReleaseBuild" { }
-        default {throw "unknown build kind" }
+        'LocalBuild' { $verInfo['CiBuildName'] = 'ZZZ' }
+        'PullRequestBuild' { $verInfo['CiBuildName'] = 'PRQ' }
+        'CiBuild' { $verInfo['CiBuildName'] = 'BLD' }
+        'ReleaseBuild' { }
+        default {throw 'unknown build kind' }
     }
 
     # Generate props file with the version information for this build.
@@ -317,47 +328,51 @@ try
     # [Been there, done that, worn out the bloody T-Shirt...]
     $csemVer = [CSemVer]::New($verInfo)
     $xmlDoc = [System.Xml.XmlDocument]::new()
-    $projectElement = $xmlDoc.CreateElement("Project")
+    $projectElement = $xmlDoc.CreateElement('Project')
     $xmlDoc.AppendChild($projectElement) | Out-Null
 
-    $propGroupElement = $xmlDoc.CreateElement("PropertyGroup")
+    $propGroupElement = $xmlDoc.CreateElement('PropertyGroup')
     $projectElement.AppendChild($propGroupElement) | Out-Null
 
-    $fileVersionElement = $xmlDoc.CreateElement("FileVersion")
+    $fileVersionElement = $xmlDoc.CreateElement('FileVersion')
     $fileVersionElement.InnerText = $csemVer.FileVersion.ToString()
     $propGroupElement.AppendChild($fileVersionElement) | Out-Null
 
-    $packageVersionElement = $xmlDoc.CreateElement("PackageVersion")
+    $packageVersionElement = $xmlDoc.CreateElement('PackageVersion')
     $packageVersionElement.InnerText = $csemVer.ToString($false,$true) # short form of version
     $propGroupElement.AppendChild($packageVersionElement) | Out-Null
 
-    $productVersionElement = $xmlDoc.CreateElement("ProductVersion")
+    $productVersionElement = $xmlDoc.CreateElement('ProductVersion')
     $productVersionElement.InnerText = $csemVer.ToString($true, $false) # long form of version
     $propGroupElement.AppendChild($productVersionElement) | Out-Null
 
-    $assemblyVersionElement = $xmlDoc.CreateElement("AssemblyVersion")
+    $assemblyVersionElement = $xmlDoc.CreateElement('AssemblyVersion')
     $assemblyVersionElement.InnerText = $csemVer.FileVersion.ToString()
     $propGroupElement.AppendChild($assemblyVersionElement) | Out-Null
 
-    $informationalVersionElement = $xmlDoc.CreateElement("InformationalVersion")
+    $informationalVersionElement = $xmlDoc.CreateElement('InformationalVersion')
     $informationalVersionElement.InnerText = $csemVer.ToString($true, $false) # long form of version
     $propGroupElement.AppendChild($informationalVersionElement) | Out-Null
 
     # Unit tests need to see the CI build info as it isn't something they can determine on their own.
     # The Build index is based on a timestamp and the build name depends on the runtime environment
     # to set some env vars etc...
-    if($buildKind -ne "ReleaseBuild")
+    if($buildKind -ne 'ReleaseBuild')
     {
-        $ciBuildIndexElement = $xmlDoc.CreateElement("CiBuildIndex")
+        $buildTimeElement = $xmlDoc.CreateElement('BuildTime')
+        $buildTimeElement.InnerText = $env:BuildTime
+        $propGroupElement.AppendChild($buildTimeElement) | Out-Null
+
+        $ciBuildIndexElement = $xmlDoc.CreateElement('CiBuildIndex')
         $ciBuildIndexElement.InnerText = $verInfo['CiBuildIndex']
         $propGroupElement.AppendChild($ciBuildIndexElement) | Out-Null
 
-        $ciBuildNameElement = $xmlDoc.CreateElement("CiBuildName")
+        $ciBuildNameElement = $xmlDoc.CreateElement('CiBuildName')
         $ciBuildNameElement.InnerText = $verInfo['CiBuildName']
         $propGroupElement.AppendChild($ciBuildNameElement) | Out-Null
     }
 
-    $buildGeneratedPropsPath = Join-Path $buildInfo["RepoRootPath"] "GeneratedVersion.props"
+    $buildGeneratedPropsPath = Join-Path $buildInfo['RepoRootPath'] 'GeneratedVersion.props'
     $xmlDoc.Save($buildGeneratedPropsPath)
 }
 catch
@@ -375,4 +390,4 @@ finally
     $env:Path = $oldPath
 }
 
-Write-Information "Done build"
+Write-Information 'Done build'

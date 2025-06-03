@@ -18,10 +18,9 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
     /// </remarks>
     internal readonly record struct BuildProperties
     {
-        public BuildProperties( BuildResult result )
+        public BuildProperties( ProjectInstance inst )
         {
-            ArgumentNullException.ThrowIfNull(result.ProjectStateAfterBuild);
-            var inst = result.ProjectStateAfterBuild;
+            ArgumentNullException.ThrowIfNull(inst);
 
             // Manually or from Ubiquity.NET.Versioning.Build.Tasks.props
             BuildTime = inst.GetPropertyValue("BuildTime");
@@ -45,6 +44,8 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             FileVersionBuild = inst.GetPropertyAs<UInt16>("FileVersionBuild");
             FileVersionRevision = inst.GetPropertyAs<UInt16>("FileVersionRevision");
             PackageVersion = inst.GetOptionalProperty("PackageVersion");
+
+            BuildMeta = inst.GetOptionalProperty("BuildMeta");
 
             // from Ubiquity.NET.Versioning.Build.Tasks.targets/SetVersionDependentProperties target
             FileVersion = inst.GetOptionalProperty("FileVersion");

@@ -79,11 +79,11 @@ namespace Ubiquity.NET.Versioning.Tests
             Assert.AreEqual("-alpha.1", prv.ToString());
 
             prv = new PrereleaseVersion( "beta", 1, 0);
-            Assert.AreEqual("-b.1",prv.ToString("S", null));
+            Assert.AreEqual("-b01",prv.ToString("S", null));
 
             // The Z format is used when there is CI build info available
             Assert.AreEqual("-beta.1.0",prv.ToString("Z", null));
-            Assert.AreEqual("-b.1.0",prv.ToString("SZ", null), "format combinations are allowed");
+            Assert.AreEqual("-b01-00",prv.ToString("SZ", null), "format combinations are allowed");
         }
     }
 }

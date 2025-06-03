@@ -17,13 +17,13 @@ using a Constrained Semantic Version ([CSemVer](https://csemver.org/)).
 > who are aware of the change and those who use this library to set an explicit build meta data
 > string. (Principle of least surprise for what this library can control).
 >
-> The default OPT-OUT behavior is to use the Repository ID (usually a GIT commit hash). This
-> is appended with a leading `+` if one isn't already in the `InformationalVersion` property. If
-> build metadata is already included (Like from use of this task) the id is appended using a `.`
-> instead. Unless the project has opted out of this behavior by setting the property as
-> previously described.
+> The default .NET build behavior is to use the Repository ID (usually a GIT commit hash).
+> This is appended with a leading `+` if one isn't already in the `InformationalVersion`
+> property. If build metadata is already included (Like from use of this task) the id is
+> appended using a `.` instead. So it is ALWAYS appended unless the project has opted out of
+> this behavior by setting the property as previously described.
 >
->Thus, it is ***strongly recommended*** that projects using this package OPT-OUT
+> Thus, it is ***strongly recommended*** that projects using this package OPT-OUT
 > of the new behavior.
 
 
@@ -50,13 +50,13 @@ The following is a list of the version formats in descending order of precedence
 
 | Build Type | Format |
 |------------|--------|
-| Local build  | `{BuildMajor}.{BuildMinor}.{BuildPatch}--ci-{UTCTIME of build }-ZZZ` |
-| Pull Request | `{BuildMajor}.{BuildMinor}.{BuildPatch}--ci-{UTCTIME of PR Commit}-PRQ+{COMMIT ID}` |
-| Official CI builds | `{BuildMajor}.{BuildMinor}.{BuildPatch}--ci-{UTCTIME of HEAD Commit}-BLD+{COMMIT ID}` |
-| Official PreRelease | `{BuildMajor}.{BuildMinor}.{BuildPatch}-{PreReleaseName}[.PreReleaseNumber][.PreReleaseFix]+{COMMIT ID}` |
-| Official Release | `{BuildMajor}.{BuildMinor}.{BuildPatch}+{COMMIT ID}` |
+| Local build  | `{BuildMajor}.{BuildMinor}.{BuildPatch}--ci-{CiBuildIndex}-ZZZ+{BuildMeta}` |
+| Pull Request | `{BuildMajor}.{BuildMinor}.{BuildPatch}--ci-{CiBuildIndex}-PRQ+{BuildMeta}` |
+| Official CI builds | `{BuildMajor}.{BuildMinor}.{BuildPatch}--ci-{CiBuildIndex}-BLD+{BuildMeta}` |
+| Official PreRelease | `{BuildMajor}.{BuildMinor}.{BuildPatch}-{PreReleaseName}[.PreReleaseNumber][.PreReleaseFix]+{BuildMeta}` |
+| Official Release | `{BuildMajor}.{BuildMinor}.{BuildPatch}+{BuildMeta}` |
 
-This package provides a single package to automate the generation of these versions in an easy
+This project provides an MSBUILD task to automate the generation of these versions in an easy
 to use NuGet Package.
 
 The package creates File and Assembly Versions and defines the appropriate MsBuild properties
@@ -92,6 +92,9 @@ CSemVer.Build uses MSBuild properties to determine the final version number.
 | BuildMeta         | `<undefined>`                                                | Build meta for the version
 | CiBuildIndex      | ISO 8601 formated UTC time-stamp for the build or the commit ID for automated builds | Provides a unique build to build value guaranteed to increase with each build
 | CiBuildName       | `<see notes>`                                                | CSemVer CI name
+| PackageVersionUsesShortForm | `<Undefined>` => false | Determines if the PackageVersion is set to the short form for legacy NuGet clients |
+| GeneratedVersionInfoHeader | `<undefined>` | Full path of the header file to generate [No header generated if not set] [Only applies to a VCXPROJ file ] |
+| GenerateAssemblyInfo | `<undefined>` | If set, creates `$(IntermediateOutputPath)AssemblyVersionInfo.g.cs` and includes it for compilation. Used for legacy CSPROJ files as new SDK projects handle this automatically now |
 
 ### CiBuildName
 Unless explicitly provided, the CiBuildName is determined by a set of properties that indicate
@@ -124,6 +127,11 @@ example for setting them based on an AppVeyor build in the `Directory.Build.prop
 </PropertyGroup>
 ```
 
+### PackageVersionUsesShortForm
+The MSBuild Property `PackageVersionUsesShortForm` is used by the task to determine the format to use for the
+`PackageVersion` property. The default is to use the long form supported by modern NuGet clients, however if your are
+in need of the legacy format support a project may set this property to `true` to observe the legacy behavior.
+
 ## BuildVersion.xml
 If the MSBuild property `BuildMajor` is not set, then the base build version is read from the
 repository file specified in the BuildVersion.xml, typically this is located at the root of a
@@ -132,13 +140,71 @@ the file is specified by an MSBuild property `BuildVersionXml`. The contents of 
 fairly simple and only requires a single `BuildVersionData` element with a set of attributes.
 The available attributes are:
 
-|Name               |Description|
-|-------------------|-----------|
-| BuildMajor        | Major portion of the build number |
-| BuildMinor        | Minor portion of the build number |
-| BuildPatch        | Patch portion of the build number |
-| PreReleaseName    | PreRelease Name of the CSemVer |
-| PreReleaseNumber  | PreRelease Number of the CSemVer |
-| PreReleaseFix     | PreRelease Fix of the CSemVer |
+|Name              |Description|
+|------------------|-----------|
+| BuildMajor       | Major portion of the build number |
+| BuildMinor       | Minor portion of the build number |
+| BuildPatch       | Patch portion of the build number |
+| PreReleaseName   | PreRelease Name of the CSemVer |
+| PreReleaseNumber | PreRelease Number of the CSemVer |
+| PreReleaseFix    | PreRelease Fix of the CSemVer |
 
 Only the Major, minor and Patch numbers are required.
+Example:  
+```xml
+<BuildVersionData
+    BuildMajor = "5"
+    BuildMinor = "0"
+    BuildPatch = "0"
+    PreReleaseName = "alpha"
+/>
+```
+
+## Generated Properties
+|Name                |Description|
+|--------------------|-----------|
+| BuildTime          | Set to the current time (UTC ISO-8601 format) if not already set by build tooling) |
+| IsAutomatedBuild   | Automated build system value to indicate this is an automated build |
+| IsPullRequestBuild | Automated build system value to indicate this is a build for an untrusted PR |
+| IsReleaseBuild     | Automated build system value to indicate this is an official release build (No CI information) |
+| CiBuildName        | If not set externally, this is set based on the kind of build |
+| CiBuildIndex       | If not set externally, this is set based on the $(BuildTime) property by parsing the ISO-8601 string and computing an index from that |
+| BuildMajor         | Major portion of the build; If not set externally, this is set based on the information in the $(BuildVersionXml) file |
+| BuildMinor         | Minor portion of the build; If not set externally, this is set based on the information in the $(BuildVersionXml) file |
+| BuildPatch         | Patch portion of the build; If not set externally, this is set based on the information in the $(BuildVersionXml) file |
+| PreReleaseName     | PreRelease Name for the build [Optional]; If not set externally, this is set based on the information in the $(BuildVersionXml) file, which may not include a value for this |
+| PreReleaseNumber   | PreRelease Number for the build [Optional]; If not set externally, this is set based on the information in the $(BuildVersionXml) file, which may not include a value for this |
+| PreReleaseFix      | PreRelease Fix for the build [Optional]; If not set externally, this is set based on the information in the $(BuildVersionXml) file, which may not include a value for this |
+| FullBuildNumber    | String form of the full CSemVer value for a build |
+| ShortBuildNumber   | Short form of the CSemVer for use with legacy NuGet clients (Modern clients support the full name) |
+| FileVersionMajor   | Major portion of the FileVersion number (Used for vcxproj files to generate the version header) |
+| FileVersionMinor   | Minor portion of the FileVersion number (Used for vcxproj files to generate the version header) |
+| FileVersionBuild   | Build portion of the FileVersion number (Used for vcxproj files to generate the version header) |
+| FileVersionRevision | Revision portion of the FileVersion number (Used for vcxproj files to generate the version header) |
+
+### BuildTime
+Ordinarily this is set for an entire solution by build scripting to ensure that all components using this
+build task report the same version number. If it is not set the current time at the moment of property evaluation
+for a project is used. This will result in a distinct CI version for each project in a solution. Whether, that
+is desired or not is left for the consumer. If it is not desired, then a centralized setting as a build property
+or environment variable is warranted.
+
+## Automated build flags
+`IsAutomatedBuild`, `IsPullRequestBuild`, and `IsReleaseBuild` are normally set by an automated build script/action
+based on the build environment used and aid in determining the CI build name as previously described in
+[CiBuildName](#cibuildname).
+
+## CiBuildName
+If not explicitly set this is determined by the automated build flags as described in the [CiBuildName](#cibuildname)
+section of this document.
+
+## Detected Error Conditions
+|Code     |Description|
+|---------|-----------|
+| CSM001  | BuildMajor is a required property, either set it as a global or in the build version XML |
+| CSM002  | BuildMinor is a required property, either set it as a global or in the build version XML |
+| CSM003  | BuildPatch is a required property, either set it as a global or in the build version XML |
+| CSM004  | FileVersion property not provided AND FileVersionMajor property not found to create it from |
+| CSM005  | FileVersion property not provided AND FileVersionMinor property not found to create it from |
+| CSM006  | FileVersion property not provided AND FileVersionBuild property not found to create it from |
+| CSM007  | FileVersion property not provided AND FileVersionRevision property not found to create it from |

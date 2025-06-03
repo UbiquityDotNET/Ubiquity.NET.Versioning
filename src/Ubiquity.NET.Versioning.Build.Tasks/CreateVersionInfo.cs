@@ -92,7 +92,7 @@ namespace Ubiquity.NET.Versioning.Build.Tasks
                 CSemVer = CreateSemVerString( preRelIndex );
                 Log.LogMessage(MessageImportance.Low, "CSemVer={0}", CSemVer ?? string.Empty);
 
-                ShortCSemVer = CreateSemVerString( preRelIndex, useShortForm: true );
+                ShortCSemVer = CreateSemVerString( preRelIndex, useShortForm: true, includeMetadata: false );
                 Log.LogMessage(MessageImportance.Low, "ShortCSemVer={0}", ShortCSemVer ?? string.Empty);
 
                 SetFileVersion( preRelIndex );
@@ -109,9 +109,21 @@ namespace Ubiquity.NET.Versioning.Build.Tasks
             }
         }
 
-        private string CreateSemVerString( int preRelIndex, bool useShortForm = false, bool includeMetadata = true )
+        /// <summary>Creates a formatted CSemver from the properties of this instance</summary>
+        /// <param name="preRelIndex">Numeric form of the build index [(-1)-7] where -1 indicates not a pre-release</param>
+        /// <param name="useShortForm">Flag to indicate if the short form is desired</param>
+        /// <param name="includeMetadata">Flag to indicate if the metadata is included</param>
+        /// <param name="alwaysIncludeZero">Flag to indicate if a 0 pre-release is ALWAYs included [see remarks]</param>
+        /// <returns>Formatted CSemVer string</returns>
+        /// <remarks>
+        /// <para>The <paramref name="alwaysIncludeZero"/> is for legacy behavior and should generally be left at the default. In
+        /// prior releases the pre-release number and fix were always included for pre-release builds in the short form. In
+        /// the current version based on CSemVer v1.0.0-rc.1 the behavior is the same as for a full version. (The Number is omitted
+        /// unless it is > 0 OR Fix >0).</para>
+        /// <para>Additionally, the short form uses a two digit leading 0 conversion.</para>
+        /// </remarks>
+        private string CreateSemVerString( int preRelIndex, bool useShortForm = false, bool includeMetadata = true, bool alwaysIncludeZero = false)
         {
-            bool alwaysIncludeZero = useShortForm;
             var bldr = new StringBuilder()
                           .AppendFormat(CultureInfo.InvariantCulture, "{0}.{1}.{2}", BuildMajor, BuildMinor, BuildPatch);
 
@@ -123,10 +135,10 @@ namespace Ubiquity.NET.Versioning.Build.Tasks
 
                 if(PreReleaseNumber > 0 || PreReleaseFix > 0 || alwaysIncludeZero)
                 {
-                    bldr.AppendFormat( CultureInfo.InvariantCulture, ".{0}", PreReleaseNumber );
+                    bldr.AppendFormat( CultureInfo.InvariantCulture, useShortForm ? "{0:D02}" : ".{0}", PreReleaseNumber );
                     if(PreReleaseFix > 0 || alwaysIncludeZero)
                     {
-                        bldr.AppendFormat( CultureInfo.InvariantCulture, ".{0}", PreReleaseFix );
+                        bldr.AppendFormat( CultureInfo.InvariantCulture, useShortForm ? "-{0:D02}" : ".{0}", PreReleaseFix );
                     }
                 }
             }
@@ -250,6 +262,15 @@ namespace Ubiquity.NET.Versioning.Build.Tasks
 
             return !hasInputError;
         }
+
+        //private void LogError(
+        //    string code,
+        //    /*[StringSyntax(StringSyntaxAttribute.CompositeFormat)]*/ string message,
+        //    params object[] messageArgs
+        //    )
+        //{
+        //    Log.LogError("Task", code, null, null, 0, 0, 0, 0, message, messageArgs);
+        //}
 
         private static int ComputePreReleaseIndex( string preRelName )
         {

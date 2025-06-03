@@ -110,7 +110,8 @@ namespace Ubiquity.NET.Versioning
         /// <item><term>S</term><description>Use short form of pre-release name</description></item>
         /// <item><term>Z</term><description>Assume a CI build and ALWAYs include 0 values for <see cref="Number"/> and <see cref="Fix"/></description></item>
         /// </list>
-        /// The 'F' and 'S' are mutually exclusive values, only ONE of them at a time is valid. 'Z' is allowed in combination with either or alone.
+        /// The 'F' and 'S' are mutually exclusive values, only ONE of them at a time is valid. 'Z' is allowed in combination with either or alone and
+        /// used to support legacy formatting where the zero value is always included for short forms (CSemVer v1.0.0-rc.1 does NOT include that)
         /// </remarks>
         public string ToString( string? format, IFormatProvider? formatProvider )
         {
@@ -149,10 +150,10 @@ namespace Ubiquity.NET.Versioning
 
             if(Number > 0 || Fix > 0 || alwaysIncludeZero)
             {
-                bldr.AppendFormat( CultureInfo.InvariantCulture, ".{0}", Number );
+                bldr.AppendFormat( CultureInfo.InvariantCulture, useShortForm ? "{0:D02}" : ".{0}", Number );
                 if(Fix > 0 || alwaysIncludeZero)
                 {
-                    bldr.AppendFormat( CultureInfo.InvariantCulture, ".{0}", Fix );
+                    bldr.AppendFormat( CultureInfo.InvariantCulture, useShortForm ? "-{0:D02}" : ".{0}", Fix );
                 }
             }
 

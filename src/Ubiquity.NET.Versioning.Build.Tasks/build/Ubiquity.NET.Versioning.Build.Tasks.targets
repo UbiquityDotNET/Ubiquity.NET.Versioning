@@ -54,11 +54,11 @@
                            BuildMeta = "$(BuildMeta)"
                            >
             <Output TaskParameter="CSemVer" PropertyName="FullBuildNumber" />
+            <Output TaskParameter="ShortCSemVer" PropertyName="ShortBuildNumber"/>
             <Output TaskParameter="FileVersionMajor" PropertyName="FileVersionMajor" />
             <Output TaskParameter="FileVersionMinor" PropertyName="FileVersionMinor" />
             <Output TaskParameter="FileVersionBuild" PropertyName="FileVersionBuild" />
             <Output TaskParameter="FileVersionRevision" PropertyName="FileVersionRevision" />
-            <Output TaskParameter="ShortCSemVer" PropertyName="PackageVersion"/>
         </CreateVersionInfo>
     </Target>
 
@@ -68,6 +68,12 @@
             <FileVersion Condition="'$(FileVersion)'==''">$(__FileVersion)</FileVersion>
             <AssemblyVersion Condition="'$(AssemblyVersion)'==''">$(__FileVersion)</AssemblyVersion>
             <InformationalVersion Condition="$(InformationalVersion)==''">$(FullBuildNumber)</InformationalVersion>
+            <!--
+            NuGet clients prior to 4.3.0 don't support the full name, and instead should use the short name.
+            Default is to use the newer format, but allow specification of the legacy format if needed.
+            -->
+            <PackageVersion Condition="$(FullBuildNumber)!='' AND '$(PackageVersionUsesShortForm)'!='true'">$(FullBuildNumber)</PackageVersion>
+            <PackageVersion Condition="$(ShortBuildNumber)!='' AND '$(PackageVersionUsesShortForm)'=='true'">$(ShortBuildNumber)</PackageVersion>
         </PropertyGroup>
     </Target>
 

@@ -5,20 +5,17 @@ using module "PSModules/RepoBuild/RepoBuild.psd1"
 .SYNOPSIS
     Shows docs using the docfx built-in server
 
-.PARAMETER DocsPathToHost
-    Path of docs to host. Default is the local build but any legit path is accepted.
-    This is useful when downloading docs build artifacts to ensure they are built correctly.
-
 .PARAMETER buildInfo
    BuildInfo to use for current repo build. The hashtable provided for this must include the
    `DocsOutputPath` value for the path to use. This is normally set by a call to `Initialize-Environment`
+
+.PARAMETER DocsPathToHost
+    Path of docs to host. Default is the local build but any legit path is accepted.
+    This is useful when downloading docs build artifacts to ensure they are built correctly.
 #>
 Param(
-    [Parameter(Mandatory, ParameterSetName = 'UsePath', Position = 0)]
-    [string]$DocsPathToHost,
-
-    [Parameter(ParameterSetName = 'UseRepo', Position = 0)]
-    [hashtable]$buildInfo
+    [hashtable]$buildInfo,
+    [string]$DocsPathToHost
 )
 
 $docFXToolVersion = '2.78.3'
@@ -30,7 +27,7 @@ Push-Location $PSScriptRoot
 $oldPath = $env:Path
 try
 {
-    if ($PSCmdlet.ParameterSetName -eq 'UseRepo')
+    if (!$DocsPathToHost)
     {
         if (!$buildInfo)
         {

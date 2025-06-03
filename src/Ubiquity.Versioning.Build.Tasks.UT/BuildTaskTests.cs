@@ -53,7 +53,7 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
                 ["BuildVersionXml"] = Path.Combine(RepoRoot, "BuildVersion.xml"),
             };
 
-            // For a CI build load the ciBuildIndex d time and ciBuildName from the generatedversion.props file
+            // For a CI build load the ciBuildIndex and ciBuildName from the generatedversion.props file
             // so the test knows what to expect. This does NOT verify the behavior of the tasks exactly unfortunately.
             // There is a non-determinism in computing the index based on a time stamp in particular a single date/time
             // string is converted based on seconds since midnight today (in UTC) so if two different implementations
@@ -176,8 +176,13 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
 
             // v20.1.4-alpha => 5.44854.3875.59946 [see: https://csemver.org/playground/site/#/]
             // NOTE: CI build is +1 (FileVersionRevision)!
+            //
+            // NOTE: Since build index is based on time which is captured during build it
+            // is not possible to know 'a priori' what the value will be..., additionally, the
+            // CiBuildName is dependent on the environment. Other, tests validate the behavior of
+            // those with an explicit setting...
             string expectedFullBuildNumber = $"20.1.4-alpha.ci.{props.CiBuildIndex}.{props.CiBuildName}";
-            string expectedShortNumber = $"20.1.4-a.0.0.ci.{props.CiBuildIndex}.{props.CiBuildName}";
+            string expectedShortNumber = $"20.1.4-a.ci.{props.CiBuildIndex}.{props.CiBuildName}";
             string expectedFileVersion = "5.44854.3875.59947";
 
             Assert.IsNotNull( props.BuildMajor, "should have a value set for 'BuildMajor'" );
@@ -195,11 +200,8 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             Assert.IsNull( props.PreReleaseNumber, "Should NOT have a value set for 'PreReleaseNumber'" );
             Assert.IsNull( props.PreReleaseFix, "Should NOT have a value set for 'PreReleaseNumber'" );
 
-            // NOTE: Since build index is based on time which is captured during build it
-            // is not possible to know 'a priori' what the value will be... Other, tests
-            // validate the behavior of that with an explicit setting...
             Assert.AreEqual( expectedFullBuildNumber, props.FullBuildNumber );
-            Assert.AreEqual( expectedShortNumber, props.PackageVersion );
+            Assert.AreEqual( expectedFullBuildNumber, props.PackageVersion );
 
             // TODO: Test that time is in ISO-8601 format and within a few seconds of "now"
             // For now, just make sure they aren't null or empty
@@ -231,12 +233,12 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         [DataRow("net8.0")]
         public void BuildVersionXmlIsUsed( string targetFramework)
         {
-            string buildVersionXml = CreateBuildVersionXml(20, 1, 5);
+            string buildVersionXml = CreateBuildVersionXmlWithRandomName(20, 1, 5);
             string buildTime = DateTime.UtcNow.ToString( "o" );
             const string buildIndex = "ABCDEF12";
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildTime"] = buildTime,
+                ["BuildTime"] = buildTime, // should be ignored as presence of explicit CiBuildIndex overrides it
                 ["CiBuildIndex"] = buildIndex,
                 ["BuildVersionXml"] = buildVersionXml
             };
@@ -291,6 +293,176 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
 
             Assert.IsNotNull( props.FileVersionRevision );
             Assert.AreEqual( 52269, props.FileVersionRevision.Value );
+
+            Assert.AreEqual( expectedFileVersion, props.FileVersion );
+            Assert.AreEqual( expectedFileVersion, props.AssemblyVersion );
+            Assert.AreEqual( expectedFullBuildNumber, props.InformationalVersion );
+        }
+
+        [TestMethod]
+        [DataRow("netstandard2.0")]
+        [DataRow("net48")]
+        [DataRow("net8.0")]
+        public void CiBuildInfoIsProcessedCorrectly( string targetFramework )
+        {
+            // NOT using BuildVersion.xml, all values set as globals to test handling of that
+            var globalProperties = new Dictionary<string,string>
+            {
+                ["BuildMajor"] = "20",
+                ["BuildMinor"] = "1",
+                ["BuildPatch"] = "5",
+                ["PreReleaseName"] = "delta",
+                ["PreReleaseNumber"] = "0",
+                ["PreReleaseFix"] = "1",
+                ["BuildTime"] = "2025-06-02T10:15:48-07:00", // Format typical of commit date time stamp
+                ["CiBuildName"] = "QRP", // Intentionally, not a standard value
+            };
+
+            // compute build index from the time stamp to get the expected value of the index
+            // Technically, this is const as the time stamp itself is a const, but this saves on
+            // "magic numbers" and allows easier updates to validate a different time stamp.
+            var parsedBuildTime = DateTime.Parse(globalProperties["BuildTime"], CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+            string expectedIndex = parsedBuildTime.ToBuildIndex();
+
+            using var collection = new ProjectCollection(globalProperties);
+            var (testProject, props) = CreateTestProjectAndInvokeTestedPackage(
+                targetFramework,
+                projectCollection: collection
+            );
+
+            // v20.1.5-delta.0.1 => 5.44854.3878.63342 [see: https://csemver.org/playground/site/#/]
+            // NOTE: CI build is +1 (FileVersionRevision)!
+            //
+            // NOTE: Since build index is based on time which is captured during build it
+            // is not possible to know 'a priori' what the value will be..., additionally, the
+            // CiBuildName is dependent on the environment. Other, tests validate the behavior of
+            // those with an explicit setting...
+            string expectedFullBuildNumber = $"20.1.5-delta.0.1.ci.{expectedIndex}.QRP";
+            string expectedShortNumber = $"20.1.5-d.0.1.ci.{expectedIndex}.QRP";
+            string expectedFileVersion = "5.44854.3878.63343"; // CI Build (+1)
+
+            Assert.IsNotNull( props.BuildMajor, "should have a value set for 'BuildMajor'" );
+            Assert.AreEqual( 20u, props.BuildMajor.Value );
+
+            Assert.IsNotNull( props.BuildMinor, "should have a value set for 'BuildMinor'" );
+            Assert.AreEqual( 1u, props.BuildMinor.Value );
+
+            Assert.IsNotNull( props.BuildPatch, "should have a value set for 'BuildPatch'" );
+            Assert.AreEqual( 5, props.BuildPatch.Value );
+
+            Assert.IsNotNull( props.PreReleaseName, "should have a value set for 'PreReleaseName'" );
+            Assert.AreEqual( "delta", props.PreReleaseName );
+
+            Assert.IsNotNull( props.PreReleaseNumber, "Should have a value set for 'PreReleaseNumber'" );
+            Assert.AreEqual((UInt16)0u, props.PreReleaseNumber);
+
+            Assert.IsNotNull( props.PreReleaseFix, "Should have a value set for 'PreReleaseNumber'" );
+            Assert.AreEqual((UInt16)1u, props.PreReleaseFix);
+
+            Assert.AreEqual( expectedFullBuildNumber, props.FullBuildNumber );
+            Assert.AreEqual( expectedFullBuildNumber, props.PackageVersion );
+
+            Assert.AreEqual( globalProperties["BuildTime"], props.BuildTime );
+            Assert.AreEqual( expectedIndex, props.CiBuildIndex );
+
+            Assert.AreEqual( "QRP", props.CiBuildName );
+
+            Assert.IsNotNull( props.FileVersionMajor );
+            Assert.AreEqual( 5, props.FileVersionMajor.Value );
+
+            Assert.IsNotNull( props.FileVersionMinor );
+            Assert.AreEqual( 44854, props.FileVersionMinor.Value );
+
+            Assert.IsNotNull( props.FileVersionBuild );
+            Assert.AreEqual( 3878, props.FileVersionBuild.Value );
+
+            Assert.IsNotNull( props.FileVersionRevision );
+            Assert.AreEqual( 63343, props.FileVersionRevision.Value );
+
+            Assert.AreEqual( expectedFileVersion, props.FileVersion );
+            Assert.AreEqual( expectedFileVersion, props.AssemblyVersion );
+            Assert.AreEqual( expectedFullBuildNumber, props.InformationalVersion );
+        }
+
+        [TestMethod]
+        [DataRow("netstandard2.0")]
+        [DataRow("net48")]
+        [DataRow("net8.0")]
+        public void PreReleaseFixOfZeroNotShownIfNumber( string targetFramework )
+        {
+            // NOT using BuildVersion.xml, all values set as globals to test handling of that
+            var globalProperties = new Dictionary<string,string>
+            {
+                ["BuildMajor"] = "20",
+                ["BuildMinor"] = "1",
+                ["BuildPatch"] = "5",
+                ["PreReleaseName"] = "delta",
+                ["PreReleaseNumber"] = "1",
+                ["PreReleaseFix"] = "0",
+                ["BuildTime"] = "2025-06-02T10:15:48-07:00", // Format typical of commit date time stamp
+                ["CiBuildName"] = "QRP", // Intentionally, not a standard value
+            };
+
+            // compute build index from the time stamp to get the expected value of the index
+            // Technically, this is const as the time stamp itself is a const, but this saves on
+            // "magic numbers" and allows easier updates to validate a different time stamp.
+            var parsedBuildTime = DateTime.Parse(globalProperties["BuildTime"], CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+            string expectedIndex = parsedBuildTime.ToBuildIndex();
+
+            using var collection = new ProjectCollection(globalProperties);
+            var (testProject, props) = CreateTestProjectAndInvokeTestedPackage(
+                targetFramework,
+                projectCollection: collection
+            );
+
+            // v20.1.5-delta.1 => 5.44854.3878.63540 [see: https://csemver.org/playground/site/#/]
+            // NOTE: CI build is +1 (FileVersionRevision)!
+            //
+            // NOTE: Since build index is based on time which is captured during build it
+            // is not possible to know 'a priori' what the value will be..., additionally, the
+            // CiBuildName is dependent on the environment. Other, tests validate the behavior of
+            // those with an explicit setting...
+            string expectedFullBuildNumber = $"20.1.5-delta.1.ci.{expectedIndex}.QRP";
+            string expectedShortNumber = $"20.1.5-d01.ci.{expectedIndex}.QRP";
+            string expectedFileVersion = "5.44854.3878.63541"; // CI Build (+1)
+
+            Assert.IsNotNull( props.BuildMajor, "should have a value set for 'BuildMajor'" );
+            Assert.AreEqual( 20u, props.BuildMajor.Value );
+
+            Assert.IsNotNull( props.BuildMinor, "should have a value set for 'BuildMinor'" );
+            Assert.AreEqual( 1u, props.BuildMinor.Value );
+
+            Assert.IsNotNull( props.BuildPatch, "should have a value set for 'BuildPatch'" );
+            Assert.AreEqual( 5, props.BuildPatch.Value );
+
+            Assert.IsNotNull( props.PreReleaseName, "should have a value set for 'PreReleaseName'" );
+            Assert.AreEqual( "delta", props.PreReleaseName );
+
+            Assert.IsNotNull( props.PreReleaseNumber, "Should have a value set for 'PreReleaseNumber'" );
+            Assert.AreEqual((UInt16)1u, props.PreReleaseNumber);
+
+            Assert.IsNotNull( props.PreReleaseFix, "Should have a value set for 'PreReleaseNumber'" );
+            Assert.AreEqual((UInt16)0u, props.PreReleaseFix);
+
+            Assert.AreEqual( expectedFullBuildNumber, props.FullBuildNumber );
+            Assert.AreEqual( expectedFullBuildNumber, props.PackageVersion );
+
+            Assert.AreEqual( globalProperties["BuildTime"], props.BuildTime );
+            Assert.AreEqual( expectedIndex, props.CiBuildIndex );
+
+            Assert.AreEqual( "QRP", props.CiBuildName );
+
+            Assert.IsNotNull( props.FileVersionMajor );
+            Assert.AreEqual( 5, props.FileVersionMajor.Value );
+
+            Assert.IsNotNull( props.FileVersionMinor );
+            Assert.AreEqual( 44854, props.FileVersionMinor.Value );
+
+            Assert.IsNotNull( props.FileVersionBuild );
+            Assert.AreEqual( 3878, props.FileVersionBuild.Value );
+
+            Assert.IsNotNull( props.FileVersionRevision );
+            Assert.AreEqual( 63541, props.FileVersionRevision.Value );
 
             Assert.AreEqual( expectedFileVersion, props.FileVersion );
             Assert.AreEqual( expectedFileVersion, props.AssemblyVersion );
@@ -363,7 +535,7 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             }
         }
 
-        private string CreateBuildVersionXml(
+        private string CreateBuildVersionXmlWithRandomName(
             int buildMajor,
             int buildMinor,
             int buildPatch,

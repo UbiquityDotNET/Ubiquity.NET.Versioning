@@ -168,7 +168,7 @@ namespace Ubiquity.NET.Versioning.Build.Tasks
                 orderedVersion += (ulong)PreReleaseFix;
             }
 
-            Log.LogMessage(MessageImportance.High, "orderedVersion={0}", orderedVersion);
+            Log.LogMessage(MessageImportance.Low, "orderedVersion={0}", orderedVersion);
 
             bool isCiBuild = !string.IsNullOrWhiteSpace(CiBuildIndex) && !string.IsNullOrWhiteSpace(CiBuildName);
             UInt64 fileVersion64 = (orderedVersion << 1) + (isCiBuild ? 1ul : 0ul);
@@ -183,10 +183,10 @@ namespace Ubiquity.NET.Versioning.Build.Tasks
             rem = (rem - FileVersionMinor.Value) / 65536;
             FileVersionMajor = (UInt16)(rem % 65536);
 
-            Log.LogMessage(MessageImportance.High, "FileVersionMajor={0}", FileVersionMajor);
-            Log.LogMessage(MessageImportance.High, "FileVersionMinor={0}", FileVersionMinor);
-            Log.LogMessage(MessageImportance.High, "FileVersionBuild={0}", FileVersionBuild);
-            Log.LogMessage(MessageImportance.High, "FileVersionRevision={0}", FileVersionRevision);
+            Log.LogMessage(MessageImportance.Low, "FileVersionMajor={0}", FileVersionMajor);
+            Log.LogMessage(MessageImportance.Low, "FileVersionMinor={0}", FileVersionMinor);
+            Log.LogMessage(MessageImportance.Low, "FileVersionBuild={0}", FileVersionBuild);
+            Log.LogMessage(MessageImportance.Low, "FileVersionRevision={0}", FileVersionRevision);
         }
 
         private bool ValidateInput( )

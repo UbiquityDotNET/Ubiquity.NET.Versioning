@@ -339,11 +339,11 @@ try
     $propGroupElement.AppendChild($fileVersionElement) | Out-Null
 
     $packageVersionElement = $xmlDoc.CreateElement('PackageVersion')
-    $packageVersionElement.InnerText = $csemVer.ToString($false,$true) # short form of version
+    $packageVersionElement.InnerText = $csemVer.ToString($false,$false) # long form of version (No metadata)
     $propGroupElement.AppendChild($packageVersionElement) | Out-Null
 
     $productVersionElement = $xmlDoc.CreateElement('ProductVersion')
-    $productVersionElement.InnerText = $csemVer.ToString($true, $false) # long form of version
+    $productVersionElement.InnerText = $csemVer.ToString($true, $false) # long form of version (With metadata)
     $propGroupElement.AppendChild($productVersionElement) | Out-Null
 
     $assemblyVersionElement = $xmlDoc.CreateElement('AssemblyVersion')

@@ -80,6 +80,10 @@ namespace Ubiquity.NET.Versioning
             return new Version( Major, Minor, Build, Revision );
         }
 
+        /// <summary>Converts this instance to a dotted string form</summary>
+        /// <returns>Formatted string</returns>
+        public override string ToString( ) => $"{Major}.{Minor}.{Build}.{Revision}";
+
         /// <summary>Converts a <see cref="Version"/> value to a <see cref="FileVersionQuad"/> if possible</summary>
         /// <param name="v">Version to convert</param>
         /// <returns>Resulting <see cref="FileVersionQuad"/></returns>

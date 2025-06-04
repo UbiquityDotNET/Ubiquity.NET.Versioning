@@ -12,6 +12,7 @@ using System.Linq;
 using System.Runtime.Loader;
 
 using Microsoft.Build.Evaluation;
+using Microsoft.Build.Utilities.ProjectCreation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Ubiquity.NET.Versioning;
@@ -51,100 +52,110 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             };
 
             // For a CI build load the ciBuildIndex and ciBuildName from the generatedversion.props file
-            // so the test knows what to expect. This does NOT verify the behavior of the tasks exactly unfortunately.
-            // There is a non-determinism in computing the index based on a time stamp in particular a single date/time
-            // string is converted based on seconds since midnight today (in UTC) so if two different implementations
-            // compute a value at a different time that varies by as much as 2 seconds, then they will produce different
-            // results even if behaving correctly. The use of seconds since midnight today makes it non-deterministic...
-            // Unfortunately that's the algorithm chosen, though since this is a major release (and a full rename that
-            // is something to re-visit) Until, that is deterministic, use the generated CI info all up. Other tests will
-            // need to validate the behavior of the task.
-            var (ciBuildIndex, ciBuildName, buildTime) = TestUtils.GetGeneratedCiBuildInfo();
-
-            // Build name depends on context of the build (Local, PR, CI, Release)
-            // and therefore is NOT hard-coded in the tests.
-            if(!string.IsNullOrWhiteSpace(ciBuildName))
+            // so the test knows what to expect.
+            var (ciBuildIndex, ciBuildName, buildTime, envControl) = TestUtils.GetGeneratedBuildInfo();
+            using(envControl)
             {
-                globalProperties["CiBuildName"] = ciBuildName;
-            }
-
-            if(!string.IsNullOrWhiteSpace(buildTime))
-            {
-                // NOT using exact parsing as that's 'flaky' at best and doesn't actually handle all ISO-8601 formats
-                // Also, NOT using assumption of UTC as commit dates from repo are local time based. ToBuildIndex() will
-                // convert to UTC so that the resulting index is still consistent.
-                var parsedBuildTime = DateTime.Parse(buildTime, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
-                string indexFromLib = parsedBuildTime.ToBuildIndex();
-                Assert.AreEqual(indexFromLib, ciBuildIndex, "Index computed with versioning library should match the index computed by scripts");
-
-                globalProperties["BuildTime"] = buildTime;
-            }
-
-            using var collection = new ProjectCollection(globalProperties);
-
-            var (buildResults, props) = Context.CreateTestProjectAndInvokeTestedPackage(targetFramework, collection);
-
-            string? taskAssembly = buildResults.Creator.ProjectInstance.GetOptionalProperty("_Ubiquity_NET_Versioning_Build_Tasks");
-            Assert.IsNotNull( taskAssembly, "Task assembly property should contain full path to the task DLL (Not NULL)" );
-            Context.WriteLine( $"Task Assembly: '{taskAssembly}'" );
-
-            Assert.IsFalse( string.IsNullOrWhiteSpace( taskAssembly ), "Task assembly property should contain full path to the task DLL (Not Whitespace)" );
-            Assert.IsNotNull( props.FileVersion, "Generated properties should have a 'FileVersion'" );
-            Context.WriteLine( $"Generated FileVersion: {props.FileVersion}" );
-
-            var alc = new AssemblyLoadContext("TestALC", isCollectible: true);
-            try
-            {
-                var asm = alc.LoadFromAssemblyPath(taskAssembly);
-                Assert.IsNotNull( asm, "should be able to load task assembly" );
-                var asmName = asm.GetName();
-                Version? asmVer = asmName.Version;
-                Assert.IsNotNull( asmVer, "Task assembly should have a version" );
-                Context.WriteLine( $"TaskAssemblyVersion: {asmVer}" );
-                Context.WriteLine( $"AssemblyName: {asmName}" );
-
-                Assert.IsNotNull( props.FileVersionMajor, "Property value for Major should exist" );
-                Assert.AreEqual( (int)props.FileVersionMajor, asmVer.Major, "Major value of assembly version should match" );
-
-                Assert.IsNotNull( props.FileVersionMinor, "Property value for Minor should exist" );
-                Assert.AreEqual( (int)props.FileVersionMinor, asmVer.Minor, "Minor value of assembly version should match" );
-
-                Assert.IsNotNull( props.FileVersionBuild, "Property value for Build should exist" );
-                Assert.AreEqual( (int)props.FileVersionBuild, asmVer.Build, "Build value of assembly version should match" );
-
-                Assert.IsNotNull( props.FileVersionRevision, "Property value for Revision should exist" );
-                Assert.AreEqual( (int)props.FileVersionRevision, asmVer.Revision, "Revision value of assembly version should match" );
-
-                // Release builds won't have a CI component by definition so nothing to validate for those
-                // Should get local, PR and CI builds before that to hit this case though.
                 if(!string.IsNullOrWhiteSpace(ciBuildIndex))
                 {
-                    Assert.AreEqual( ciBuildIndex, props.CiBuildIndex, "BuildIndex computed in scripts should match computed value from task");
+                    globalProperties["CiBuildIndex"] = ciBuildIndex;
                 }
 
-                // Test that AssemblyFileVersion on the task assembly matches expected value
-                string fileVersion = ( from attr in asm.CustomAttributes
-                                       where attr.AttributeType.FullName == "System.Reflection.AssemblyFileVersionAttribute"
-                                       let val = attr.ConstructorArguments.Single().Value as string
-                                       where val is not null
-                                       select val
-                                     ).Single();
+                // Build name depends on context of the build (Local, PR, CI, Release)
+                // and therefore is NOT hard-coded in the tests.
+                if(!string.IsNullOrWhiteSpace(ciBuildName))
+                {
+                    globalProperties["CiBuildName"] = ciBuildName;
+                }
 
-                Assert.AreEqual(props.FileVersion, fileVersion);
+                if(!string.IsNullOrWhiteSpace(buildTime))
+                {
+                    // NOT using exact parsing as that's 'flaky' at best and doesn't actually handle all ISO-8601 formats
+                    // Also, NOT using assumption of UTC as commit dates from repo are local time based. ToBuildIndex() will
+                    // convert to UTC so that the resulting index is still consistent.
+                    var parsedBuildTime = DateTime.Parse(buildTime, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+                    string indexFromLib = parsedBuildTime.ToBuildIndex();
+                    Assert.AreEqual(indexFromLib, ciBuildIndex, "Index computed with versioning library should match the index computed by scripts");
 
-                // Test that AssemblyInformationalVersion on the task assembly matches expected value
-                string informationalVersion = ( from attr in asm.CustomAttributes
-                                                where attr.AttributeType.FullName == "System.Reflection.AssemblyInformationalVersionAttribute"
-                                                let val = attr.ConstructorArguments.Single().Value as string
-                                                where val is not null
-                                                select val
-                                              ).Single();
+                    globalProperties["BuildTime"] = buildTime;
+                }
 
-                Assert.AreEqual(props.InformationalVersion, informationalVersion);
+                using var collection = new ProjectCollection(globalProperties);
+
+                var (buildResults, props) = Context.CreateTestProjectAndInvokeTestedPackage(targetFramework, collection);
+
+                LogBuildMessages(buildResults.Output);
+
+                string? taskAssembly = buildResults.Creator.ProjectInstance.GetOptionalProperty("_Ubiquity_NET_Versioning_Build_Tasks");
+                Assert.IsNotNull( taskAssembly, "Task assembly property should contain full path to the task DLL (Not NULL)" );
+                Context.WriteLine( $"Task Assembly: '{taskAssembly}'" );
+
+                Assert.IsFalse( string.IsNullOrWhiteSpace( taskAssembly ), "Task assembly property should contain full path to the task DLL (Not Whitespace)" );
+                Assert.IsNotNull( props.FileVersion, "Generated properties should have a 'FileVersion'" );
+                Context.WriteLine( $"Generated FileVersion: {props.FileVersion}" );
+
+                var alc = new AssemblyLoadContext("TestALC", isCollectible: true);
+                try
+                {
+                    var asm = alc.LoadFromAssemblyPath(taskAssembly);
+                    Assert.IsNotNull( asm, "should be able to load task assembly" );
+                    var asmName = asm.GetName();
+                    Version? asmVer = asmName.Version;
+                    Assert.IsNotNull( asmVer, "Task assembly should have a version" );
+                    Context.WriteLine( $"TaskAssemblyVersion: {asmVer}" );
+                    Context.WriteLine( $"AssemblyName: {asmName}" );
+
+                    Assert.IsNotNull( props.FileVersionMajor, "Property value for Major should exist" );
+                    Assert.AreEqual( (int)props.FileVersionMajor, asmVer.Major, "Major value of assembly version should match" );
+
+                    Assert.IsNotNull( props.FileVersionMinor, "Property value for Minor should exist" );
+                    Assert.AreEqual( (int)props.FileVersionMinor, asmVer.Minor, "Minor value of assembly version should match" );
+
+                    Assert.IsNotNull( props.FileVersionBuild, "Property value for Build should exist" );
+                    Assert.AreEqual( (int)props.FileVersionBuild, asmVer.Build, "Build value of assembly version should match" );
+
+                    Assert.IsNotNull( props.FileVersionRevision, "Property value for Revision should exist" );
+                    Assert.AreEqual( (int)props.FileVersionRevision, asmVer.Revision, "Revision value of assembly version should match" );
+
+                    // Release builds won't have a CI component by definition so nothing to validate for those
+                    // Should get local, PR and CI builds before that to hit this case though.
+                    if(!string.IsNullOrWhiteSpace(ciBuildIndex))
+                    {
+                        Assert.AreEqual( ciBuildIndex, props.CiBuildIndex, "BuildIndex computed in scripts should match computed value from task");
+                    }
+
+                    // Test that AssemblyFileVersion on the task assembly matches expected value
+                    string fileVersion = ( from attr in asm.CustomAttributes
+                                           where attr.AttributeType.FullName == "System.Reflection.AssemblyFileVersionAttribute"
+                                           let val = attr.ConstructorArguments.Single().Value as string
+                                           where val is not null
+                                           select val
+                                         ).Single();
+
+                    Assert.AreEqual(props.FileVersion, fileVersion);
+
+                    // Test that AssemblyInformationalVersion on the task assembly matches expected value
+                    string informationalVersion = ( from attr in asm.CustomAttributes
+                                                    where attr.AttributeType.FullName == "System.Reflection.AssemblyInformationalVersionAttribute"
+                                                    let val = attr.ConstructorArguments.Single().Value as string
+                                                    where val is not null
+                                                    select val
+                                                  ).Single();
+
+                    Assert.AreEqual(props.InformationalVersion, informationalVersion);
+                }
+                finally
+                {
+                    alc.Unload();
+                }
             }
-            finally
+        }
+
+        private void LogBuildMessages( BuildOutput output )
+        {
+            foreach(string msg in output.Messages.Low)
             {
-                alc.Unload();
+                Context.WriteLine("MSBUILD: {0}", msg);
             }
         }
     }

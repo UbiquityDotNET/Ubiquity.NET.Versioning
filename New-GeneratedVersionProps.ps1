@@ -196,8 +196,12 @@ class CSemVer
 
         $this.BuildMetadata = $buildVersionData['BuildMetadata']
 
-        $this.CiBuildName = $buildVersionData['CiBuildName'];
-        $this.CiBuildIndex = $buildVersionData['CiBuildIndex'];
+        if( ![string]::IsNullOrEmpty( $buildVersionData["CiBuildIndex"] ) -and ![string]::IsNullOrEmpty( $buildVersionData["CiBuildIndex"] ) )
+        {
+            $this.CiBuildName = $buildVersionData['CiBuildName'];
+            $this.CiBuildIndex = $buildVersionData['CiBuildIndex'];
+        }
+
 
         if( (![string]::IsNullOrEmpty( $this.CiBuildName )) -and [string]::IsNullOrEmpty( $this.CiBuildIndex ) )
         {
@@ -353,6 +357,13 @@ try
     $informationalVersionElement = $xmlDoc.CreateElement('InformationalVersion')
     $informationalVersionElement.InnerText = $csemVer.ToString($true, $false) # long form of version
     $propGroupElement.AppendChild($informationalVersionElement) | Out-Null
+
+    # inform unit testing of the environment as the env vars are NOT accessible to the tests
+    # Sadly, the `dotnet test` command does not spawn the tests with an inherited environment.
+    # So they cannot know what the scenario is.
+    $buildKindElement = $xmlDoc.CreateElement('BuildKind')
+    $buildKindElement.InnerText = $buildKind
+    $propGroupElement.AppendChild($buildKindElement) | Out-Null
 
     # Unit tests need to see the CI build info as it isn't something they can determine on their own.
     # The Build index is based on a timestamp and the build name depends on the runtime environment

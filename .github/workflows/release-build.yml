@@ -36,9 +36,10 @@ jobs:
         run: ./Invoke-Tests.ps1
 
       - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action/windows@v2
+        uses: actions/upload-artifact@v4
         with:
-          files: BuildOutput/Test-Results/*.trx
+          name: test-results
+          path: BuildOutput/Test-Results/*.trx
 
       - name: Publish Artifacts
         uses: actions/upload-artifact@v4
@@ -48,6 +49,9 @@ jobs:
 
       - name: Show asset names
         run: dir BuildOutput/Nuget
+
+      - name: Build Docs
+        run: ./Build-Docs.ps1
 
       - name: Commit Docs
         env:
@@ -63,9 +67,10 @@ jobs:
           branch: gh-pages
 
       - name: Publish packages to NuGet.org
-        run: dir .\BuildOutput\NuGet\*.nupkg | .\Push-Nuget.ps1 -apiKey ${{ secrets.NUGETPUSH_ACCESS_TOKEN }}
+        run: dotnet nuget push .\BuildOutput\NuGet\*.nupkg -k ${{ secrets.NUGETPUSH_ACCESS_TOKEN }} -s 'https://api.nuget.org/v3/index.json' --skip-duplicate
 
       - name: Create Release
+        if: (!cancelled())
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref }}

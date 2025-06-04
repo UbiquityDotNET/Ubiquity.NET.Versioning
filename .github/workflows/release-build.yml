@@ -36,9 +36,10 @@ jobs:
         run: ./Invoke-Tests.ps1
 
       - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action/windows@v2
+        uses: actions/upload-artifact@v4
         with:
-          files: BuildOutput/Test-Results/*.trx
+          name: test-results
+          path: BuildOutput/Test-Results/*.trx
 
       - name: Publish Artifacts
         uses: actions/upload-artifact@v4

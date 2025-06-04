@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>About | Ubiquity.NET </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="About | Ubiquity.NET ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/UbiquityDotNET/Llvm.NET/blob/develop/docfx/build-tasks/index.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../llvm/DragonSharp48x48.png" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+        </div>
+
+        <article data-uid="">
+<h1 id="about">About</h1>
+
+<p>The Ubiquity.NET.Versioning.Build.Tasks package provides automated support for build versioning
+using a Constrained Semantic Version (<a href="https://csemver.org/">CSemVer</a>).</p>
+<div class="WARNING">
+<h5>Warning</h5>
+<p>As a <a href="https://learn.microsoft.com/en-us/dotnet/core/compatibility/sdk/8.0/source-link">Breaking change in .NET SDK 8</a>
+is now setting the build meta data for the <code>InformationalVersion</code> property without user
+consent. (A Highly controversial choice that was more easily handled via an OPT-IN pattern)
+Unfortunately, this was set ON by default and made into an 'OPT-OUT' scenario. This library
+will honor such a setting and does not alter/interfere with it in any way. (Though the results
+can, unfortunately, produce surprising behavior).</p>
+<p>If you wish to disable this behavior you can set an MSBUILD property to OPT-OUT as follows:<br>
+<code>&lt;IncludeSourceRevisionInInformationalVersion&gt;false&lt;/IncludeSourceRevisionInInformationalVersion&gt;</code></p>
+<p>This choice of ignoring the additional data is considered to have the least impact on those
+who are aware of the change and those who use this library to set an explicit build meta data
+string. (Principle of least surprise for what this library can control).</p>
+<p>The default .NET build behavior is to use the Repository ID (usually a GIT commit hash).
+This is appended with a leading <code>+</code> if one isn't already in the <code>InformationalVersion</code>
+property. If build metadata is already included (Like from use of this task) the id is
+appended using a <code>.</code> instead. So it is ALWAYS appended unless the project has opted out of
+this behavior by setting the property as previously described.</p>
+<p>Thus, it is <em><strong>strongly recommended</strong></em> that projects using this package OPT-OUT
+of the new behavior.</p>
+</div>
+<h2 id="overview">Overview</h2>
+<p>Officially, SemVer 2.0 doesn't consider or account for publicly available CI builds.
+SemVer is only concerned with official releases. This makes CI builds producing
+versioned packages challenging. Fortunately, someone has already defined a solution
+to using SemVer in a specially constrained way to ensure compatibility, while also
+allowing for automated CI builds. These new versions are called a <a href="http://csemver.org">Constrained Semantic
+Version</a> (CSemVer).</p>
+<p>A CSemVer is unique for each CI build and always increments while still supporting official
+releases. In the real world there are often cases where there are additional builds that are distinct from
+official releases and CI builds. Including Local developer builds, builds generated from a Pull
+Request (a.k.a Automated buddy build). CSemVer doesn't explicitly define any format for these
+cases. So this library defines a pattern of versioning that is fully compatible with CSemVer and
+allows for the additional build types in a way that retains precedence having the least
+surprising consequences. In particular, local build packages have a higher precedence than CI or
+release versions if all other components of the version match. This ensures that what you are
+building includes the dependent packages you just built instead of the last one released
+publicly.</p>
+<p>The following is a list of the version formats in descending order of precedence:</p>
+<table>
+<thead>
+<tr>
+<th>Build Type</th>
+<th>Format</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Local build</td>
+<td><code>{BuildMajor}.{BuildMinor}.{BuildPatch}--ci-{CiBuildIndex}-ZZZ+{BuildMeta}</code></td>
+</tr>
+<tr>
+<td>Pull Request</td>
+<td><code>{BuildMajor}.{BuildMinor}.{BuildPatch}--ci-{CiBuildIndex}-PRQ+{BuildMeta}</code></td>
+</tr>
+<tr>
+<td>Official CI builds</td>
+<td><code>{BuildMajor}.{BuildMinor}.{BuildPatch}--ci-{CiBuildIndex}-BLD+{BuildMeta}</code></td>
+</tr>
+<tr>
+<td>Official PreRelease</td>
+<td><code>{BuildMajor}.{BuildMinor}.{BuildPatch}-{PreReleaseName}[.PreReleaseNumber][.PreReleaseFix]+{BuildMeta}</code></td>
+</tr>
+<tr>
+<td>Official Release</td>
+<td><code>{BuildMajor}.{BuildMinor}.{BuildPatch}+{BuildMeta}</code></td>
+</tr>
+</tbody>
+</table>
+<p>This project provides an MSBUILD task to automate the generation of these versions in an easy
+to use NuGet Package.</p>
+<p>The package creates File and Assembly Versions and defines the appropriate MsBuild properties
+so the build will automatically incorporate them.</p>
+<blockquote>
+<p><strong>NOTE:</strong><br>
+The automatic use of MsBuild properties requires using the new SDK attribute support for .NET
+projects. Where the build auto generates the assembly info. If you are using some other means to
+auto generate the assembly level versioning attributes. You can use the properties generated by
+this package to generate the attributes.</p>
+</blockquote>
+<p>File and AssemblyVersions are computed based on the CSemVer &quot;Ordered version&quot;, which
+is a 64 bit value that maps to a standard windows FILEVERSION Quad with each part
+consuming 16 bits. This ensures a strong relationship between the  assembly/file versions
+and the packages as well as ensures that CI builds can function properly. Furthermore, this
+guarantees that each build has a different file and assembly version so that strong name
+signing functions properly to enable loading different versions in the same process.</p>
+<p>The Major, Minor and Patch versions are only updated in the primary branch at the time
+of a release. This ensures the concept that SemVer versions define released products. The
+version numbers used are stored in the repository in the BuildVersion.xml</p>
+<h2 id="properties-used-to-determine-the-version">Properties used to determine the version</h2>
+<p>CSemVer.Build uses MSBuild properties to determine the final version number.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Default Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BuildMajor</td>
+<td>Read from BuildVersion.xml</td>
+<td>Major portion of the build number</td>
+</tr>
+<tr>
+<td>BuildMinor</td>
+<td>Read from BuildVersion.xml</td>
+<td>Minor portion of the build number</td>
+</tr>
+<tr>
+<td>BuildPatch</td>
+<td>Read from BuildVersion.xml</td>
+<td>Patch portion of the build number</td>
+</tr>
+<tr>
+<td>PreReleaseName</td>
+<td><code>&lt;Undefined&gt;</code> or value read from BuildVersion.xml if present</td>
+<td>PreRelease Name of the CSemVer</td>
+</tr>
+<tr>
+<td>PreReleaseNumber</td>
+<td><code>&lt;Undefined&gt;</code> or value read from BuildVersion.xml if present</td>
+<td>PreRelease Number of the CSemVer</td>
+</tr>
+<tr>
+<td>PreReleaseFix</td>
+<td><code>&lt;Undefined&gt;</code> or value read from BuildVersion.xml if present</td>
+<td>PreRelease Fix of the CSemVer</td>
+</tr>
+<tr>
+<td>BuildMeta</td>
+<td><code>&lt;undefined&gt;</code></td>
+<td>Build meta for the version</td>
+</tr>
+<tr>
+<td>CiBuildIndex</td>
+<td>ISO 8601 formated UTC time-stamp for the build or the commit ID for automated builds</td>
+<td>Provides a unique build to build value guaranteed to increase with each build</td>
+</tr>
+<tr>
+<td>CiBuildName</td>
+<td><code>&lt;see notes&gt;</code></td>
+<td>CSemVer CI name</td>
+</tr>
+<tr>
+<td>PackageVersionUsesShortForm</td>
+<td><code>&lt;Undefined&gt;</code> =&gt; false</td>
+<td>Determines if the PackageVersion is set to the short form for legacy NuGet clients</td>
+</tr>
+<tr>
+<td>GeneratedVersionInfoHeader</td>
+<td><code>&lt;undefined&gt;</code></td>
+<td>Full path of the header file to generate [No header generated if not set] [Only applies to a VCXPROJ file ]</td>
+</tr>
+<tr>
+<td>GenerateAssemblyInfo</td>
+<td><code>&lt;undefined&gt;</code></td>
+<td>If set, creates <code>$(IntermediateOutputPath)AssemblyVersionInfo.g.cs</code> and includes it for compilation. Used for legacy CSPROJ files as new SDK projects handle this automatically now</td>
+</tr>
+</tbody>
+</table>
+<h3 id="cibuildname">CiBuildName</h3>
+<p>Unless explicitly provided, the CiBuildName is determined by a set of properties that indicate
+the nature of the build. The properties used (in evaluation order) are:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Default Value</th>
+<th>CiBuildName</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IsPullRequestBuild</td>
+<td><code>&lt;Undefined&gt;</code></td>
+<td><code>PRQ</code> if true</td>
+<td>Used to indicate if the build is from a pull request</td>
+</tr>
+<tr>
+<td>IsAutomatedBuild</td>
+<td><code>&lt;Undefined&gt;</code></td>
+<td><code>BLD</code> if true</td>
+<td>Used to indicate if the build is an automated build</td>
+</tr>
+<tr>
+<td>IsReleaseBuild</td>
+<td><code>&lt;Undefined&gt;</code></td>
+<td><code>ZZZ</code> if !true</td>
+<td>Used to indicate if the build is an official release build</td>
+</tr>
+</tbody>
+</table>
+<p>These three values are determined by the automated build in some form. These are either explicit
+variables set for the build definition or determined on the fly based on values set by the build.
+Commonly a <code>directory.build.props</code> for a repository will specify these. The following is an
+example for setting them based on an AppVeyor build in the <code>Directory.Build.props</code> file:</p>
+<pre><code class="lang-xml">&lt;PropertyGroup&gt;
+    &lt;!-- If running in APPVEYOR it is an automated build --&gt;
+    &lt;IsAutomatedBuild Condition=&quot;'$(IsAutomatedBuild)'=='' AND '$(APPVEYOR)'!=''&quot;&gt;true&lt;/IsAutomatedBuild&gt;
+    &lt;IsAutomatedBuild Condition=&quot;'$(IsAutomatedBuild)'==''&quot;&gt;false&lt;/IsAutomatedBuild&gt;
+
+    &lt;!-- If it has a PR number associated it is a PR build --&gt;
+    &lt;IsPullRequestBuild Condition=&quot;'$(IsPullRequestBuild)'=='' AND '$(APPVEYOR_PULL_REQUEST_NUMBER)'!=''&quot;&gt;true&lt;/IsPullRequestBuild&gt;
+    &lt;IsPullRequestBuild Condition=&quot;'$(IsPullRequestBuild)'==''&quot;&gt;false&lt;/IsPullRequestBuild&gt;
+
+    &lt;!-- Tags applied without a PR are release builds --&gt;
+    &lt;IsReleaseBuild Condition=&quot;'$(IsReleaseBuild)'=='' AND '$(APPVEYOR_REPO_TAG)'=='true' AND '$(APPVEYOR_PULL_REQUEST_NUMBER)'==''&quot;&gt;true&lt;/IsReleaseBuild&gt;
+    &lt;IsReleaseBuild Condition=&quot;'$(IsReleaseBuild)'==''&quot;&gt;false&lt;/IsReleaseBuild&gt;
+&lt;/PropertyGroup&gt;
+</code></pre>
+<h3 id="packageversionusesshortform">PackageVersionUsesShortForm</h3>
+<p>The MSBuild Property <code>PackageVersionUsesShortForm</code> is used by the task to determine the format to use for the
+<code>PackageVersion</code> property. The default is to use the long form supported by modern NuGet clients, however if your are
+in need of the legacy format support a project may set this property to <code>true</code> to observe the legacy behavior.</p>
+<h2 id="buildversionxml">BuildVersion.xml</h2>
+<p>If the MSBuild property <code>BuildMajor</code> is not set, then the base build version is read from the
+repository file specified in the BuildVersion.xml, typically this is located at the root of a
+repository so that any child projects share the same versioning information. The location of
+the file is specified by an MSBuild property <code>BuildVersionXml</code>. The contents of the file are
+fairly simple and only requires a single <code>BuildVersionData</code> element with a set of attributes.
+The available attributes are:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BuildMajor</td>
+<td>Major portion of the build number</td>
+</tr>
+<tr>
+<td>BuildMinor</td>
+<td>Minor portion of the build number</td>
+</tr>
+<tr>
+<td>BuildPatch</td>
+<td>Patch portion of the build number</td>
+</tr>
+<tr>
+<td>PreReleaseName</td>
+<td>PreRelease Name of the CSemVer</td>
+</tr>
+<tr>
+<td>PreReleaseNumber</td>
+<td>PreRelease Number of the CSemVer</td>
+</tr>
+<tr>
+<td>PreReleaseFix</td>
+<td>PreRelease Fix of the CSemVer</td>
+</tr>
+</tbody>
+</table>
+<p>Only the Major, minor and Patch numbers are required.
+Example:</p>
+<pre><code class="lang-xml">&lt;BuildVersionData
+    BuildMajor = &quot;5&quot;
+    BuildMinor = &quot;0&quot;
+    BuildPatch = &quot;0&quot;
+    PreReleaseName = &quot;alpha&quot;
+/&gt;
+</code></pre>
+<h2 id="generated-properties">Generated Properties</h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BuildTime</td>
+<td>Set to the current time (UTC ISO-8601 format) if not already set by build tooling)</td>
+</tr>
+<tr>
+<td>IsAutomatedBuild</td>
+<td>Automated build system value to indicate this is an automated build</td>
+</tr>
+<tr>
+<td>IsPullRequestBuild</td>
+<td>Automated build system value to indicate this is a build for an untrusted PR</td>
+</tr>
+<tr>
+<td>IsReleaseBuild</td>
+<td>Automated build system value to indicate this is an official release build (No CI information)</td>
+</tr>
+<tr>
+<td>CiBuildName</td>
+<td>If not set externally, this is set based on the kind of build</td>
+</tr>
+<tr>
+<td>CiBuildIndex</td>
+<td>If not set externally, this is set based on the $(BuildTime) property by parsing the ISO-8601 string and computing an index from that</td>
+</tr>
+<tr>
+<td>BuildMajor</td>
+<td>Major portion of the build; If not set externally, this is set based on the information in the $(BuildVersionXml) file</td>
+</tr>
+<tr>
+<td>BuildMinor</td>
+<td>Minor portion of the build; If not set externally, this is set based on the information in the $(BuildVersionXml) file</td>
+</tr>
+<tr>
+<td>BuildPatch</td>
+<td>Patch portion of the build; If not set externally, this is set based on the information in the $(BuildVersionXml) file</td>
+</tr>
+<tr>
+<td>PreReleaseName</td>
+<td>PreRelease Name for the build [Optional]; If not set externally, this is set based on the information in the $(BuildVersionXml) file, which may not include a value for this</td>
+</tr>
+<tr>
+<td>PreReleaseNumber</td>
+<td>PreRelease Number for the build [Optional]; If not set externally, this is set based on the information in the $(BuildVersionXml) file, which may not include a value for this</td>
+</tr>
+<tr>
+<td>PreReleaseFix</td>
+<td>PreRelease Fix for the build [Optional]; If not set externally, this is set based on the information in the $(BuildVersionXml) file, which may not include a value for this</td>
+</tr>
+<tr>
+<td>FullBuildNumber</td>
+<td>String form of the full CSemVer value for a build</td>
+</tr>
+<tr>
+<td>ShortBuildNumber</td>
+<td>Short form of the CSemVer for use with legacy NuGet clients (Modern clients support the full name)</td>
+</tr>
+<tr>
+<td>FileVersionMajor</td>
+<td>Major portion of the FileVersion number (Used for vcxproj files to generate the version header)</td>
+</tr>
+<tr>
+<td>FileVersionMinor</td>
+<td>Minor portion of the FileVersion number (Used for vcxproj files to generate the version header)</td>
+</tr>
+<tr>
+<td>FileVersionBuild</td>
+<td>Build portion of the FileVersion number (Used for vcxproj files to generate the version header)</td>
+</tr>
+<tr>
+<td>FileVersionRevision</td>
+<td>Revision portion of the FileVersion number (Used for vcxproj files to generate the version header)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="buildtime">BuildTime</h3>
+<p>Ordinarily this is set for an entire solution by build scripting to ensure that all components using this
+build task report the same version number. If it is not set the current time at the moment of property evaluation
+for a project is used. This will result in a distinct CI version for each project in a solution. Whether, that
+is desired or not is left for the consumer. If it is not desired, then a centralized setting as a build property
+or environment variable is warranted.</p>
+<h2 id="automated-build-flags">Automated build flags</h2>
+<p><code>IsAutomatedBuild</code>, <code>IsPullRequestBuild</code>, and <code>IsReleaseBuild</code> are normally set by an automated build script/action
+based on the build environment used and aid in determining the CI build name as previously described in
+<a href="#cibuildname">CiBuildName</a>.</p>
+<h2 id="cibuildname-1">CiBuildName</h2>
+<p>If not explicitly set this is determined by the automated build flags as described in the <a href="#cibuildname">CiBuildName</a>
+section of this document.</p>
+<h2 id="detected-error-conditions">Detected Error Conditions</h2>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CSM001</td>
+<td>BuildMajor is a required property, either set it as a global or in the build version XML</td>
+</tr>
+<tr>
+<td>CSM002</td>
+<td>BuildMinor is a required property, either set it as a global or in the build version XML</td>
+</tr>
+<tr>
+<td>CSM003</td>
+<td>BuildPatch is a required property, either set it as a global or in the build version XML</td>
+</tr>
+<tr>
+<td>CSM004</td>
+<td>FileVersion property not provided AND FileVersionMajor property not found to create it from</td>
+</tr>
+<tr>
+<td>CSM005</td>
+<td>FileVersion property not provided AND FileVersionMinor property not found to create it from</td>
+</tr>
+<tr>
+<td>CSM006</td>
+<td>FileVersion property not provided AND FileVersionBuild property not found to create it from</td>
+</tr>
+<tr>
+<td>CSM007</td>
+<td>FileVersion property not provided AND FileVersionRevision property not found to create it from</td>
+</tr>
+</tbody>
+</table>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/UbiquityDotNET/Llvm.NET/blob/develop/docfx/build-tasks/index.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Copyright (C) 2017-2025, Ubiquity.NET Contributors
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

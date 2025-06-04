@@ -50,6 +50,9 @@ jobs:
       - name: Show asset names
         run: dir BuildOutput/Nuget
 
+      - name: Build Docs
+        run: ./Build-Docs.ps1
+
       - name: Commit Docs
         env:
           docspush_email: 32618965+cibuild-telliam@users.noreply.github.com

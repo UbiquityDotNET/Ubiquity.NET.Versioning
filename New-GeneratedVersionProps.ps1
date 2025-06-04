@@ -196,6 +196,12 @@ class CSemVer
 
         $this.BuildMetadata = $buildVersionData['BuildMetadata']
 
+        if( ![string]::IsNullOrEmpty( $buildVersionData["CiBuildIndex"] ) -and ![string]::IsNullOrEmpty( $buildVersionData["CiBuildIndex"] ) )
+        {
+            $this.CiBuildName = $buildVersionData['CiBuildName'];
+            $this.CiBuildIndex = $buildVersionData['CiBuildIndex'];
+        }
+
 
         if( (![string]::IsNullOrEmpty( $this.CiBuildName )) -and [string]::IsNullOrEmpty( $this.CiBuildIndex ) )
         {
@@ -205,12 +211,6 @@ class CSemVer
         if( (![string]::IsNullOrEmpty( $this.CiBuildIndex )) -and [string]::IsNullOrEmpty( $this.CiBuildName ) )
         {
             throw 'CiBuildName is required if CiBuildIndex is provided';
-        }
-
-        if( ![string]::IsNullOrEmpty( $this.CiBuildIndex ) -and ![string]::IsNullOrEmpty( $this.CiBuildName ) )
-        {
-            $this.CiBuildName = $buildVersionData['CiBuildName'];
-            $this.CiBuildIndex = $buildVersionData['CiBuildIndex'];
         }
 
         $this.OrderedVersion = [CSemVer]::GetOrderedVersion($this.Major, $this.Minor, $this.Patch, $this.PreReleaseVersion)
@@ -382,6 +382,7 @@ try
         $ciBuildNameElement.InnerText = $verInfo['CiBuildName']
         $propGroupElement.AppendChild($ciBuildNameElement) | Out-Null
     }
+
     $buildGeneratedPropsPath = Join-Path $buildInfo['RepoRootPath'] 'GeneratedVersion.props'
     $xmlDoc.Save($buildGeneratedPropsPath)
 }

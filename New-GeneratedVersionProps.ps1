@@ -358,6 +358,13 @@ try
     $informationalVersionElement.InnerText = $csemVer.ToString($true, $false) # long form of version
     $propGroupElement.AppendChild($informationalVersionElement) | Out-Null
 
+    # inform unit testing of the environment as the env vars are NOT accessible to the tests
+    # Sadly, the `dotnet test` command does not spawn the tests with an inherited environment.
+    # So they cannot know what the scenario is.
+    $buildKindElement = $xmlDoc.CreateElement('BuildKind')
+    $buildKindElement.InnerText = $buildKind
+    $propGroupElement.AppendChild($buildKindElement) | Out-Null
+
     # Unit tests need to see the CI build info as it isn't something they can determine on their own.
     # The Build index is based on a timestamp and the build name depends on the runtime environment
     # to set some env vars etc...
@@ -375,7 +382,6 @@ try
         $ciBuildNameElement.InnerText = $verInfo['CiBuildName']
         $propGroupElement.AppendChild($ciBuildNameElement) | Out-Null
     }
-
     $buildGeneratedPropsPath = Join-Path $buildInfo['RepoRootPath'] 'GeneratedVersion.props'
     $xmlDoc.Save($buildGeneratedPropsPath)
 }

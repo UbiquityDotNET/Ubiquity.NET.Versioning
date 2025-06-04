@@ -14,6 +14,8 @@ using Microsoft.Build.Execution;
 using Microsoft.Build.Utilities.ProjectCreation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using Ubiquity.NET.Versioning;
+
 namespace Ubiquity.Versioning.Build.Tasks.UT
 {
     [SuppressMessage( "StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Simple record used here" )]
@@ -40,6 +42,12 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             return !string.IsNullOrWhiteSpace(ctx.TestRunDirectory)
                    ? Path.GetFullPath( Path.Combine( ctx.TestRunDirectory, "..", "..", ".." ) )
                    : throw new InvalidOperationException("Context.TestRunDirectory is not available");
+        }
+
+        internal static ParsedBuildVersionXml ParseRepoBuildVersionXml(this TestContext ctx)
+        {
+            string buildVersionXmlPath = Path.Combine(GetRepoRoot(ctx), "BuildVersion.xml");
+            return ParsedBuildVersionXml.ParseFile(buildVersionXmlPath);
         }
 
         internal static VersioningProjectBuildResults CreateTestProjectAndInvokeTestedPackage(
@@ -83,9 +91,15 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
                 throw new InvalidOperationException("TestName is not available!");
             }
 
+            // Build a package version that matches the current repository core version
+            // this prevents the build from pulling these packages from public NUGET.
+            // An alternative might be to update the NuGet config with restricted via source mapping
+            // but that's not currently supported in the PackageR
+            var repoBuildVersion = ParseRepoBuildVersionXml(ctx);
+            string packageVersion = $"{repoBuildVersion.BuildMajor}.{repoBuildVersion.BuildMinor}.{repoBuildVersion.BuildPatch}-*";
             string projectPath = Path.Combine( ctx.TestResultsDirectory, $"{nameof(BuildTaskTests)}-{ctx.TestName}-{targetFramework}.csproj");
             var project = ProjectCreator.Templates
-                                        .VersioningProject(targetFramework, customAction: action, projectCollection: projectCollection )
+                                        .VersioningProject(targetFramework, packageVersion, customAction: action, projectCollection: projectCollection )
                                         .Save( projectPath )
                                         .TryBuild(
                                             restore: true,

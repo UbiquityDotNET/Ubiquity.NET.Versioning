@@ -20,6 +20,7 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         public static ProjectCreator VersioningProject(
             this ProjectCreatorTemplates templates,
             string targetFramework,
+            string packageVersion,
             Action<ProjectCreator>? customAction = null,
             string? path = null,
             string? defaultTargets = null,
@@ -45,7 +46,7 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
                                 projectCollection,
                                 projectFileOptions,
                                 globalProperties
-                                ).ItemPackageReference(PackageUnderTestId, version: "5.0.0-*", privateAssets: "All")
+                                ).ItemPackageReference(PackageUnderTestId, version: packageVersion, privateAssets: "All")
                                  .Property("Nullable", "disable")
                                  .Property("ManagePackageVersionsCentrally", "false")
                                  .Property("ImplicitUsings","disable")

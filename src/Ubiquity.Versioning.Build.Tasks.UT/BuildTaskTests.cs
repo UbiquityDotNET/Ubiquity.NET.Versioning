@@ -43,7 +43,8 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             };
 
             using var collection = new ProjectCollection(globalProperties);
-            var (_, props) = Context.CreateTestProjectAndInvokeTestedPackage(targetFramework, collection);
+            var (buildResults, props) = Context.CreateTestProjectAndInvokeTestedPackage(targetFramework, collection);
+            Assert.IsTrue(buildResults.Success);
 
             // v20.1.4-alpha => 5.44854.3875.59946 [see: https://csemver.org/playground/site/#/]
             // NOTE: CI build is +1 (FileVersionRevision)!
@@ -116,7 +117,8 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
 
             using var collection = new ProjectCollection(globalProperties);
 
-            var (_, props) = Context.CreateTestProjectAndInvokeTestedPackage(targetFramework, collection);
+            var (buildResults, props) = Context.CreateTestProjectAndInvokeTestedPackage(targetFramework, collection);
+            Assert.IsTrue(buildResults.Success);
 
             // v20.1.5 => 5.44854.3880.52268 [see: https://csemver.org/playground/site/#/]
             // NOTE: CI build is +1 (FileVersionRevision)!
@@ -193,7 +195,8 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             string expectedIndex = parsedBuildTime.ToBuildIndex();
 
             using var collection = new ProjectCollection(globalProperties);
-            var (_, props) = Context.CreateTestProjectAndInvokeTestedPackage(targetFramework, collection);
+            var (buildResults, props) = Context.CreateTestProjectAndInvokeTestedPackage(targetFramework, collection);
+            Assert.IsTrue(buildResults.Success);
 
             // v20.1.5-delta.0.1 => 5.44854.3878.63342 [see: https://csemver.org/playground/site/#/]
             // NOTE: CI build is +1 (FileVersionRevision)!
@@ -275,7 +278,8 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             string expectedIndex = parsedBuildTime.ToBuildIndex();
 
             using var collection = new ProjectCollection(globalProperties);
-            var (_, props) = Context.CreateTestProjectAndInvokeTestedPackage(targetFramework, collection);
+            var (buildResults, props) = Context.CreateTestProjectAndInvokeTestedPackage(targetFramework, collection);
+            Assert.IsTrue(buildResults.Success);
 
             // v20.1.5-delta.1 => 5.44854.3878.63540 [see: https://csemver.org/playground/site/#/]
             // NOTE: CI build is +1 (FileVersionRevision)!
@@ -384,7 +388,8 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             }
 
             using var collection = new ProjectCollection(globalProperties);
-            var (_, props) = Context.CreateTestProjectAndInvokeTestedPackage("net8.0", collection);
+            var (buildResults, props) = Context.CreateTestProjectAndInvokeTestedPackage("net8.0", collection);
+            Assert.IsTrue(buildResults.Success);
 
             FileVersionQuad expectedFileVersion = ExpectedFileVersion(isPreRelease, isCiBuild);
 

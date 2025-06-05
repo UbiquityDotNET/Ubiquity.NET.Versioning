@@ -60,6 +60,7 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             var resolveResults = ctx.CreateAndResolveTestProject( targetFramework, action, projectCollection );
             if (!resolveResults.Success)
             {
+                LogBuildErrors(ctx, resolveResults.Output);
                 return new(resolveResults, default);
             }
 
@@ -67,6 +68,10 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             var (result, output) = resolveResults.Creator.ProjectInstance.Build("PrepareVersioningForBuild");
             Assert.IsNotNull( result );
             Assert.IsNotNull( result.ProjectStateAfterBuild );
+            if (result.OverallResult != BuildResultCode.Success)
+            {
+                LogBuildErrors(ctx, output);
+            }
 
             return new(
                 new ProjectBuildResults(resolveResults.Creator, output,  result.OverallResult == BuildResultCode.Success),

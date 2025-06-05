@@ -83,8 +83,8 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
                 using var collection = new ProjectCollection(globalProperties);
 
                 var (buildResults, props) = Context.CreateTestProjectAndInvokeTestedPackage(targetFramework, collection);
-
                 LogBuildMessages(buildResults.Output);
+                Assert.IsTrue(buildResults.Success);
 
                 string? taskAssembly = buildResults.Creator.ProjectInstance.GetOptionalProperty("_Ubiquity_NET_Versioning_Build_Tasks");
                 Assert.IsNotNull( taskAssembly, "Task assembly property should contain full path to the task DLL (Not NULL)" );

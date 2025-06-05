@@ -21,8 +21,21 @@ namespace Ubiquity.NET.Versioning
     /// <para>A standard .NET <see cref="Version"/> is very similar except that the bit width of each
     /// field is larger AND they are signed values. That is, every <see cref="FileVersionQuad"/> can
     /// produce a valid .NET <see cref="Version"/>. However, not every <see cref="Version"/> can result
-    /// in a valid <see cref="FileVersionQuad"/>.
+    /// in a valid <see cref="FileVersionQuad"/>.</para>
+    /// <para>A file version is a quad of 4 <see cref="UInt16"/> values. This is convertible to a <see cref="UInt64"/> in the
+    /// following pattern:
+    /// (bits are numbered with MSB as the highest numeric value [Actual byte ordering depends on platform endianess])
+    /// <list type="table">
+    ///     <listheader><term>Field</term><term>Description</term></listheader>
+    ///     <item><term>bits 48-63</term><description> Major part of Build number</description></item>
+    ///     <item><term>bits 32-47</term><description> Minor part of Build number</description></item>
+    ///     <item><term>bits 16-31</term><description> Build part of Build number</description></item>
+    ///     <item><term>bits 0-15</term><description> Revision part of Build number (Odd Numbers indicate a CI build)</description></item>
+    /// </list>
     /// </para>
+    /// <para>A file version cast as a <see cref="UInt64"/> is <i><b>NOT</b></i> the same as an Ordered version number.
+    /// The file version includes a "bit" for the status as a CI Build. Thus, a "file version" as a <see cref="UInt64"/> is the
+    /// ordered version shifted left by one bit and the LSB indicates if it is a CI build</para>
     /// </remarks>
     public readonly record struct FileVersionQuad( UInt16 Major, UInt16 Minor, UInt16 Build, UInt16 Revision )
         : IComparable<FileVersionQuad>

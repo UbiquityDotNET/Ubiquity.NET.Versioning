@@ -49,7 +49,7 @@ namespace Ubiquity.NET.Versioning
         /// <param name="formatProvider">[ignored] formatting uses a well-known pattern that is independent of any localization</param>
         /// <returns>String format of the build information</returns>
         /// <remarks>
-        /// This API Always supports two distinct format options based on the CSemVer-CI spec.
+        /// This API supports two distinct format options based on the CSemVer-CI spec.
         /// <list>
         /// <item><term>P</term><description>Pre-release format using a single '.' as the leading delimiter</description></item>
         /// <item><term>R</term><description>Release format using a double dash '--' as the leading delimiter</description></item>

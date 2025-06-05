@@ -63,7 +63,8 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
                 ctx.TestRunDirectory,                            // '.nuget/packages' repo folder goes here
                 new Uri(Path.Combine(BuildOutputPath, "NuGet")), // Local feed (Contains location of the build of the package under test)
                 new Uri("https://api.nuget.org/v3/index.json") // standard NuGet Feed
-            );
+            ).SourceMapping("Local1", "Ubiquity.NET.Versioning*") // force all fetches of built package to locally built source only
+             .SourceMapping("api.nuget.org", "*"); // Everything else goes to NuGet public feed.
         }
 
         [AssemblyCleanup]

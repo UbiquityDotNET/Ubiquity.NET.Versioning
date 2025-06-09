@@ -42,6 +42,17 @@ namespace Ubiquity.NET.Versioning.Build.Tasks
             try
             {
                 Log.LogMessage(MessageImportance.Low, $"+{nameof(ParseBuildVersionXml)} Task");
+                if (string.IsNullOrWhiteSpace(BuildVersionXml))
+                {
+                    LogError("CSM200", "BuildVersionXml is required and must not be all whitespace");
+                    return false;
+                }
+
+                if (!File.Exists(BuildVersionXml))
+                {
+                    LogError("CSM201", $"Specified BuildVersionXml does not exist '{BuildVersionXml}'");
+                    return false;
+                }
 
                 using var stream = File.OpenText( BuildVersionXml );
                 var xdoc = System.Xml.Linq.XDocument.Load( stream, System.Xml.Linq.LoadOptions.None );
@@ -82,7 +93,7 @@ namespace Ubiquity.NET.Versioning.Build.Tasks
                         break;
 
                     default:
-                        Log.LogWarning( "Unexpected attribute {0}", attrib.Name.LocalName );
+                        LogWarning( "CSM202", "Unexpected attribute {0}", attrib.Name.LocalName );
                         break;
                     }
                 }
@@ -109,6 +120,24 @@ namespace Ubiquity.NET.Versioning.Build.Tasks
                 Log.LogErrorFromException(ex, showStackTrace: true);
                 return false;
             }
+        }
+
+        private void LogError(
+            string code,
+            /*[StringSyntax(StringSyntaxAttribute.CompositeFormat)]*/ string message,
+            params object[] messageArgs
+            )
+        {
+            Log.LogError($"{nameof(ParseBuildVersionXml)} Task", code, null, null, 0, 0, 0, 0, message, messageArgs);
+        }
+
+        private void LogWarning(
+            string code,
+            /*[StringSyntax(StringSyntaxAttribute.CompositeFormat)]*/ string message,
+            params object[] messageArgs
+            )
+        {
+            Log.LogWarning($"{nameof(ParseBuildVersionXml)} Task", code, null, null, 0, 0, 0, 0, message, messageArgs);
         }
     }
 }

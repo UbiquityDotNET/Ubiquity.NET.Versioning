@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Numerics;
 
 namespace Ubiquity.NET.Versioning
 {
@@ -30,16 +31,45 @@ namespace Ubiquity.NET.Versioning
     ///     <item><term>bits 48-63</term><description> Major part of Build number</description></item>
     ///     <item><term>bits 32-47</term><description> Minor part of Build number</description></item>
     ///     <item><term>bits 16-31</term><description> Build part of Build number</description></item>
-    ///     <item><term>bits 0-15</term><description> Revision part of Build number (Odd Numbers indicate a CI build)</description></item>
+    ///     <item><term>bits 0-15</term><description> Revision part of Build number (LSB == 1 indicates a Release build; LSB == 0 indicates a CI build)</description></item>
     /// </list>
     /// </para>
+    /// <note type="important">
+    /// The role of the LSB for the Revision field is INTENTIONALLY inverted from the behavior found in official
+    /// CSemVer v1.0.0-rc.1. This is to maintain the expressed intent that a File Version Quad is treated as a UInt64 and
+    /// maintains sort order comparisons. In particular a CI build version ALWAYS has a lower sort order than a release
+    /// build. (Thus the LSB bit indicates a RELEASE build (1; ODD Revision values) or a CI Build (0; EVEN revision values)
+    /// </note>
     /// <para>A file version cast as a <see cref="UInt64"/> is <i><b>NOT</b></i> the same as an Ordered version number.
     /// The file version includes a "bit" for the status as a CI Build. Thus, a "file version" as a <see cref="UInt64"/> is the
-    /// ordered version shifted left by one bit and the LSB indicates if it is a CI build</para>
+    /// ordered version shifted left by one bit and the LSB indicates if it is a Release/CI build</para>
     /// </remarks>
+    /// <seealso href="https://csemver.org/"/>
     public readonly record struct FileVersionQuad( UInt16 Major, UInt16 Minor, UInt16 Build, UInt16 Revision )
         : IComparable<FileVersionQuad>
+        , IComparisonOperators<FileVersionQuad, FileVersionQuad, bool>
     {
+        /// <summary>Gets a value indicating whether this version is a CI build</summary>
+        public bool IsCiBuild => (Revision & 1) == 0; // 1 indicates a release with a higher sort order.
+
+        /// <inheritdoc/>
+        public int CompareTo( FileVersionQuad other )
+        {
+            return ToUInt64().CompareTo(other.ToUInt64());
+        }
+
+        /// <inheritdoc/>
+        public static bool operator <( FileVersionQuad left, FileVersionQuad right ) => left.CompareTo( right ) < 0;
+
+        /// <inheritdoc/>
+        public static bool operator <=( FileVersionQuad left, FileVersionQuad right ) => left.CompareTo( right ) <= 0;
+
+        /// <inheritdoc/>
+        public static bool operator >( FileVersionQuad left, FileVersionQuad right ) => left.CompareTo( right ) > 0;
+
+        /// <inheritdoc/>
+        public static bool operator >=( FileVersionQuad left, FileVersionQuad right ) => left.CompareTo( right ) >= 0;
+
         /// <summary>Gets the UInt64 representation of the version</summary>
         /// <returns>UInt64 version of the version</returns>
         /// <remarks>
@@ -56,38 +86,35 @@ namespace Ubiquity.NET.Versioning
                  + Revision;
         }
 
-        /// <inheritdoc/>
-        public int CompareTo( FileVersionQuad other )
+        /// <summary>Gets the CSemVer defined ordered version number for this FileVersion quad</summary>
+        /// <param name="isCIBuild">Indicates if the File Version is for a CI build or not</param>
+        /// <returns>Ordered version number of this file version</returns>
+        /// <remarks>
+        /// The File version form of a CSemVer value includes a bit to indicate if the version is a CI build
+        /// or not. This condition is important for ordering
+        /// </remarks>
+        public UInt64 ToOrderedVersion(out bool isCIBuild)
         {
-            return ToUInt64().CompareTo(other.ToUInt64());
+            isCIBuild = IsCiBuild;
+            return ToUInt64() >> 1;
         }
 
-        /// <summary>Compares versions (Less than)</summary>
-        /// <param name="left">Left hand side of the comparison</param>
-        /// <param name="right">Right hand side of the comparison</param>
-        /// <returns>Result of the comparison</returns>
-        public static bool operator <( FileVersionQuad left, FileVersionQuad right ) => left.CompareTo( right ) < 0;
-
-        /// <summary>Compares versions (Less than or Equal)</summary>
-        /// <param name="left">Left hand side of the comparison</param>
-        /// <param name="right">Right hand side of the comparison</param>
-        /// <returns>Result of the comparison</returns>
-        public static bool operator <=( FileVersionQuad left, FileVersionQuad right ) => left.CompareTo( right ) <= 0;
-
-        /// <summary>Compares versions (Greater than)</summary>
-        /// <param name="left">Left hand side of the comparison</param>
-        /// <param name="right">Right hand side of the comparison</param>
-        /// <returns>Result of the comparison</returns>
-        public static bool operator >( FileVersionQuad left, FileVersionQuad right ) => left.CompareTo( right ) > 0;
-
-        /// <summary>Compares versions (Greater than or equal)</summary>
-        /// <param name="left">Left hand side of the comparison</param>
-        /// <param name="right">Right hand side of the comparison</param>
-        /// <returns>Result of the comparison</returns>
-        public static bool operator >=( FileVersionQuad left, FileVersionQuad right ) => left.CompareTo( right ) >= 0;
+        /// <inheritdoc cref="ToOrderedVersion(out bool)"/>
+        public UInt64 ToOrderedVersion()
+        {
+            return ToOrderedVersion(out _);
+        }
 
         /// <summary>Converts this instance to a <see cref="Version"/></summary>
         /// <returns>Values of this instance as a <see cref="Version"/></returns>
+        /// <remarks>
+        /// <note type="important">
+        /// This conversion INCLUDES the CI build information bit and thus ordering
+        /// of the result is NOT correct. (In File version Quads an ODD revision
+        /// indicates a CI build, but any such build has an ordering that is LESS
+        /// then any without it and therefore does NOT match the numeric ordering)
+        /// </note>
+        /// </remarks>
         public Version ToVersion( )
         {
             return new Version( Major, Minor, Build, Revision );

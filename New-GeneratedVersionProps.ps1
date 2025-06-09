@@ -215,7 +215,8 @@ class CSemVer
 
         $this.OrderedVersion = [CSemVer]::GetOrderedVersion($this.Major, $this.Minor, $this.Patch, $this.PreReleaseVersion)
         $fileVer64 = $this.OrderedVersion -shl 1
-        if($this.CiBuildIndex -and $this.CiBuildName)
+        # If this is a release build include that in the file version
+        if(!$this.CiBuildIndex -and !$this.CiBuildName)
         {
             $fileVer64 += 1;
         }
@@ -366,7 +367,7 @@ try
     $propGroupElement.AppendChild($buildKindElement) | Out-Null
 
     # Unit tests need to see the CI build info as it isn't something they can determine on their own.
-    # The Build index is based on a timestamp and the build name depends on the runtime environment
+    # The Build index is based on a time stamp and the build name depends on the runtime environment
     # to set some env vars etc...
     if($buildKind -ne 'ReleaseBuild')
     {

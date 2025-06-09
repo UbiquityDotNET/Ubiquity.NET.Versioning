@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Numerics;
 using System.Text.RegularExpressions;
 
 namespace Ubiquity.NET.Versioning
@@ -13,6 +14,8 @@ namespace Ubiquity.NET.Versioning
     /// <seealso href="https://csemver.org/"/>
     public readonly partial record struct CiBuildInfo
         : IFormattable
+        , IComparable<CiBuildInfo>
+        , IComparisonOperators<CiBuildInfo, CiBuildInfo, bool>
     {
         /// <summary>Initializes a new instance of the <see cref="CiBuildInfo"/> struct.</summary>
         /// <param name="index">Build index for the build</param>
@@ -81,6 +84,31 @@ namespace Ubiquity.NET.Versioning
 
         /// <summary>Gets the Build name for this build</summary>
         public string BuildName { get; } = string.Empty;
+
+        /// <inheritdoc/>
+        /// <remarks>
+        /// Two <see cref="CiBuildInfo"/> instances compare ordering using the <see cref="CiBuildInfo.BuildIndex"/>
+        /// and the <see cref="CiBuildInfo.BuildName"/> properties in ASCII sort ordering (Case Sensitive!).
+        /// <see cref="CiBuildInfo.BuildIndex"/> is compared first giving it higher precedence.
+        /// </remarks>
+        public int CompareTo( CiBuildInfo other )
+        {
+            var comparer = StringComparer.Ordinal;
+            int indexCompare = comparer.Compare(BuildIndex, other.BuildIndex);
+            return indexCompare != 0 ? indexCompare : comparer.Compare(BuildName, other.BuildName);
+        }
+
+        /// <inheritdoc/>
+        public static bool operator >( CiBuildInfo left, CiBuildInfo right ) => left.CompareTo(right) > 0;
+
+        /// <inheritdoc/>
+        public static bool operator >=( CiBuildInfo left, CiBuildInfo right ) => left.CompareTo(right) >= 0;
+
+        /// <inheritdoc/>
+        public static bool operator <( CiBuildInfo left, CiBuildInfo right ) => left.CompareTo(right) < 0;
+
+        /// <inheritdoc/>
+        public static bool operator <=( CiBuildInfo left, CiBuildInfo right ) => left.CompareTo(right) <= 0;
 
         private static readonly Regex CiBuildIdRegEx = GetGeneratedBuildIdRegex();
 

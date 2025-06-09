@@ -67,7 +67,8 @@
         ],
         "template": [
             "default",
-            "modern"
+            "modern",
+            "templates/Ubiquity"
         ],
         "globalMetadataFiles": [],
         "fileMetadataFiles": [],
@@ -75,7 +76,7 @@
         "globalMetadata": {
             "_appTitle": "Ubiquity.NET",
             "_appFooter": "Copyright (C) 2017-2025, Ubiquity.NET Contributors",
-            "_appLogoPath": "favicon-32x32.png", // TODO: change this to something more generic...
+            "_appLogoPath": "favicon-32x32.png",
             "_disableBreadcrumb": true,
             "_gitContribute": {
                 "repo": "https://github.com/UbiquityDotNET/CSemVer.GitBuild",

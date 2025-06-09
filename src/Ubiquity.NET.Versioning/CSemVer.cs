@@ -7,6 +7,7 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Numerics;
 
 namespace Ubiquity.NET.Versioning
 {
@@ -17,6 +18,8 @@ namespace Ubiquity.NET.Versioning
         : IFormattable
         , IComparable<CSemVer>
         , IEquatable<CSemVer>
+        , IComparisonOperators<CSemVer, CSemVer, bool>
+        , IEqualityOperators<CSemVer, CSemVer, bool>
     {
         /// <summary>Initializes a new instance of the <see cref="CSemVer"/> class</summary>
         /// <param name="major">Major version value [0-99999]</param>
@@ -66,7 +69,7 @@ namespace Ubiquity.NET.Versioning
             get
             {
                 ulong orderedNum = OrderedVersion << 1;
-                return FileVersionQuad.From( IsCIBuild ? orderedNum + 1 : orderedNum );
+                return FileVersionQuad.From( IsCIBuild ? orderedNum : orderedNum + 1 );
             }
         }
 
@@ -100,15 +103,15 @@ namespace Ubiquity.NET.Versioning
         /// This is used to indicate if a build represents a CI build or not.</para>
         /// <para>The CI build information is contained in the optional <see cref="CiBuildInfo"/> property. However, if this
         /// instance was produced from a purely numeric value then such information is lost though it is possible to indicate
-        /// a CI build using the low bit of the revision part of a <see cref="FileVersionQuad"/>.
-        /// </para>
+        /// a CI build using the low bit of the revision part of a <see cref="FileVersionQuad"/>. Thus, it is possible for this
+        /// to return <see langword="true"/> even if <see cref="CiBuildInfo.IsValid"/> returns <see langword="false"/></para>
         /// </remarks>
         public bool IsCIBuild { get; }
 
         /// <summary>Gets a value indicating whether this is a pre-release version</summary>
         public bool IsPrerelease => PrereleaseVersion.IsValid;
 
-        #region Comparison operators
+        #region Equality
 
         /// <inheritdoc/>
         public bool Equals( CSemVer? other ) => other is not null && CompareTo(other) == 0;
@@ -125,37 +128,6 @@ namespace Ubiquity.NET.Versioning
             return HashCode.Combine(Major, Minor, Patch, PrereleaseVersion, CiBuildInfo, BuildMetaData);
         }
 
-        /// <inheritdoc/>
-        public int CompareTo( CSemVer? other )
-        {
-            // By definition, any object compares greater than null, and two null references compare equal to each other.
-            return other is null ? 1 : FileVersion.CompareTo( other.FileVersion );
-        }
-
-        /// <summary>Compares two <see cref="CSemVer"/> values (Less than)</summary>
-        /// <param name="left">Left hand side of the operation</param>
-        /// <param name="right">Right hand side of the operation</param>
-        /// <returns>Result of the comparison</returns>
-        public static bool operator <( CSemVer left, CSemVer right ) => left.CompareTo( right ) < 0;
-
-        /// <summary>Compares two <see cref="CSemVer"/> values (Less than or equal)</summary>
-        /// <param name="left">Left hand side of the operation</param>
-        /// <param name="right">Right hand side of the operation</param>
-        /// <returns>Result of the comparison</returns>
-        public static bool operator <=( CSemVer left, CSemVer right ) => left.CompareTo( right ) <= 0;
-
-        /// <summary>Compares two <see cref="CSemVer"/> values (Greater than)</summary>
-        /// <param name="left">Left hand side of the operation</param>
-        /// <param name="right">Right hand side of the operation</param>
-        /// <returns>Result of the comparison</returns>
-        public static bool operator >( CSemVer left, CSemVer right ) => left.CompareTo( right ) > 0;
-
-        /// <summary>Compares two <see cref="CSemVer"/> values (Greater than or equal)</summary>
-        /// <param name="left">Left hand side of the operation</param>
-        /// <param name="right">Right hand side of the operation</param>
-        /// <returns>Result of the comparison</returns>
-        public static bool operator >=( CSemVer left, CSemVer right ) => left.CompareTo( right ) >= 0;
-
         /// <summary>Compares two <see cref="CSemVer"/> values (Equals)</summary>
         /// <param name="left">Left hand side of the operation</param>
         /// <param name="right">Right hand side of the operation</param>
@@ -167,6 +139,44 @@ namespace Ubiquity.NET.Versioning
         /// <param name="right">Right hand side of the operation</param>
         /// <returns>Result of the comparison</returns>
         public static bool operator !=( CSemVer? left, CSemVer? right ) => !(left == right);
+
+        #endregion
+
+        #region Comparison operators
+
+        /// <inheritdoc/>
+        public int CompareTo( CSemVer? other )
+        {
+            // By definition, any object compares greater than null, and two null references compare equal to each other.
+            if (other is null)
+            {
+                return 1;
+            }
+
+            int orderedCompare = OrderedVersion.CompareTo(other.OrderedVersion);
+
+            // If they are different without considering CI info or the CI info status is the same,
+            // then just use the ordered number comparison
+            if (orderedCompare != 0 || IsCIBuild == other.IsCIBuild)
+            {
+                return orderedCompare;
+            }
+
+            // account for any CI info
+            return CiBuildInfo.CompareTo(other.CiBuildInfo);
+        }
+
+        /// <inheritdoc/>
+        public static bool operator <( CSemVer left, CSemVer right ) => left.CompareTo( right ) < 0;
+
+        /// <inheritdoc/>
+        public static bool operator <=( CSemVer left, CSemVer right ) => left.CompareTo( right ) <= 0;
+
+        /// <inheritdoc/>
+        public static bool operator >( CSemVer left, CSemVer right ) => left.CompareTo( right ) > 0;
+
+        /// <inheritdoc/>
+        public static bool operator >=( CSemVer left, CSemVer right ) => left.CompareTo( right ) >= 0;
         #endregion
 
         /// <inheritdoc/>
@@ -242,7 +252,7 @@ namespace Ubiquity.NET.Versioning
         /// </remarks>
         public static CSemVer From( UInt64 fileVersion, string? buildMetaData = null )
         {
-            bool isCIBuild = (fileVersion & 1) == 1;
+            bool isCIBuild = (fileVersion & 1) == 0;
             return FromOrderedVersion(fileVersion >> 1, isCIBuild, buildMetaData); // Drop the CI bit to get the "ordered" number
         }
 
@@ -327,8 +337,8 @@ namespace Ubiquity.NET.Versioning
         /// <param name="buildMetaData">[Optional]Additional build meta data [default: empty string]</param>
         /// <remarks>
         /// This is used internally when converting from a File Version as those only have a single bit
-        /// to indicate they are a CI build. The rest of the information, which doesn't participate in sort
-        /// ordering, is lost.
+        /// to indicate if they are a Release/CI build. The rest of the information is lost and therefore
+        /// does not participate in ordering.
         /// </remarks>
         private CSemVer( int major
                        , int minor

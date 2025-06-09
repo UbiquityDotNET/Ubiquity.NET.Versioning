@@ -209,13 +209,13 @@ namespace Ubiquity.NET.Versioning.UT
             Assert.AreEqual(number, ver.PrereleaseVersion.Number, exp);
             Assert.AreEqual(fix, ver.PrereleaseVersion.Fix, exp);
             Assert.IsFalse(ver.CiBuildInfo.IsValid, exp);
-            Assert.IsFalse(ver.IsCIBuild, exp);
+            Assert.IsTrue(ver.IsCIBuild, exp, $"Conversion from integer should still indicate it IS a CI build for '{exp}'");
             Assert.IsNotNull(ver.BuildMetaData, $"non-nullable property should not be null for '{exp}'");
             Assert.AreEqual(string.Empty, ver.BuildMetaData, $"non-nullable property should be an empty string if not set '{exp}'");
             Assert.AreEqual(orderedVersion, ver.OrderedVersion, exp);
             Assert.AreEqual(f64, ver.FileVersion, exp);
 
-            // Now test CI variant
+            // Now test Release variant
             var f64CI = FileVersionQuad.From((orderedVersion << 1) + 1);
             var verCI = CSemVer.From(f64CI.ToUInt64());
             Assert.AreEqual(major, verCI.Major, exp);
@@ -227,7 +227,7 @@ namespace Ubiquity.NET.Versioning.UT
             Assert.AreEqual(number, verCI.PrereleaseVersion.Number, exp);
             Assert.AreEqual(fix, verCI.PrereleaseVersion.Fix, exp);
             Assert.IsFalse(verCI.CiBuildInfo.IsValid, $"Conversion from integer should NOT have any CI build info for '{exp}'");
-            Assert.IsTrue(verCI.IsCIBuild, $"Conversion from integer should still indicate it IS a CI build for '{exp}'");
+            Assert.IsFalse(verCI.IsCIBuild, $"Conversion from integer should indicate it IS a release build for '{exp}'");
             Assert.IsNotNull(verCI.BuildMetaData, $"non-nullable property should not be null for '{exp}'");
             Assert.AreEqual(string.Empty, verCI.BuildMetaData, $"non-nullable property should be an empty string if not set '{exp}'");
             Assert.AreEqual(orderedVersion, verCI.OrderedVersion , $"CI builds should have the same ordered version number as a non-CI build for '{exp}'");
@@ -250,13 +250,13 @@ namespace Ubiquity.NET.Versioning.UT
             Assert.IsFalse(ver.PrereleaseVersion.IsValid, exp);
             Assert.IsFalse(ver.IsPrerelease, exp);
             Assert.IsFalse(ver.CiBuildInfo.IsValid, exp);
-            Assert.IsFalse(ver.IsCIBuild, exp);
+            Assert.IsTrue(ver.IsCIBuild, exp, $"Conversion from integer should still indicate it IS a CI build for '{exp}'");
             Assert.IsNotNull(ver.BuildMetaData, $"non-nullable property should not be null for '{exp}'");
             Assert.AreEqual(string.Empty, ver.BuildMetaData, $"non-nullable property should be an empty string if not set for '{exp}'");
             Assert.AreEqual(orderedVersion, ver.OrderedVersion, exp);
             Assert.AreEqual(f64, ver.FileVersion, exp);
 
-            // Now test CI variant
+            // Now test Release variant
             var f64CI = FileVersionQuad.From((orderedVersion << 1) + 1);
             var verCI = CSemVer.From(f64CI.ToUInt64());
             Assert.AreEqual(major, verCI.Major, exp);
@@ -265,7 +265,7 @@ namespace Ubiquity.NET.Versioning.UT
             Assert.IsFalse(verCI.PrereleaseVersion.IsValid, exp);
             Assert.IsFalse(verCI.IsPrerelease, exp);
             Assert.IsFalse(verCI.CiBuildInfo.IsValid, $"Conversion from integer should NOT have any CI build info for '{exp}'");
-            Assert.IsTrue(verCI.IsCIBuild, $"Conversion from integer should indicate it IS a CI build for '{exp}'");
+            Assert.IsFalse(verCI.IsCIBuild, $"Conversion from integer should indicate it IS a release build for '{exp}'");
             Assert.IsNotNull(verCI.BuildMetaData, $"non-nullable property should not be null for '{exp}'");
             Assert.AreEqual(string.Empty, verCI.BuildMetaData, $"non-nullable property should be an empty string if not set for '{exp}'");
             Assert.AreEqual(orderedVersion, verCI.OrderedVersion , $"CI builds should have the same ordered version number as a non-CI build for '{exp}'");

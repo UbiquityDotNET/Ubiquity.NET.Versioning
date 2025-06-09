@@ -4,11 +4,12 @@ using a Constrained Semantic Version ([CSemVer](https://csemver.org/)).
 
 >[!WARNING]
 > As a [Breaking change in .NET SDK 8](https://learn.microsoft.com/en-us/dotnet/core/compatibility/sdk/8.0/source-link)
-> is now setting the build meta data for the `InformationalVersion` property without user
-> consent. (A Highly controversial choice that was more easily handled via an OPT-IN pattern)
-> Unfortunately, this was set ON by default and made into an 'OPT-OUT' scenario. This library
-> will honor such a setting and does not alter/interfere with it in any way. (Though the results
-> can, unfortunately, produce surprising behavior).
+> is now setting the build meta data for the `InformationalVersion` property automatically and
+> without user consent. (A Highly controversial choice that was more easily handled via an
+> OPT-IN pattern) Unfortunately, this was set ON by default and made into an 'OPT-OUT' scenario.
+> This library will honor such a setting and does not alter/interfere with it in any way.
+> (Though the results can, unfortunately, produce surprising behavior as it is not well
+> documented).
 >
 > If you wish to disable this behavior you can set an MSBUILD property to OPT-OUT as follows:  
 > `<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>`  
@@ -17,11 +18,12 @@ using a Constrained Semantic Version ([CSemVer](https://csemver.org/)).
 > who are aware of the change and those who use this library to set an explicit build meta data
 > string. (Principle of least surprise for what this library can control).
 >
-> The default .NET build behavior is to use the Repository ID (usually a GIT commit hash).
-> This is appended with a leading `+` if one isn't already in the `InformationalVersion`
-> property. If build metadata is already included (Like from use of this task) the id is
-> appended using a `.` instead. So it is ALWAYS appended unless the project has opted out of
-> this behavior by setting the property as previously described.
+> The default behavior added in this breaking change is to use the Repository ID (usually a GIT
+> commit hash [FULL SHA form!]) as the build metadata. This is appended with a leading `+` if
+> one isn't already in the `InformationalVersion` property. If build metadata is already
+> included (Like from use of this task) the id is appended using a `.` instead. So it is ALWAYS
+> appended unless the project has opted out of this behavior by setting the property as
+> previously described.
 >
 > Thus, it is ***strongly recommended*** that projects using this package OPT-OUT
 > of the new behavior.
@@ -36,15 +38,15 @@ allowing for automated CI builds. These new versions are called a [Constrained S
 Version](http://csemver.org) (CSemVer).
 
 A CSemVer is unique for each CI build and always increments while still supporting official
-releases. In the real world there are often cases where there are additional builds that are distinct from
-official releases and CI builds. Including Local developer builds, builds generated from a Pull 
-Request (a.k.a Automated buddy build). CSemVer doesn't explicitly define any format for these
-cases. So this library defines a pattern of versioning that is fully compatible with CSemVer and
-allows for the additional build types in a way that retains precedence having the least
-surprising consequences. In particular, local build packages have a higher precedence than CI or
-release versions if all other components of the version match. This ensures that what you are
-building includes the dependent packages you just built instead of the last one released
-publicly.
+releases. However, in the real world, there are often cases where there are additional builds
+that are distinct from official releases and CI builds. These include local developer builds
+and builds generated from a Pull Request (a.k.a Automated buddy build). Neither SemVer, nor
+CSemVer explicitly define any format for these cases. So this library defines a pattern of
+versioning that is fully compatible with CSemVer and allows for the additional build types
+in a way that retains precedence having the least surprising consequences. In particular,
+local build versions have a higher precedence than CI or release versions if all other
+components of the version match. This ensures that what you are building includes the dependent
+components you just built instead of the last one released publicly.
 
 The following is a list of the version formats in descending order of precedence:
 
@@ -56,23 +58,40 @@ The following is a list of the version formats in descending order of precedence
 | Official PreRelease | `{BuildMajor}.{BuildMinor}.{BuildPatch}-{PreReleaseName}[.PreReleaseNumber][.PreReleaseFix]+{BuildMeta}` |
 | Official Release | `{BuildMajor}.{BuildMinor}.{BuildPatch}+{BuildMeta}` |
 
+That is the, CI BuildName is chosen to ensure the ordering matches the expected behavior for
+a build.
+
 This project provides an MSBUILD task to automate the generation of these versions in an easy
 to use NuGet Package.
 
 The package creates File and Assembly Versions and defines the appropriate MsBuild properties
 so the build will automatically incorporate them.
 > **NOTE:**  
-The automatic use of MsBuild properties requires using the new SDK attribute support for .NET
-projects. Where the build auto generates the assembly info. If you are using some other means to
-auto generate the assembly level versioning attributes. You can use the properties generated by
-this package to generate the attributes.
+> The automatic use of MsBuild properties requires using the new SDK attribute support for .NET
+> projects. Where the build auto generates the assembly info. If you are using some other means
+> to auto generate the assembly level versioning attributes. You can use the properties
+> generated by this package to generate the attributes.
 
 File and AssemblyVersions are computed based on the CSemVer "Ordered version", which
-is a 64 bit value that maps to a standard windows FILEVERSION Quad with each part
-consuming 16 bits. This ensures a strong relationship between the  assembly/file versions
+is a 64 bit value that maps to a standard windows FILE VERSION Quad with each part
+consuming 16 bits. This ensures a strong relationship between the assembly/file versions
 and the packages as well as ensures that CI builds can function properly. Furthermore, this
 guarantees that each build has a different file and assembly version so that strong name
 signing functions properly to enable loading different versions in the same process.
+
+>[!IMPORTANT]
+> A file version quad representation of a CSemVer does NOT carry with it the CI information nor
+> the build metadata. It only contains a single bit to indicate a Release vs. a CI build. In
+> fact, the official CSemVer specs are silent on the use of this bit though the "playground"
+> does indicate an ODD numbered revision is a CI build. However, that leads to problems (see
+> this: [Spec issue](https://github.com/CK-Build/csemver.org/issues/2) for more details).
+> Thus, the `Ubiquity.NET.Versioning.*` libraries do NOT work that way. In these libraries,
+> an odd numbered revision indicates a RELEASE build whereas an EVEN numbered form represents
+> a CI build. This results in the correct behavior for comparisons of the File version. The
+> file version comparisons MUST result in correct ordering or an underlying Windows OS and
+> related APIs will NOT behave as expected. (A CI build is ALWAYS ordered less then a release
+> build)
+
 
 The Major, Minor and Patch versions are only updated in the primary branch at the time
 of a release. This ensures the concept that SemVer versions define released products. The

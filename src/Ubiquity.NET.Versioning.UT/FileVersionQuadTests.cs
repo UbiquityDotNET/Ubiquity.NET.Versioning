@@ -41,6 +41,10 @@ namespace Ubiquity.NET.Versioning.Tests
             var val = new FileVersionQuad(0x1234, 0x5678, 0x9ABC, 0xDEF0 );
             var valp1 = new FileVersionQuad(0x1234, 0x5678, 0x9ABC, 0xDEF1 );
 
+            Assert.IsFalse(valm1.IsCiBuild);
+            Assert.IsTrue(val.IsCiBuild);
+            Assert.IsFalse(valp1.IsCiBuild);
+
             Assert.AreEqual(-1, valm1.CompareTo(val), "(val-1) < val");
             Assert.AreEqual(-1, valm1.CompareTo(valp1), "(val-1) < (val+1)");
             Assert.AreEqual(1, val.CompareTo(valm1), "val > (val-1)");

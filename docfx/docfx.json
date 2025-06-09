@@ -78,7 +78,7 @@
             "_appLogoPath": "llvm/DragonSharp48x48.png", // TODO: change this to something more generic...
             "_disableBreadcrumb": true,
             "_gitContribute": {
-                "repo": "https://github.com/UbiquityDotNET/Llvm.NET",
+                "repo": "https://github.com/UbiquityDotNET/CSemVer.GitBuild",
                 "branch": "develop"
             },
             "_gitUrlPattern": "github"

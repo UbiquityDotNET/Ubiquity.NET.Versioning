@@ -1,4 +1,4 @@
-﻿<Project>
+﻿<Project TreatAsLocalProperty="BuildTime;CiBuildName;IsPullRequestBuild;IsAutomatedBuild;IsReleaseBuild">
     <PropertyGroup>
         <!--
         Force the time-stamp into ISO 8601 format so it is locale neutral
@@ -20,12 +20,5 @@
         <CiBuildName Condition="'$(CiBuildName)'=='' AND $(IsPullRequestBuild) AND !$(IsReleaseBuild)">PRQ</CiBuildName>
         <CiBuildName Condition="'$(CiBuildName)'=='' AND $(IsAutomatedBuild) AND !$(IsReleaseBuild)">BLD</CiBuildName>
         <CiBuildName Condition="'$(CiBuildName)'=='' AND !$(IsReleaseBuild)">ZZZ</CiBuildName>
-    </PropertyGroup>
-
-    <!-- Force empty values for CI Build info in a release build -->
-    <PropertyGroup Condition="$(IsReleaseBuild)">
-        <CiBuildName/>
-        <CiBuildIndex />
-        <BuildTime />
     </PropertyGroup>
 </Project>

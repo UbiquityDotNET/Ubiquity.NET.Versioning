@@ -7,6 +7,8 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Xml.Linq;
+
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
@@ -55,8 +57,13 @@ namespace Ubiquity.NET.Versioning.Build.Tasks
                 }
 
                 using var stream = File.OpenText( BuildVersionXml );
-                var xdoc = System.Xml.Linq.XDocument.Load( stream, System.Xml.Linq.LoadOptions.None );
+                var xdoc = XDocument.Load( stream, System.Xml.Linq.LoadOptions.None );
                 var data = xdoc.Element( "BuildVersionData" );
+                if (data is null)
+                {
+                    LogError("CSM202", $"BuildVersionData element does not exist in '{BuildVersionXml}'");
+                    return false;
+                }
 
                 foreach( var attrib in data.Attributes( ) )
                 {
@@ -93,7 +100,7 @@ namespace Ubiquity.NET.Versioning.Build.Tasks
                         break;
 
                     default:
-                        LogWarning( "CSM202", "Unexpected attribute {0}", attrib.Name.LocalName );
+                        LogWarning( "CSM203", "Unexpected attribute {0}", attrib.Name.LocalName );
                         break;
                     }
                 }
@@ -114,6 +121,11 @@ namespace Ubiquity.NET.Versioning.Build.Tasks
 
                 Log.LogMessage(MessageImportance.Low, $"-{nameof(ParseBuildVersionXml)} Task");
                 return true;
+            }
+            catch(System.Xml.XmlException)
+            {
+                LogError("CSM204", "XML format of '{0}' is invalid", BuildVersionXml!);
+                return false;
             }
             catch(Exception ex)
             {

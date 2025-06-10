@@ -12,6 +12,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Ubiquity.NET.Versioning.Build.Tasks\Ubiquity.NET.Versioning.Build.Tasks.csproj">
+      <ReferenceOutputAssembly>False</ReferenceOutputAssembly>
+      <PrivateAssets>All</PrivateAssets>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\Ubiquity.NET.Versioning\Ubiquity.NET.Versioning.csproj" />
   </ItemGroup>
 

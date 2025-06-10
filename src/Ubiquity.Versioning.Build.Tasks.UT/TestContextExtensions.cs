@@ -5,8 +5,8 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 
 using Microsoft.Build.Evaluation;
@@ -18,12 +18,6 @@ using Ubiquity.NET.Versioning;
 
 namespace Ubiquity.Versioning.Build.Tasks.UT
 {
-    [SuppressMessage( "StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Simple record used here" )]
-    internal readonly record struct ProjectBuildResults(ProjectCreator Creator, BuildOutput Output, bool Success);
-
-    [SuppressMessage( "StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Simple record used here" )]
-    internal readonly record struct VersioningProjectBuildResults(ProjectBuildResults BuildResults, BuildProperties Properties);
-
     internal static class TestContextExtensions
     {
         /// <summary>Determines the repository root from the test context</summary>
@@ -35,19 +29,19 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         /// the task assembly itself requires access to the BuildVersion XML file used along with the 'generatedversion.props'
         /// file to know what was used to validate against.
         /// </remarks>
-        internal static string GetRepoRoot(this TestContext ctx)
+        internal static string GetRepoRoot( this TestContext ctx )
         {
             // Currently this assumes a fixed relationship between the "TestRunDirectory" and the actual root
             // If that ever changes, this is the one place to change it.
-            return !string.IsNullOrWhiteSpace(ctx.TestRunDirectory)
+            return !string.IsNullOrWhiteSpace( ctx.TestRunDirectory )
                    ? Path.GetFullPath( Path.Combine( ctx.TestRunDirectory, "..", "..", ".." ) )
-                   : throw new InvalidOperationException("Context.TestRunDirectory is not available");
+                   : throw new InvalidOperationException( "Context.TestRunDirectory is not available" );
         }
 
-        internal static ParsedBuildVersionXml ParseRepoBuildVersionXml(this TestContext ctx)
+        internal static ParsedBuildVersionXml ParseRepoBuildVersionXml( this TestContext ctx )
         {
             string buildVersionXmlPath = Path.Combine(GetRepoRoot(ctx), "BuildVersion.xml");
-            return ParsedBuildVersionXml.ParseFile(buildVersionXmlPath);
+            return ParsedBuildVersionXml.ParseFile( buildVersionXmlPath );
         }
 
         internal static VersioningProjectBuildResults CreateTestProjectAndInvokeTestedPackage(
@@ -57,71 +51,84 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             Action<ProjectCreator>? action = null
             )
         {
-            var resolveResults = ctx.CreateAndResolveTestProject( targetFramework, action, projectCollection );
-            if (!resolveResults.Success)
+#pragma warning disable CA2000 // Dispose objects before losing scope
+            // It doesn't "lose scope", the disposable members are transferred to the return
+            ProjectBuildResults buildResults = ctx.CreateAndRestoreTestProject( targetFramework, action, projectCollection );
+#pragma warning restore CA2000 // Dispose objects before losing scope
+            try
             {
-                LogBuildErrors(ctx, resolveResults.Output);
-                return new(resolveResults, default);
-            }
+                if(!buildResults.Success)
+                {
+                    LogBuildErrors( ctx, buildResults.Output! );
+                    return new( buildResults, default );
+                }
 
-            // Since this project uses an imported target, it won't even exist until AFTER ResolvePackageDependencies[DesignTime|ForBuild] comes along.
-            var (result, output) = resolveResults.Creator.ProjectInstance.Build("PrepareVersioningForBuild");
-            Assert.IsNotNull( result );
-            Assert.IsNotNull( result.ProjectStateAfterBuild );
-            if (result.OverallResult != BuildResultCode.Success)
+                // Since this project uses an imported target, it won't even exist until AFTER ResolvePackageDependencies[DesignTime|ForBuild] comes along.
+                var result = buildResults.Creator.ProjectInstance.Build(buildResults.Output, "PrepareVersioningForBuild" );
+                Assert.IsNotNull( result );
+                Assert.IsNotNull( result.ProjectStateAfterBuild );
+                if(result.OverallResult != BuildResultCode.Success)
+                {
+                    LogBuildErrors( ctx, buildResults.Output );
+                }
+
+#pragma warning disable CA2000 // Dispose objects before losing scope
+                // Newly created instance is returned as a member of a disposable type
+                return new(
+                    new ProjectBuildResults(buildResults.Creator, buildResults.Output, result.OverallResult == BuildResultCode.Success),
+                    result.OverallResult == BuildResultCode.Success ? new BuildProperties( result.ProjectStateAfterBuild) : default
+                );
+#pragma warning restore CA2000 // Dispose objects before losing scope
+            }
+            catch
             {
-                LogBuildErrors(ctx, output);
+                buildResults.Dispose();
+                throw;
             }
-
-            return new(
-                new ProjectBuildResults(resolveResults.Creator, output,  result.OverallResult == BuildResultCode.Success),
-                new BuildProperties( result.ProjectStateAfterBuild )
-            );
         }
 
-        internal static ProjectBuildResults CreateAndResolveTestProject(
+        internal static ProjectBuildResults CreateAndRestoreTestProject(
             this TestContext ctx,
             string targetFramework,
             Action<ProjectCreator>? action = null,
             ProjectCollection? projectCollection = null
             )
         {
-            if (string.IsNullOrWhiteSpace(ctx.TestResultsDirectory))
+            if(string.IsNullOrWhiteSpace( ctx.TestResultsDirectory ))
             {
-                throw new InvalidOperationException("TestResultsDirectory is not available!");
+                throw new InvalidOperationException( "TestResultsDirectory is not available!" );
             }
 
-            if (string.IsNullOrWhiteSpace(ctx.TestName))
+            if(string.IsNullOrWhiteSpace( ctx.TestName ))
             {
-                throw new InvalidOperationException("TestName is not available!");
+                throw new InvalidOperationException( "TestName is not available!" );
             }
 
-            // Build a package version that matches the current repository core version
-            // this prevents the build from pulling these packages from public NUGET.
-            // An alternative might be to update the NuGet config with restricted via source mapping
-            // but that's not currently supported in the PackageR
-            var repoBuildVersion = ParseRepoBuildVersionXml(ctx);
-            string packageVersion = $"{repoBuildVersion.BuildMajor}.{repoBuildVersion.BuildMinor}.{repoBuildVersion.BuildPatch}-*";
+            // package version of the tasks should match the informational version of THIS assembly
+            // That, is they MUST be built together as they are inherently tightly coupled.
+            string? packageVersion = ( from attr in typeof(TestContextExtensions).Assembly.CustomAttributes
+                                       where attr.AttributeType.FullName == "System.Reflection.AssemblyInformationalVersionAttribute"
+                                       select (string?)attr.ConstructorArguments[0].Value
+                                     ).FirstOrDefault();
+
+            if (string.IsNullOrWhiteSpace(packageVersion))
+            {
+                throw new InvalidOperationException("AssemblyInformationalVersionAttribute is missing, null or whitespace!");
+            }
+
             string projectPath = Path.Combine( ctx.TestResultsDirectory, $"{nameof(BuildTaskTests)}-{ctx.TestName}-{targetFramework}.csproj");
+#pragma warning disable CA2000 // Dispose objects before losing scope
+            // restoreBuildOutput doesn't lose scope here, it's provided to the return type
             var project = ProjectCreator.Templates
                                         .VersioningProject(targetFramework, packageVersion, customAction: action, projectCollection: projectCollection )
                                         .Save( projectPath )
-                                        .TryBuild(
-                                            restore: true,
-                                            "ResolvePackageDependenciesDesignTime",
-                                            out bool resolveResult,
-                                            out BuildOutput resolveBuildOutput
-                                            );
+                                        .TryRestore(out bool restoreResult, out BuildOutput restoreBuildOutput);
+#pragma warning restore CA2000 // Dispose objects before losing scope
 
-            using(resolveBuildOutput)
-            {
-                ctx.LogBuildErrors( resolveBuildOutput );
-            }
-
-            return new(project, resolveBuildOutput, resolveResult);
+            return new( project, restoreBuildOutput, restoreResult );
         }
 
-        internal static void LogBuildErrors(this TestContext ctx, BuildOutput buildOutput)
+        internal static void LogBuildErrors( this TestContext ctx, BuildOutput buildOutput )
         {
             foreach(var err in buildOutput.ErrorEvents)
             {
@@ -129,6 +136,20 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
                 // see: https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-diagnostic-format-for-tasks?view=vs-2022
                 ctx.WriteLine( $"{err.ProjectFile}({err.LineNumber},{err.ColumnNumber}) : {err.Subcategory} error {err.Code} : {err.Message}" );
             }
+        }
+
+        internal static string CreateRandomFilePath(this TestContext ctx)
+        {
+            return !string.IsNullOrWhiteSpace( ctx.DeploymentDirectory )
+                ? Path.Combine(ctx.DeploymentDirectory, Path.GetRandomFileName())
+                : throw new InvalidOperationException( "DeploymentDirectory is not available!" );
+        }
+
+        internal static string CreateRandomFile(this TestContext ctx)
+        {
+            string retVal = CreateRandomFilePath(ctx);
+            using var strm = File.Open(retVal, FileMode.CreateNew);
+            return retVal;
         }
 
         internal static string CreateBuildVersionXmlWithRandomName(
@@ -141,12 +162,7 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             int? preReleaseFix = null
             )
         {
-            if (string.IsNullOrWhiteSpace(ctx.DeploymentDirectory))
-            {
-                throw new InvalidOperationException("DeploymentDirectory is not available!");
-            }
-
-            string retVal = Path.Combine(ctx.DeploymentDirectory, Path.GetRandomFileName());
+            string retVal = CreateRandomFilePath(ctx);
             using var strm = File.Open(retVal, FileMode.CreateNew);
             var element = new XElement("BuildVersionData",
                                         new XAttribute("BuildMajor", buildMajor),
@@ -168,6 +184,16 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
                 element.Add( new XAttribute( "PreReleaseNumber", preReleaseFix.Value ) );
             }
 
+            element.Save( strm );
+            ctx.WriteLine( $"BuildVersionXML written to: '{retVal}'" );
+            return retVal;
+        }
+
+        internal static string CreateEmptyBuildVersionXmlWithRandomName( this TestContext ctx )
+        {
+            string retVal = CreateRandomFilePath(ctx);
+            using var strm = File.Open(retVal, FileMode.CreateNew);
+            var element = new XElement("BuildVersionData");
             element.Save( strm );
             ctx.WriteLine( $"BuildVersionXML written to: '{retVal}'" );
             return retVal;

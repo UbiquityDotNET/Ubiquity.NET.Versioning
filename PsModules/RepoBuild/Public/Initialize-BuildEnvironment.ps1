@@ -60,7 +60,7 @@ function Initialize-BuildEnvironment
 
         # Add repo specific values
         $buildInfo['PackagesRoot'] = Join-Path $buildInfo['BuildOutputPath'] 'packages'
-        $buildInfo['OfficialGitRemoteUrl'] = 'https://github.com/UbiquityDotNET/CSemVer.GitBuild'
+        $buildInfo['OfficialGitRemoteUrl'] = 'https://github.com/UbiquityDotNET/CSemVer.GitBuild.git'
 
         # make sure directories required (but not created by build tools) exist
         New-Item -ItemType Directory -Path $buildInfo['BuildOutputPath'] -ErrorAction SilentlyContinue | Out-Null

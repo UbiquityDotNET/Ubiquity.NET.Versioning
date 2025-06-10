@@ -22,8 +22,8 @@ namespace Ubiquity.NET.Versioning
         /// Since the resulting build index is based on the number of seconds since midnight and needs
         /// to fit in a limited string output. There is a narrow window of 2 seconds where two distinct
         /// builds (Local or PR) might generate the same matching build number. However, since this number
-        /// is only used for local builds that's not realistically a problem. (Automated builds use the
-        /// commit hash of the repo as the build index)
+        /// is normally only used for local builds that's not realistically a problem. (Automated builds
+        /// usually use the time stamp of the HEAD commit of the repo as the build index)
         /// </remarks>
         public static string ToBuildIndex( this DateTime timeStamp )
         {

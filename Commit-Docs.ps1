@@ -16,57 +16,23 @@ using module "PSModules/RepoBuild/RepoBuild.psd1"
     This is used by automated release builds to essentially "commit" the doc changes before a dedicated step pushes the results.
 #>
 Param(
-    [switch]$FullInit,
-    [switch]$SkipPush
+    [switch]$FullInit
 )
 
 $buildInfo = Initialize-BuildEnvironment -FullInit:$FullInit
 
-Write-Information "Preparing to PUSH updated docs to GitHub IO"
+Write-Information "Preparing to commit updated docs for gh-pages"
 
-$canPush = $env:IsAutomatedBuild -and ($env:IsPullRequestBuild -ieq 'false')
-if(!$canPush)
+$canCommit = $env:IsAutomatedBuild -and ($env:IsPullRequestBuild -ieq 'false')
+if(!$canCommit)
 {
-    Write-Information "Skipping Docs PUSH as this is not an official build"
+    Write-Information "Skipping Docs commit as this is not an official build"
     return;
-}
-
-# Docs must only be updated from a build with the official repository as the default remote.
-# This ensures that the links to source in the generated docs will have the correct URLs
-# (e.g. docs pushed to the official repository MUST not have links to source in some private fork)
-$remoteUrl = Invoke-External git ls-remote --get-url
-
-Write-Information "Remote URL: $remoteUrl"
-
-if($remoteUrl -ne $buildInfo['OfficialGitRemoteUrl'])
-{
-    throw "Pushing docs is only allowed when the origin remote is the official source - current remote is '$remoteUrl'"
-}
-
-if(!$env:docspush_access_token -and !$SkipPush)
-{
-    Write-Error "Missing docspush_access_token" -ErrorAction Stop
-}
-
-if(!$env:docspush_email)
-{
-    Write-Error "Missing docspush_email" -ErrorAction Stop
-}
-
-if(!$env:docspush_username)
-{
-    Write-Error "Missing docspush_username" -ErrorAction Stop
 }
 
 Push-Location .\BuildOutput\docs -ErrorAction Stop
 try
 {
-    if($env:docspush_access_token)
-    {
-        Invoke-External git config --local credential.helper store
-        Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:docspush_access_token):x-oauth-basic@github.com`n"
-    }
-
     Invoke-External git config --local user.email "$env:docspush_email"
     Invoke-External git config --local user.name "$env:docspush_username"
 
@@ -84,12 +50,6 @@ try
     $msg = "CI Docs Update $(Get-BuildVersionTag $buildInfo)"
     Write-Information "Committing changes to git [$msg]"
     Invoke-External git commit -m"$msg"
-
-    if(!$SkipPush)
-    {
-        Write-Information 'Pushing changes to git'
-        Invoke-External git push
-    }
 }
 catch
 {

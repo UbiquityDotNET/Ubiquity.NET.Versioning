@@ -57,9 +57,9 @@ jobs:
         env:
           docspush_email: 32618965+cibuild-telliam@users.noreply.github.com
           docspush_username: cibuild-telliam
-        run: .\Push-Docs.ps1 -SkipPush
+        run: .\Commit-Docs.ps1
 
-      - name: Push Docs
+      - name: Publish Docs
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -67,12 +67,10 @@ jobs:
           branch: gh-pages
 
       - name: Publish packages to NuGet.org
-        run: dotnet nuget push .\BuildOutput\NuGet\*.nupkg -k ${{ secrets.NUGETPUSH_ACCESS_TOKEN }} -s 'https://api.nuget.org/v3/index.json' --skip-duplicate
+        run: dotnet nuget push .\BuildOutput\NuGet\*.nupkg -k '${{ secrets.NUGETPUSH_ACCESS_TOKEN }}' -s 'https://api.nuget.org/v3/index.json' --skip-duplicate
 
       - name: Create Release
         if: (!cancelled())
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
           draft: true

@@ -82,7 +82,8 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
 
                 using var collection = new ProjectCollection(globalProperties);
 
-                var (buildResults, props) = Context.CreateTestProjectAndInvokeTestedPackage(targetFramework, collection);
+                using var fullResults = Context.CreateTestProjectAndInvokeTestedPackage(targetFramework, collection);
+                var (buildResults, props) = fullResults;
                 LogBuildMessages(buildResults.Output);
                 Assert.IsTrue(buildResults.Success);
 

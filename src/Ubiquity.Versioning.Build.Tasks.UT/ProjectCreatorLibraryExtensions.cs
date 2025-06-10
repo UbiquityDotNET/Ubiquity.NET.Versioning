@@ -52,7 +52,7 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
                                 sdk,
                                 targetFramework,
                                 outputType: null,
-                                customAction,
+                                null,
                                 defaultTargets,
                                 initialTargets,
                                 treatAsLocalProperty,
@@ -63,7 +63,7 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
                                  .Property( "Nullable", "disable" )
                                  .Property( "ManagePackageVersionsCentrally", "false" )
                                  .Property( "ImplicitUsings", "disable" )
-                                 ;
+                                 .CustomAction(customAction);
         }
 
         private static XElement GetOrCreateSourceMappingElement( XElement configuration )

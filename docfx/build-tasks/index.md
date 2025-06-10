@@ -218,6 +218,8 @@ If not explicitly set this is determined by the automated build flags as describ
 section of this document.
 
 ## Detected Error Conditions
+
+### Targets file
 |Code    |Description|
 |--------|-----------|
 | CSM001 | BuildMajor is a required property, either set it as a global or in the build version XML |
@@ -227,14 +229,32 @@ section of this document.
 | CSM005 | FileVersion property not provided AND FileVersionMinor property not found to create it from |
 | CSM006 | FileVersion property not provided AND FileVersionBuild property not found to create it from |
 | CSM007 | FileVersion property not provided AND FileVersionRevision property not found to create it from |
+
+### CreateVersionInfo Task
+|Code    |Description|
+|--------|-----------|
 | CSM100 | BuildMajor value must be in range [0-99999] |
 | CSM101 | BuildMinor value must be in range [0-49999] |
 | CSM102 | BuildPatch value must be in range [0-9999] |
-| CSM103 | PreRelease Name is unknown |
+| CSM103 | PreReleaseName is unknown |
 | CSM104 | PreReleaseNumber value must be in range [0-99] |
-| CSM105 | If CiBuildIndex is set then CiBuildName must also be set; If CiBuildIndex is NOT set then CiBuildName must not be set. |
-| CSM106 | CiBuildIndex does not match syntax defined by CSemVer |
-| CSM107 | CiBuildName does not match syntax defined by CSemVer |
+| CSM105 | PreReleaseFix value must be in range [0-99] |
+| CSM106^1^ | If CiBuildIndex is set then CiBuildName must also be set; If CiBuildIndex is NOT set then CiBuildName must not be set. |
+| CSM107 | CiBuildIndex does not match syntax defined by CSemVer |
+| CSM108 | CiBuildName does not match syntax defined by CSemVer |
+
+### ParseBuildVersionXml Task
+|Code    |Description|
+|--------|-----------|
 | CSM200 | BuildVersionXml is required and must not be all whitespace |
 | CSM201 | Specified BuildVersionXml does not exist `$(BuildVersionXml)`|
-| CSM202 | [Warning] Unexpected attribute on BuildVersionData Element |
+| CSM202 | BuildVersionData element does not exist in `$(BuildVersionXml)`|
+| CSM203 | [Warning] Unexpected attribute on BuildVersionData Element |
+| CSM204 | XML format of file specified by `$(BuildVersionXml)' is invalid |
+
+----
+^1^ CSM106 is essentially an internal sanity test. The props/targets files ensure that
+`$(CiBuildIndex)` and `$(CiBuildName)` have a value unless $(IsReleaseBuild) is set. In that case
+the targets file will force them to empty. So, there's no way to test for or hit this condition
+without completely replacing/bypassing the props/targets files for the task. Which is obviously,
+an unsupported scenario :grin:.

@@ -29,11 +29,9 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
 
         // Sadly, project creator library doesn't have support for after build state retrieval...
         // Fortunately, it is fairly easy to create an extension to handle that scenario.
-        public static (BuildResult BuildResult, BuildOutput Output) Build( this ProjectInstance self, params string[] targetsToBuild )
+        public static BuildResult Build( this ProjectInstance self, BuildOutput buildOutput, params string[] targetsToBuild )
         {
-            // !@#$ project creator hides new and uses a dumb wrapper for create. [Sigh...]
-            var buildOutput = BuildOutput.Create();
-            var result = BuildManager.DefaultBuildManager.Build(
+            return BuildManager.DefaultBuildManager.Build(
                                           new BuildParameters() { Loggers = [buildOutput] },
                                           new BuildRequestData(
                                               self,
@@ -42,7 +40,6 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
                                               BuildRequestDataFlags.ProvideProjectStateAfterBuild
                                               )
                                           );
-            return (result, buildOutput);
         }
     }
 }

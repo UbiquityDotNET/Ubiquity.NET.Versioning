@@ -221,35 +221,35 @@ namespace Ubiquity.NET.Versioning.Build.Tasks
                         hasInputError = true;
                     }
                 }
-            }
 
-            if(PreReleaseNumber < 0 || PreReleaseNumber > 99)
-            {
-                LogError("CSM104", "PreReleaseNumber value must be in range [0-99]" );
-                hasInputError = true;
-            }
+                if(PreReleaseNumber < 0 || PreReleaseNumber > 99)
+                {
+                    LogError("CSM104", "PreReleaseNumber value must be in range [0-99]" );
+                    hasInputError = true;
+                }
 
-            if(PreReleaseFix < 0 || PreReleaseFix > 99)
-            {
-                LogError("CSM104", "PreReleaseFix value must be in range [0-99]" );
-                hasInputError = true;
+                if(PreReleaseNumber != 0 && (PreReleaseFix < 0 || PreReleaseFix > 99))
+                {
+                    LogError("CSM105", "PreReleaseFix value must be in range [0-99]" );
+                    hasInputError = true;
+                }
             }
 
             if(string.IsNullOrWhiteSpace( CiBuildIndex ) != string.IsNullOrWhiteSpace( CiBuildName ))
             {
-                LogError("CSM105", "If CiBuildIndex is set then CiBuildName must also be set; If CiBuildIndex is NOT set then CiBuildName must not be set." );
+                LogError("CSM106", "If CiBuildIndex is set then CiBuildName must also be set; If CiBuildIndex is NOT set then CiBuildName must not be set." );
                 hasInputError = true;
             }
 
             if(CiBuildIndex != null && !CiBuildIdRegEx.IsMatch( CiBuildIndex ))
             {
-                LogError("CSM106", "CiBuildIndex does not match syntax defined by CSemVer" );
+                LogError("CSM107", "CiBuildIndex does not match syntax defined by CSemVer" );
                 hasInputError = true;
             }
 
             if(CiBuildName != null && !CiBuildIdRegEx.IsMatch( CiBuildName ))
             {
-                LogError("CSM107", "CiBuildName does not match syntax defined by CSemVer" );
+                LogError("CSM108", "CiBuildName does not match syntax defined by CSemVer" );
                 hasInputError = true;
             }
 

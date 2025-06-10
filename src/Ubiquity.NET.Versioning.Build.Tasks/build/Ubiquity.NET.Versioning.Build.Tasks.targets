@@ -1,8 +1,19 @@
-﻿<Project TreatAsLocalProperty="_TaskFolder;_Ubiquity_NET_Versioning_Build_Tasks;__FileVersion">
+﻿<Project TreatAsLocalProperty="_TaskFolder;_Ubiquity_NET_Versioning_Build_Tasks;__FileVersion;BuildTime;CiBuildIndex;CiBuildName">
     <PropertyGroup>
         <_TaskFolder Condition=" '$(MSBuildRuntimeType)' == 'Core' ">tasks\netstandard2.0\</_TaskFolder>
         <_TaskFolder Condition=" '$(MSBuildRuntimeType)' != 'Core' ">tasks\net48\</_TaskFolder>
         <_Ubiquity_NET_Versioning_Build_Tasks>$([MSBuild]::NormalizePath($(MSBuildThisFileDirectory)..\$(_TaskFolder)Ubiquity.NET.Versioning.Build.Tasks.dll))</_Ubiquity_NET_Versioning_Build_Tasks>
+    </PropertyGroup>
+
+    <!--
+    Set empty values for CI Build info in a release build.
+    This must appear in the targets file to ensure that the properties are reset
+    AFTER any project might set them.
+    -->
+    <PropertyGroup Condition="$(IsReleaseBuild)">
+        <BuildTime/>
+        <CiBuildIndex/>
+        <CiBuildName/>
     </PropertyGroup>
 
     <UsingTask TaskName="CreateVersionInfo" AssemblyFile="$(_Ubiquity_NET_Versioning_Build_Tasks)"/>

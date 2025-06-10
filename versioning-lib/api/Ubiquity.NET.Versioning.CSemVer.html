@@ -16,7 +16,7 @@
       
       
       
-      <meta name="docfx:docurl" content="https://github.com/UbiquityDotNET/Llvm.NET/new/develop/apiSpec/new?filename=Ubiquity_NET_Versioning_CSemVer.md&amp;value=---%0Auid%3A%20Ubiquity.NET.Versioning.CSemVer%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/UbiquityDotNET/CSemVer.GitBuild/new/develop/apiSpec/new?filename=Ubiquity_NET_Versioning_CSemVer.md&amp;value=---%0Auid%3A%20Ubiquity.NET.Versioning.CSemVer%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -44,7 +44,7 @@
       <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
         <div class="container-xxl flex-nowrap">
           <a class="navbar-brand" href="../../index.html">
-            <img id="logo" class="svg" src="../../llvm/DragonSharp48x48.png" alt="">
+            <img id="logo" class="svg" src="../../favicon-32x32.png" alt="">
             
           </a>
           <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,7 +84,7 @@
 
 
   <h1 id="Ubiquity_NET_Versioning_CSemVer" data-uid="Ubiquity.NET.Versioning.CSemVer" class="text-break">
-Class CSemVer  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.0-rc/src/Ubiquity.NET.Versioning/CSemVer.cs/#L16"><i class="bi bi-code-slash"></i></a>
+Class CSemVer  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.0-rc.1/src/Ubiquity.NET.Versioning/CSemVer.cs/#L17"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,7 +97,7 @@ Class CSemVer  <a class="header-action link-secondary" title="View source" href=
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class CSemVer : IFormattable, IComparable&lt;CSemVer&gt;, IEquatable&lt;CSemVer&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class CSemVer : IFormattable, IComparable&lt;CSemVer&gt;, IEquatable&lt;CSemVer&gt;, IComparisonOperators&lt;CSemVer, CSemVer, bool&gt;, IEqualityOperators&lt;CSemVer, CSemVer, bool&gt;</code></pre>
   </div>
 
 
@@ -117,6 +117,8 @@ Class CSemVer  <a class="header-action link-secondary" title="View source" href=
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iformattable">IFormattable</a></div>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.icomparable-1">IComparable</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a>&gt;</div>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a>&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.icomparisonoperators-3">IComparisonOperators</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a>, <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.iequalityoperators-3">IEqualityOperators</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a>, <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</div>
     </dd>
   </dl>
 
@@ -267,12 +269,12 @@ Class CSemVer  <a class="header-action link-secondary" title="View source" href=
   </dl>
   <dl class="jumplist">
     <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.op_GreaterThan.html#Ubiquity_NET_Versioning_CSemVer_op_GreaterThan_Ubiquity_NET_Versioning_CSemVer_Ubiquity_NET_Versioning_CSemVer_">operator &gt;(CSemVer, CSemVer)</a></dt>
-    <dd><p>Compares two <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a> values (Greater than)</p>
+    <dd><p>Compares two values to determine which is greater.</p>
 </dd>
   </dl>
   <dl class="jumplist">
     <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.op_GreaterThanOrEqual.html#Ubiquity_NET_Versioning_CSemVer_op_GreaterThanOrEqual_Ubiquity_NET_Versioning_CSemVer_Ubiquity_NET_Versioning_CSemVer_">operator &gt;=(CSemVer, CSemVer)</a></dt>
-    <dd><p>Compares two <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a> values (Greater than or equal)</p>
+    <dd><p>Compares two values to determine which is greater or equal.</p>
 </dd>
   </dl>
   <dl class="jumplist">
@@ -282,12 +284,12 @@ Class CSemVer  <a class="header-action link-secondary" title="View source" href=
   </dl>
   <dl class="jumplist">
     <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.op_LessThan.html#Ubiquity_NET_Versioning_CSemVer_op_LessThan_Ubiquity_NET_Versioning_CSemVer_Ubiquity_NET_Versioning_CSemVer_">operator &lt;(CSemVer, CSemVer)</a></dt>
-    <dd><p>Compares two <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a> values (Less than)</p>
+    <dd><p>Compares two values to determine which is less.</p>
 </dd>
   </dl>
   <dl class="jumplist">
     <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.op_LessThanOrEqual.html#Ubiquity_NET_Versioning_CSemVer_op_LessThanOrEqual_Ubiquity_NET_Versioning_CSemVer_Ubiquity_NET_Versioning_CSemVer_">operator &lt;=(CSemVer, CSemVer)</a></dt>
-    <dd><p>Compares two <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a> values (Less than or equal)</p>
+    <dd><p>Compares two values to determine which is less or equal.</p>
 </dd>
   </dl>
 
@@ -300,7 +302,7 @@ Class CSemVer  <a class="header-action link-secondary" title="View source" href=
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.0-rc/src/Ubiquity.NET.Versioning/CSemVer.cs/#L16" class="edit-link">Edit this page</a>
+          <a href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.0-rc.1/src/Ubiquity.NET.Versioning/CSemVer.cs/#L17" class="edit-link">Edit this page</a>
         </div>
 
 

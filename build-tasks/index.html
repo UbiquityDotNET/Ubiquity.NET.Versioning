@@ -16,7 +16,7 @@
       
       
       
-      <meta name="docfx:docurl" content="https://github.com/UbiquityDotNET/Llvm.NET/blob/develop/docfx/build-tasks/index.md/#L1">
+      <meta name="docfx:docurl" content="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/develop/docfx/build-tasks/index.md/#L1">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -44,7 +44,7 @@
       <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
         <div class="container-xxl flex-nowrap">
           <a class="navbar-brand" href="../index.html">
-            <img id="logo" class="svg" src="../llvm/DragonSharp48x48.png" alt="">
+            <img id="logo" class="svg" src="../favicon-32x32.png" alt="">
             
           </a>
           <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,21 +87,23 @@ using a Constrained Semantic Version (<a href="https://csemver.org/">CSemVer</a>
 <div class="WARNING">
 <h5>Warning</h5>
 <p>As a <a href="https://learn.microsoft.com/en-us/dotnet/core/compatibility/sdk/8.0/source-link">Breaking change in .NET SDK 8</a>
-is now setting the build meta data for the <code>InformationalVersion</code> property without user
-consent. (A Highly controversial choice that was more easily handled via an OPT-IN pattern)
-Unfortunately, this was set ON by default and made into an 'OPT-OUT' scenario. This library
-will honor such a setting and does not alter/interfere with it in any way. (Though the results
-can, unfortunately, produce surprising behavior).</p>
+is now setting the build meta data for the <code>InformationalVersion</code> property automatically and
+without user consent. (A Highly controversial choice that was more easily handled via an
+OPT-IN pattern) Unfortunately, this was set ON by default and made into an 'OPT-OUT' scenario.
+This library will honor such a setting and does not alter/interfere with it in any way.
+(Though the results can, unfortunately, produce surprising behavior as it is not well
+documented).</p>
 <p>If you wish to disable this behavior you can set an MSBUILD property to OPT-OUT as follows:<br>
 <code>&lt;IncludeSourceRevisionInInformationalVersion&gt;false&lt;/IncludeSourceRevisionInInformationalVersion&gt;</code></p>
 <p>This choice of ignoring the additional data is considered to have the least impact on those
 who are aware of the change and those who use this library to set an explicit build meta data
 string. (Principle of least surprise for what this library can control).</p>
-<p>The default .NET build behavior is to use the Repository ID (usually a GIT commit hash).
-This is appended with a leading <code>+</code> if one isn't already in the <code>InformationalVersion</code>
-property. If build metadata is already included (Like from use of this task) the id is
-appended using a <code>.</code> instead. So it is ALWAYS appended unless the project has opted out of
-this behavior by setting the property as previously described.</p>
+<p>The default behavior added in this breaking change is to use the Repository ID (usually a GIT
+commit hash [FULL SHA form!]) as the build metadata. This is appended with a leading <code>+</code> if
+one isn't already in the <code>InformationalVersion</code> property. If build metadata is already
+included (Like from use of this task) the id is appended using a <code>.</code> instead. So it is ALWAYS
+appended unless the project has opted out of this behavior by setting the property as
+previously described.</p>
 <p>Thus, it is <em><strong>strongly recommended</strong></em> that projects using this package OPT-OUT
 of the new behavior.</p>
 </div>
@@ -113,15 +115,15 @@ to using SemVer in a specially constrained way to ensure compatibility, while al
 allowing for automated CI builds. These new versions are called a <a href="http://csemver.org">Constrained Semantic
 Version</a> (CSemVer).</p>
 <p>A CSemVer is unique for each CI build and always increments while still supporting official
-releases. In the real world there are often cases where there are additional builds that are distinct from
-official releases and CI builds. Including Local developer builds, builds generated from a Pull
-Request (a.k.a Automated buddy build). CSemVer doesn't explicitly define any format for these
-cases. So this library defines a pattern of versioning that is fully compatible with CSemVer and
-allows for the additional build types in a way that retains precedence having the least
-surprising consequences. In particular, local build packages have a higher precedence than CI or
-release versions if all other components of the version match. This ensures that what you are
-building includes the dependent packages you just built instead of the last one released
-publicly.</p>
+releases. However, in the real world, there are often cases where there are additional builds
+that are distinct from official releases and CI builds. These include local developer builds
+and builds generated from a Pull Request (a.k.a Automated buddy build). Neither SemVer, nor
+CSemVer explicitly define any format for these cases. So this library defines a pattern of
+versioning that is fully compatible with CSemVer and allows for the additional build types
+in a way that retains precedence having the least surprising consequences. In particular,
+local build versions have a higher precedence than CI or release versions if all other
+components of the version match. This ensures that what you are building includes the dependent
+components you just built instead of the last one released publicly.</p>
 <p>The following is a list of the version formats in descending order of precedence:</p>
 <table>
 <thead>
@@ -153,6 +155,8 @@ publicly.</p>
 </tr>
 </tbody>
 </table>
+<p>That is the, CI BuildName is chosen to ensure the ordering matches the expected behavior for
+a build.</p>
 <p>This project provides an MSBUILD task to automate the generation of these versions in an easy
 to use NuGet Package.</p>
 <p>The package creates File and Assembly Versions and defines the appropriate MsBuild properties
@@ -160,16 +164,30 @@ so the build will automatically incorporate them.</p>
 <blockquote>
 <p><strong>NOTE:</strong><br>
 The automatic use of MsBuild properties requires using the new SDK attribute support for .NET
-projects. Where the build auto generates the assembly info. If you are using some other means to
-auto generate the assembly level versioning attributes. You can use the properties generated by
-this package to generate the attributes.</p>
+projects. Where the build auto generates the assembly info. If you are using some other means
+to auto generate the assembly level versioning attributes. You can use the properties
+generated by this package to generate the attributes.</p>
 </blockquote>
 <p>File and AssemblyVersions are computed based on the CSemVer &quot;Ordered version&quot;, which
-is a 64 bit value that maps to a standard windows FILEVERSION Quad with each part
-consuming 16 bits. This ensures a strong relationship between the  assembly/file versions
+is a 64 bit value that maps to a standard windows FILE VERSION Quad with each part
+consuming 16 bits. This ensures a strong relationship between the assembly/file versions
 and the packages as well as ensures that CI builds can function properly. Furthermore, this
 guarantees that each build has a different file and assembly version so that strong name
 signing functions properly to enable loading different versions in the same process.</p>
+<div class="IMPORTANT">
+<h5>Important</h5>
+<p>A file version quad representation of a CSemVer does NOT carry with it the CI information nor
+the build metadata. It only contains a single bit to indicate a Release vs. a CI build. In
+fact, the official CSemVer specs are silent on the use of this bit though the &quot;playground&quot;
+does indicate an ODD numbered revision is a CI build. However, that leads to problems (see
+this: <a href="https://github.com/CK-Build/csemver.org/issues/2">Spec issue</a> for more details).
+Thus, the <code>Ubiquity.NET.Versioning.*</code> libraries do NOT work that way. In these libraries,
+an odd numbered revision indicates a RELEASE build whereas an EVEN numbered form represents
+a CI build. This results in the correct behavior for comparisons of the File version. The
+file version comparisons MUST result in correct ordering or an underlying Windows OS and
+related APIs will NOT behave as expected. (A CI build is ALWAYS ordered less then a release
+build)</p>
+</div>
 <p>The Major, Minor and Patch versions are only updated in the primary branch at the time
 of a release. This ensures the concept that SemVer versions define released products. The
 version numbers used are stored in the repository in the BuildVersion.xml</p>
@@ -448,6 +466,7 @@ based on the build environment used and aid in determining the CI build name as 
 <p>If not explicitly set this is determined by the automated build flags as described in the <a href="#cibuildname">CiBuildName</a>
 section of this document.</p>
 <h2 id="detected-error-conditions">Detected Error Conditions</h2>
+<h3 id="targets-file">Targets file</h3>
 <table>
 <thead>
 <tr>
@@ -486,11 +505,95 @@ section of this document.</p>
 </tr>
 </tbody>
 </table>
+<h3 id="createversioninfo-task">CreateVersionInfo Task</h3>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CSM100</td>
+<td>BuildMajor value must be in range [0-99999]</td>
+</tr>
+<tr>
+<td>CSM101</td>
+<td>BuildMinor value must be in range [0-49999]</td>
+</tr>
+<tr>
+<td>CSM102</td>
+<td>BuildPatch value must be in range [0-9999]</td>
+</tr>
+<tr>
+<td>CSM103</td>
+<td>PreReleaseName is unknown</td>
+</tr>
+<tr>
+<td>CSM104</td>
+<td>PreReleaseNumber value must be in range [0-99]</td>
+</tr>
+<tr>
+<td>CSM105</td>
+<td>PreReleaseFix value must be in range [0-99]</td>
+</tr>
+<tr>
+<td>CSM106<sup>1</sup></td>
+<td>If CiBuildIndex is set then CiBuildName must also be set; If CiBuildIndex is NOT set then CiBuildName must not be set.</td>
+</tr>
+<tr>
+<td>CSM107</td>
+<td>CiBuildIndex does not match syntax defined by CSemVer</td>
+</tr>
+<tr>
+<td>CSM108</td>
+<td>CiBuildName does not match syntax defined by CSemVer</td>
+</tr>
+</tbody>
+</table>
+<h3 id="parsebuildversionxml-task">ParseBuildVersionXml Task</h3>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CSM200</td>
+<td>BuildVersionXml is required and must not be all whitespace</td>
+</tr>
+<tr>
+<td>CSM201</td>
+<td>Specified BuildVersionXml does not exist <code>$(BuildVersionXml)</code></td>
+</tr>
+<tr>
+<td>CSM202</td>
+<td>BuildVersionData element does not exist in <code>$(BuildVersionXml)</code></td>
+</tr>
+<tr>
+<td>CSM203</td>
+<td>[Warning] Unexpected attribute on BuildVersionData Element</td>
+</tr>
+<tr>
+<td>CSM204</td>
+<td>XML format of file specified by `$(BuildVersionXml)' is invalid</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><sup>1</sup> CSM106 is essentially an internal sanity test. The props/targets files ensure that
+<code>$(CiBuildIndex)</code> and <code>$(CiBuildName)</code> have a value unless $(IsReleaseBuild) is set. In that case
+the targets file will force them to empty. So, there's no way to test for or hit this condition
+without completely replacing/bypassing the props/targets files for the task. Which is obviously,
+an unsupported scenario 😁.</p>
 
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/UbiquityDotNET/Llvm.NET/blob/develop/docfx/build-tasks/index.md/#L1" class="edit-link">Edit this page</a>
+          <a href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/develop/docfx/build-tasks/index.md/#L1" class="edit-link">Edit this page</a>
         </div>
 
         <div class="next-article d-print-none border-top" id="nextArticle"></div>

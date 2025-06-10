@@ -418,6 +418,18 @@ references:
   commentId: Overload:Ubiquity.NET.Versioning.CiBuildInfo.BuildName
   fullName: Ubiquity.NET.Versioning.CiBuildInfo.BuildName
   nameWithType: CiBuildInfo.BuildName
+- uid: Ubiquity.NET.Versioning.CiBuildInfo.CompareTo(Ubiquity.NET.Versioning.CiBuildInfo)
+  name: CompareTo(CiBuildInfo)
+  href: versioning-lib/api/Ubiquity.NET.Versioning.CiBuildInfo.CompareTo.html#Ubiquity_NET_Versioning_CiBuildInfo_CompareTo_Ubiquity_NET_Versioning_CiBuildInfo_
+  commentId: M:Ubiquity.NET.Versioning.CiBuildInfo.CompareTo(Ubiquity.NET.Versioning.CiBuildInfo)
+  fullName: Ubiquity.NET.Versioning.CiBuildInfo.CompareTo(Ubiquity.NET.Versioning.CiBuildInfo)
+  nameWithType: CiBuildInfo.CompareTo(CiBuildInfo)
+- uid: Ubiquity.NET.Versioning.CiBuildInfo.CompareTo*
+  name: CompareTo
+  href: versioning-lib/api/Ubiquity.NET.Versioning.CiBuildInfo.CompareTo.html
+  commentId: Overload:Ubiquity.NET.Versioning.CiBuildInfo.CompareTo
+  fullName: Ubiquity.NET.Versioning.CiBuildInfo.CompareTo
+  nameWithType: CiBuildInfo.CompareTo
 - uid: Ubiquity.NET.Versioning.CiBuildInfo.IsValid
   name: IsValid
   href: versioning-lib/api/Ubiquity.NET.Versioning.CiBuildInfo.IsValid.html#Ubiquity_NET_Versioning_CiBuildInfo_IsValid
@@ -451,6 +463,78 @@ references:
   commentId: Overload:Ubiquity.NET.Versioning.CiBuildInfo.ToString
   fullName: Ubiquity.NET.Versioning.CiBuildInfo.ToString
   nameWithType: CiBuildInfo.ToString
+- uid: Ubiquity.NET.Versioning.CiBuildInfo.op_GreaterThan(Ubiquity.NET.Versioning.CiBuildInfo,Ubiquity.NET.Versioning.CiBuildInfo)
+  name: operator >(CiBuildInfo, CiBuildInfo)
+  href: versioning-lib/api/Ubiquity.NET.Versioning.CiBuildInfo.op_GreaterThan.html#Ubiquity_NET_Versioning_CiBuildInfo_op_GreaterThan_Ubiquity_NET_Versioning_CiBuildInfo_Ubiquity_NET_Versioning_CiBuildInfo_
+  commentId: M:Ubiquity.NET.Versioning.CiBuildInfo.op_GreaterThan(Ubiquity.NET.Versioning.CiBuildInfo,Ubiquity.NET.Versioning.CiBuildInfo)
+  name.vb: '>(CiBuildInfo, CiBuildInfo)'
+  fullName: Ubiquity.NET.Versioning.CiBuildInfo.operator >(Ubiquity.NET.Versioning.CiBuildInfo, Ubiquity.NET.Versioning.CiBuildInfo)
+  fullName.vb: Ubiquity.NET.Versioning.CiBuildInfo.>(Ubiquity.NET.Versioning.CiBuildInfo, Ubiquity.NET.Versioning.CiBuildInfo)
+  nameWithType: CiBuildInfo.operator >(CiBuildInfo, CiBuildInfo)
+  nameWithType.vb: CiBuildInfo.>(CiBuildInfo, CiBuildInfo)
+- uid: Ubiquity.NET.Versioning.CiBuildInfo.op_GreaterThan*
+  name: operator >
+  href: versioning-lib/api/Ubiquity.NET.Versioning.CiBuildInfo.op_GreaterThan.html
+  commentId: Overload:Ubiquity.NET.Versioning.CiBuildInfo.op_GreaterThan
+  name.vb: '>'
+  fullName: Ubiquity.NET.Versioning.CiBuildInfo.operator >
+  fullName.vb: Ubiquity.NET.Versioning.CiBuildInfo.>
+  nameWithType: CiBuildInfo.operator >
+  nameWithType.vb: CiBuildInfo.>
+- uid: Ubiquity.NET.Versioning.CiBuildInfo.op_GreaterThanOrEqual(Ubiquity.NET.Versioning.CiBuildInfo,Ubiquity.NET.Versioning.CiBuildInfo)
+  name: operator >=(CiBuildInfo, CiBuildInfo)
+  href: versioning-lib/api/Ubiquity.NET.Versioning.CiBuildInfo.op_GreaterThanOrEqual.html#Ubiquity_NET_Versioning_CiBuildInfo_op_GreaterThanOrEqual_Ubiquity_NET_Versioning_CiBuildInfo_Ubiquity_NET_Versioning_CiBuildInfo_
+  commentId: M:Ubiquity.NET.Versioning.CiBuildInfo.op_GreaterThanOrEqual(Ubiquity.NET.Versioning.CiBuildInfo,Ubiquity.NET.Versioning.CiBuildInfo)
+  name.vb: '>=(CiBuildInfo, CiBuildInfo)'
+  fullName: Ubiquity.NET.Versioning.CiBuildInfo.operator >=(Ubiquity.NET.Versioning.CiBuildInfo, Ubiquity.NET.Versioning.CiBuildInfo)
+  fullName.vb: Ubiquity.NET.Versioning.CiBuildInfo.>=(Ubiquity.NET.Versioning.CiBuildInfo, Ubiquity.NET.Versioning.CiBuildInfo)
+  nameWithType: CiBuildInfo.operator >=(CiBuildInfo, CiBuildInfo)
+  nameWithType.vb: CiBuildInfo.>=(CiBuildInfo, CiBuildInfo)
+- uid: Ubiquity.NET.Versioning.CiBuildInfo.op_GreaterThanOrEqual*
+  name: operator >=
+  href: versioning-lib/api/Ubiquity.NET.Versioning.CiBuildInfo.op_GreaterThanOrEqual.html
+  commentId: Overload:Ubiquity.NET.Versioning.CiBuildInfo.op_GreaterThanOrEqual
+  name.vb: '>='
+  fullName: Ubiquity.NET.Versioning.CiBuildInfo.operator >=
+  fullName.vb: Ubiquity.NET.Versioning.CiBuildInfo.>=
+  nameWithType: CiBuildInfo.operator >=
+  nameWithType.vb: CiBuildInfo.>=
+- uid: Ubiquity.NET.Versioning.CiBuildInfo.op_LessThan(Ubiquity.NET.Versioning.CiBuildInfo,Ubiquity.NET.Versioning.CiBuildInfo)
+  name: operator <(CiBuildInfo, CiBuildInfo)
+  href: versioning-lib/api/Ubiquity.NET.Versioning.CiBuildInfo.op_LessThan.html#Ubiquity_NET_Versioning_CiBuildInfo_op_LessThan_Ubiquity_NET_Versioning_CiBuildInfo_Ubiquity_NET_Versioning_CiBuildInfo_
+  commentId: M:Ubiquity.NET.Versioning.CiBuildInfo.op_LessThan(Ubiquity.NET.Versioning.CiBuildInfo,Ubiquity.NET.Versioning.CiBuildInfo)
+  name.vb: <(CiBuildInfo, CiBuildInfo)
+  fullName: Ubiquity.NET.Versioning.CiBuildInfo.operator <(Ubiquity.NET.Versioning.CiBuildInfo, Ubiquity.NET.Versioning.CiBuildInfo)
+  fullName.vb: Ubiquity.NET.Versioning.CiBuildInfo.<(Ubiquity.NET.Versioning.CiBuildInfo, Ubiquity.NET.Versioning.CiBuildInfo)
+  nameWithType: CiBuildInfo.operator <(CiBuildInfo, CiBuildInfo)
+  nameWithType.vb: CiBuildInfo.<(CiBuildInfo, CiBuildInfo)
+- uid: Ubiquity.NET.Versioning.CiBuildInfo.op_LessThan*
+  name: operator <
+  href: versioning-lib/api/Ubiquity.NET.Versioning.CiBuildInfo.op_LessThan.html
+  commentId: Overload:Ubiquity.NET.Versioning.CiBuildInfo.op_LessThan
+  name.vb: <
+  fullName: Ubiquity.NET.Versioning.CiBuildInfo.operator <
+  fullName.vb: Ubiquity.NET.Versioning.CiBuildInfo.<
+  nameWithType: CiBuildInfo.operator <
+  nameWithType.vb: CiBuildInfo.<
+- uid: Ubiquity.NET.Versioning.CiBuildInfo.op_LessThanOrEqual(Ubiquity.NET.Versioning.CiBuildInfo,Ubiquity.NET.Versioning.CiBuildInfo)
+  name: operator <=(CiBuildInfo, CiBuildInfo)
+  href: versioning-lib/api/Ubiquity.NET.Versioning.CiBuildInfo.op_LessThanOrEqual.html#Ubiquity_NET_Versioning_CiBuildInfo_op_LessThanOrEqual_Ubiquity_NET_Versioning_CiBuildInfo_Ubiquity_NET_Versioning_CiBuildInfo_
+  commentId: M:Ubiquity.NET.Versioning.CiBuildInfo.op_LessThanOrEqual(Ubiquity.NET.Versioning.CiBuildInfo,Ubiquity.NET.Versioning.CiBuildInfo)
+  name.vb: <=(CiBuildInfo, CiBuildInfo)
+  fullName: Ubiquity.NET.Versioning.CiBuildInfo.operator <=(Ubiquity.NET.Versioning.CiBuildInfo, Ubiquity.NET.Versioning.CiBuildInfo)
+  fullName.vb: Ubiquity.NET.Versioning.CiBuildInfo.<=(Ubiquity.NET.Versioning.CiBuildInfo, Ubiquity.NET.Versioning.CiBuildInfo)
+  nameWithType: CiBuildInfo.operator <=(CiBuildInfo, CiBuildInfo)
+  nameWithType.vb: CiBuildInfo.<=(CiBuildInfo, CiBuildInfo)
+- uid: Ubiquity.NET.Versioning.CiBuildInfo.op_LessThanOrEqual*
+  name: operator <=
+  href: versioning-lib/api/Ubiquity.NET.Versioning.CiBuildInfo.op_LessThanOrEqual.html
+  commentId: Overload:Ubiquity.NET.Versioning.CiBuildInfo.op_LessThanOrEqual
+  name.vb: <=
+  fullName: Ubiquity.NET.Versioning.CiBuildInfo.operator <=
+  fullName.vb: Ubiquity.NET.Versioning.CiBuildInfo.<=
+  nameWithType: CiBuildInfo.operator <=
+  nameWithType.vb: CiBuildInfo.<=
 - uid: Ubiquity.NET.Versioning.DateTimeExtensions
   name: DateTimeExtensions
   href: versioning-lib/api/Ubiquity.NET.Versioning.DateTimeExtensions.html
@@ -541,6 +625,18 @@ references:
   commentId: Overload:Ubiquity.NET.Versioning.FileVersionQuad.From
   fullName: Ubiquity.NET.Versioning.FileVersionQuad.From
   nameWithType: FileVersionQuad.From
+- uid: Ubiquity.NET.Versioning.FileVersionQuad.IsCiBuild
+  name: IsCiBuild
+  href: versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.IsCiBuild.html#Ubiquity_NET_Versioning_FileVersionQuad_IsCiBuild
+  commentId: P:Ubiquity.NET.Versioning.FileVersionQuad.IsCiBuild
+  fullName: Ubiquity.NET.Versioning.FileVersionQuad.IsCiBuild
+  nameWithType: FileVersionQuad.IsCiBuild
+- uid: Ubiquity.NET.Versioning.FileVersionQuad.IsCiBuild*
+  name: IsCiBuild
+  href: versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.IsCiBuild.html
+  commentId: Overload:Ubiquity.NET.Versioning.FileVersionQuad.IsCiBuild
+  fullName: Ubiquity.NET.Versioning.FileVersionQuad.IsCiBuild
+  nameWithType: FileVersionQuad.IsCiBuild
 - uid: Ubiquity.NET.Versioning.FileVersionQuad.Major
   name: Major
   href: versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.Major.html#Ubiquity_NET_Versioning_FileVersionQuad_Major
@@ -577,6 +673,27 @@ references:
   commentId: Overload:Ubiquity.NET.Versioning.FileVersionQuad.Revision
   fullName: Ubiquity.NET.Versioning.FileVersionQuad.Revision
   nameWithType: FileVersionQuad.Revision
+- uid: Ubiquity.NET.Versioning.FileVersionQuad.ToOrderedVersion
+  name: ToOrderedVersion()
+  href: versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.ToOrderedVersion.html#Ubiquity_NET_Versioning_FileVersionQuad_ToOrderedVersion
+  commentId: M:Ubiquity.NET.Versioning.FileVersionQuad.ToOrderedVersion
+  fullName: Ubiquity.NET.Versioning.FileVersionQuad.ToOrderedVersion()
+  nameWithType: FileVersionQuad.ToOrderedVersion()
+- uid: Ubiquity.NET.Versioning.FileVersionQuad.ToOrderedVersion(System.Boolean@)
+  name: ToOrderedVersion(out bool)
+  href: versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.ToOrderedVersion.html#Ubiquity_NET_Versioning_FileVersionQuad_ToOrderedVersion_System_Boolean__
+  commentId: M:Ubiquity.NET.Versioning.FileVersionQuad.ToOrderedVersion(System.Boolean@)
+  name.vb: ToOrderedVersion(Boolean)
+  fullName: Ubiquity.NET.Versioning.FileVersionQuad.ToOrderedVersion(out bool)
+  fullName.vb: Ubiquity.NET.Versioning.FileVersionQuad.ToOrderedVersion(Boolean)
+  nameWithType: FileVersionQuad.ToOrderedVersion(out bool)
+  nameWithType.vb: FileVersionQuad.ToOrderedVersion(Boolean)
+- uid: Ubiquity.NET.Versioning.FileVersionQuad.ToOrderedVersion*
+  name: ToOrderedVersion
+  href: versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.ToOrderedVersion.html
+  commentId: Overload:Ubiquity.NET.Versioning.FileVersionQuad.ToOrderedVersion
+  fullName: Ubiquity.NET.Versioning.FileVersionQuad.ToOrderedVersion
+  nameWithType: FileVersionQuad.ToOrderedVersion
 - uid: Ubiquity.NET.Versioning.FileVersionQuad.ToString
   name: ToString()
   href: versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.ToString.html#Ubiquity_NET_Versioning_FileVersionQuad_ToString

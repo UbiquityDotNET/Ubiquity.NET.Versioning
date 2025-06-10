@@ -44,7 +44,7 @@
       <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
         <div class="container-xxl flex-nowrap">
           <a class="navbar-brand" href="../../index.html">
-            <img id="logo" class="svg" src="../../llvm/DragonSharp48x48.png" alt="">
+            <img id="logo" class="svg" src="../../favicon-32x32.png" alt="">
             
           </a>
           <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,7 +97,7 @@ Struct CiBuildInfo
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly record struct CiBuildInfo : IFormattable, IEquatable&lt;CiBuildInfo&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly record struct CiBuildInfo : IFormattable, IComparable&lt;CiBuildInfo&gt;, IComparisonOperators&lt;CiBuildInfo, CiBuildInfo, bool&gt;, IEqualityOperators&lt;CiBuildInfo, CiBuildInfo, bool&gt;, IEquatable&lt;CiBuildInfo&gt;</code></pre>
   </div>
 
 
@@ -108,6 +108,9 @@ Struct CiBuildInfo
     <dt>Implements</dt>
     <dd>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iformattable">IFormattable</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.icomparable-1">IComparable</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.CiBuildInfo.html">CiBuildInfo</a>&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.icomparisonoperators-3">IComparisonOperators</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.CiBuildInfo.html">CiBuildInfo</a>, <a class="xref" href="Ubiquity.NET.Versioning.CiBuildInfo.html">CiBuildInfo</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.iequalityoperators-3">IEqualityOperators</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.CiBuildInfo.html">CiBuildInfo</a>, <a class="xref" href="Ubiquity.NET.Versioning.CiBuildInfo.html">CiBuildInfo</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</div>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.CiBuildInfo.html">CiBuildInfo</a>&gt;</div>
     </dd>
   </dl>
@@ -169,6 +172,11 @@ Struct CiBuildInfo
 </h2>
 
   <dl class="jumplist">
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.CiBuildInfo.CompareTo.html#Ubiquity_NET_Versioning_CiBuildInfo_CompareTo_Ubiquity_NET_Versioning_CiBuildInfo_">CompareTo(CiBuildInfo)</a></dt>
+    <dd><p>Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.</p>
+</dd>
+  </dl>
+  <dl class="jumplist">
     <dt><a class="xref" href="Ubiquity.NET.Versioning.CiBuildInfo.ToString.html#Ubiquity_NET_Versioning_CiBuildInfo_ToString">ToString()</a></dt>
     <dd><p>Gets the CI build information based on the rules for CSemVer-CI</p>
 </dd>
@@ -176,6 +184,30 @@ Struct CiBuildInfo
   <dl class="jumplist">
     <dt><a class="xref" href="Ubiquity.NET.Versioning.CiBuildInfo.ToString.html#Ubiquity_NET_Versioning_CiBuildInfo_ToString_System_String_System_IFormatProvider_">ToString(string?, IFormatProvider?)</a></dt>
     <dd><p>Gets the CI build information based on the rules for CSemVer-CI</p>
+</dd>
+  </dl>
+
+  <h2 class="section" id="operators">Operators
+</h2>
+
+  <dl class="jumplist">
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.CiBuildInfo.op_GreaterThan.html#Ubiquity_NET_Versioning_CiBuildInfo_op_GreaterThan_Ubiquity_NET_Versioning_CiBuildInfo_Ubiquity_NET_Versioning_CiBuildInfo_">operator &gt;(CiBuildInfo, CiBuildInfo)</a></dt>
+    <dd><p>Compares two values to determine which is greater.</p>
+</dd>
+  </dl>
+  <dl class="jumplist">
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.CiBuildInfo.op_GreaterThanOrEqual.html#Ubiquity_NET_Versioning_CiBuildInfo_op_GreaterThanOrEqual_Ubiquity_NET_Versioning_CiBuildInfo_Ubiquity_NET_Versioning_CiBuildInfo_">operator &gt;=(CiBuildInfo, CiBuildInfo)</a></dt>
+    <dd><p>Compares two values to determine which is greater or equal.</p>
+</dd>
+  </dl>
+  <dl class="jumplist">
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.CiBuildInfo.op_LessThan.html#Ubiquity_NET_Versioning_CiBuildInfo_op_LessThan_Ubiquity_NET_Versioning_CiBuildInfo_Ubiquity_NET_Versioning_CiBuildInfo_">operator &lt;(CiBuildInfo, CiBuildInfo)</a></dt>
+    <dd><p>Compares two values to determine which is less.</p>
+</dd>
+  </dl>
+  <dl class="jumplist">
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.CiBuildInfo.op_LessThanOrEqual.html#Ubiquity_NET_Versioning_CiBuildInfo_op_LessThanOrEqual_Ubiquity_NET_Versioning_CiBuildInfo_Ubiquity_NET_Versioning_CiBuildInfo_">operator &lt;=(CiBuildInfo, CiBuildInfo)</a></dt>
+    <dd><p>Compares two values to determine which is less or equal.</p>
 </dd>
   </dl>
 

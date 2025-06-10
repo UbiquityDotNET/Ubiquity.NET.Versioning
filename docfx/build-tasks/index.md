@@ -239,7 +239,7 @@ section of this document.
 | CSM103 | PreReleaseName is unknown |
 | CSM104 | PreReleaseNumber value must be in range [0-99] |
 | CSM105 | PreReleaseFix value must be in range [0-99] |
-| CSM106^1^ | If CiBuildIndex is set then CiBuildName must also be set; If CiBuildIndex is NOT set then CiBuildName must not be set. |
+| CSM106<sup>1</sup> | If CiBuildIndex is set then CiBuildName must also be set; If CiBuildIndex is NOT set then CiBuildName must not be set. |
 | CSM107 | CiBuildIndex does not match syntax defined by CSemVer |
 | CSM108 | CiBuildName does not match syntax defined by CSemVer |
 
@@ -253,7 +253,7 @@ section of this document.
 | CSM204 | XML format of file specified by `$(BuildVersionXml)' is invalid |
 
 ----
-^1^ CSM106 is essentially an internal sanity test. The props/targets files ensure that
+<sup>1</sup> CSM106 is essentially an internal sanity test. The props/targets files ensure that
 `$(CiBuildIndex)` and `$(CiBuildName)` have a value unless $(IsReleaseBuild) is set. In that case
 the targets file will force them to empty. So, there's no way to test for or hit this condition
 without completely replacing/bypassing the props/targets files for the task. Which is obviously,

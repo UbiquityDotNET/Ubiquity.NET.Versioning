@@ -75,7 +75,6 @@ namespace Ubiquity.NET.Versioning.Build.Tasks
 
                 if(!ValidateInput())
                 {
-                    Log.LogError("Input validation failed");
                     return false;
                 }
 
@@ -196,19 +195,19 @@ namespace Ubiquity.NET.Versioning.Build.Tasks
             bool hasInputError = false;
             if(BuildMajor < 0 || BuildMajor > 99999)
             {
-                Log.LogError( "BuildMajor value must be in range [0-99999]" );
+                LogError("CSM100", "BuildMajor value must be in range [0-99999]" );
                 hasInputError = true;
             }
 
             if(BuildMinor < 0 || BuildMinor > 49999)
             {
-                Log.LogError( "BuildMinor value must be in range [0-49999]" );
+                LogError("CSM101", "BuildMinor value must be in range [0-49999]" );
                 hasInputError = true;
             }
 
             if(BuildPatch < 0 || BuildPatch > 9999)
             {
-                Log.LogError( "BuildPatch value must be in range [0-99999]" );
+                LogError("CSM102", "BuildPatch value must be in range [0-9999]" );
                 hasInputError = true;
             }
 
@@ -218,7 +217,7 @@ namespace Ubiquity.NET.Versioning.Build.Tasks
                 {
                     if(!PreReleaseShortNames.Contains( PreReleaseName, StringComparer.InvariantCultureIgnoreCase ))
                     {
-                        Log.LogError( "PreRelease Name is unknown" );
+                        LogError("CSM103", "PreRelease Name is unknown" );
                         hasInputError = true;
                     }
                 }
@@ -226,51 +225,45 @@ namespace Ubiquity.NET.Versioning.Build.Tasks
 
             if(PreReleaseNumber < 0 || PreReleaseNumber > 99)
             {
-                Log.LogError( "PreReleaseNumber value must be in range [0-99]" );
+                LogError("CSM104", "PreReleaseNumber value must be in range [0-99]" );
                 hasInputError = true;
             }
 
             if(PreReleaseFix < 0 || PreReleaseFix > 99)
             {
-                Log.LogError( "PreReleaseFix value must be in range [0-99]" );
+                LogError("CSM104", "PreReleaseFix value must be in range [0-99]" );
                 hasInputError = true;
             }
 
             if(string.IsNullOrWhiteSpace( CiBuildIndex ) != string.IsNullOrWhiteSpace( CiBuildName ))
             {
-                Log.LogError( "If CiBuildIndex is set then CiBuildName must also be set; If CiBuildIndex is NOT set then CiBuildName must not be set." );
+                LogError("CSM105", "If CiBuildIndex is set then CiBuildName must also be set; If CiBuildIndex is NOT set then CiBuildName must not be set." );
                 hasInputError = true;
             }
 
             if(CiBuildIndex != null && !CiBuildIdRegEx.IsMatch( CiBuildIndex ))
             {
-                Log.LogError( "CiBuildIndex does not match syntax defined by CSemVer" );
+                LogError("CSM106", "CiBuildIndex does not match syntax defined by CSemVer" );
                 hasInputError = true;
             }
 
             if(CiBuildName != null && !CiBuildIdRegEx.IsMatch( CiBuildName ))
             {
-                Log.LogError( "CiBuildName does not match syntax defined by CSemVer" );
-                hasInputError = true;
-            }
-
-            if(!string.IsNullOrEmpty( BuildMeta ) && BuildMeta!.Length > 20)
-            {
-                Log.LogError( "Build metadata, if provided, must not exceed 20 characters" );
+                LogError("CSM107", "CiBuildName does not match syntax defined by CSemVer" );
                 hasInputError = true;
             }
 
             return !hasInputError;
         }
 
-        //private void LogError(
-        //    string code,
-        //    /*[StringSyntax(StringSyntaxAttribute.CompositeFormat)]*/ string message,
-        //    params object[] messageArgs
-        //    )
-        //{
-        //    Log.LogError("Task", code, null, null, 0, 0, 0, 0, message, messageArgs);
-        //}
+        private void LogError(
+            string code,
+            /*[StringSyntax(StringSyntaxAttribute.CompositeFormat)]*/ string message,
+            params object[] messageArgs
+            )
+        {
+            Log.LogError($"{nameof(CreateVersionInfo)} Task", code, null, null, 0, 0, 0, 0, message, messageArgs);
+        }
 
         private static int ComputePreReleaseIndex( string preRelName )
         {

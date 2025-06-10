@@ -218,12 +218,23 @@ If not explicitly set this is determined by the automated build flags as describ
 section of this document.
 
 ## Detected Error Conditions
-|Code     |Description|
-|---------|-----------|
-| CSM001  | BuildMajor is a required property, either set it as a global or in the build version XML |
-| CSM002  | BuildMinor is a required property, either set it as a global or in the build version XML |
-| CSM003  | BuildPatch is a required property, either set it as a global or in the build version XML |
-| CSM004  | FileVersion property not provided AND FileVersionMajor property not found to create it from |
-| CSM005  | FileVersion property not provided AND FileVersionMinor property not found to create it from |
-| CSM006  | FileVersion property not provided AND FileVersionBuild property not found to create it from |
-| CSM007  | FileVersion property not provided AND FileVersionRevision property not found to create it from |
+|Code    |Description|
+|--------|-----------|
+| CSM001 | BuildMajor is a required property, either set it as a global or in the build version XML |
+| CSM002 | BuildMinor is a required property, either set it as a global or in the build version XML |
+| CSM003 | BuildPatch is a required property, either set it as a global or in the build version XML |
+| CSM004 | FileVersion property not provided AND FileVersionMajor property not found to create it from |
+| CSM005 | FileVersion property not provided AND FileVersionMinor property not found to create it from |
+| CSM006 | FileVersion property not provided AND FileVersionBuild property not found to create it from |
+| CSM007 | FileVersion property not provided AND FileVersionRevision property not found to create it from |
+| CSM100 | BuildMajor value must be in range [0-99999] |
+| CSM101 | BuildMinor value must be in range [0-49999] |
+| CSM102 | BuildPatch value must be in range [0-9999] |
+| CSM103 | PreRelease Name is unknown |
+| CSM104 | PreReleaseNumber value must be in range [0-99] |
+| CSM105 | If CiBuildIndex is set then CiBuildName must also be set; If CiBuildIndex is NOT set then CiBuildName must not be set. |
+| CSM106 | CiBuildIndex does not match syntax defined by CSemVer |
+| CSM107 | CiBuildName does not match syntax defined by CSemVer |
+| CSM200 | BuildVersionXml is required and must not be all whitespace |
+| CSM201 | Specified BuildVersionXml does not exist `$(BuildVersionXml)`|
+| CSM202 | [Warning] Unexpected attribute on BuildVersionData Element |

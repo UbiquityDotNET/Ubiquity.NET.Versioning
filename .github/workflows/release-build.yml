@@ -54,12 +54,9 @@ jobs:
         run: ./Build-Docs.ps1
 
       - name: Commit Docs
-        env:
-          docspush_email: 32618965+cibuild-telliam@users.noreply.github.com
-          docspush_username: cibuild-telliam
-        run: .\Push-Docs.ps1 -SkipPush
+        run: .\Commit-Docs.ps1
 
-      - name: Push Docs
+      - name: Publish Docs
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -73,6 +70,4 @@ jobs:
         if: (!cancelled())
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
           draft: true

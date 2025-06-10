@@ -6,6 +6,7 @@
     <File Path="../Build-All.ps1" />
     <File Path="../Build-Docs.ps1" />
     <File Path="../BuildVersion.xml" />
+    <File Path="../Commit-Docs.ps1" />
     <File Path="../Directory.Build.props" />
     <File Path="../Directory.Build.targets" />
     <File Path="../Directory.Packages.props" />
@@ -14,7 +15,6 @@
     <File Path="../Invoke-Tests.ps1" />
     <File Path="../New-GeneratedVersionProps.ps1" />
     <File Path="../Nuget.Config" />
-    <File Path="../Push-Docs.ps1" />
     <File Path="../Push-Nuget.ps1" />
     <File Path="../README.md" />
     <File Path="../Show-Docs.ps1" />

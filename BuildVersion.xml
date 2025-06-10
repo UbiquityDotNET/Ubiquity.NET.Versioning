@@ -6,5 +6,5 @@ This file is updated on a public release to set the next build that pre-releases
     BuildMinor = "0"
     BuildPatch = "0"
     PreReleaseName = "rc"
-    PreReleaseNumber = "1"
+    PreReleaseNumber = "2"
 />

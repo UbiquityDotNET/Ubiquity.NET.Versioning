@@ -20,40 +20,48 @@ namespace Ubiquity.NET.Versioning
     {
         public static string ThrowIfNotMatch( [NotNull] this string self, Regex regex, [CallerArgumentExpression( nameof( self ) )] string? exp = null )
         {
-            self.ThrowIfNull(exp);
+            self.ThrowIfNull( exp );
             return regex.IsMatch( self ) ? self : throw new ArgumentException( $"Input '{self}' does not match expected pattern '{regex}'", exp );
+        }
+
+        public static bool IsOutOfRange<T>( [NotNullWhen(false)] this T? self, T min, T max )
+            where T : IComparable<T>
+        {
+            return self is null
+                || self.CompareTo( min ) < 0
+                || self.CompareTo( max ) > 0;
         }
 
         public static T ThrowIfOutOfRange<T>( [NotNull] this T? self, T min, T max, [CallerArgumentExpression( nameof( self ) )] string? exp = null )
             where T : IComparable<T>
         {
-            self.ThrowIfNull(exp);
-            return self.CompareTo( min ) < 0 || self.CompareTo( max ) > 0
-                ? throw new ArgumentOutOfRangeException( exp, self, $"Value is outside of range [{min}-{max}]")
+            self.ThrowIfNull( exp );
+            return IsOutOfRange(self, min, max)
+                ? throw new ArgumentOutOfRangeException( exp, self, $"Value is outside of range [{min}-{max}]" )
                 : self;
         }
 
-        public static T ThrowIfNull<T>([NotNull] this T? self, [CallerArgumentExpression( nameof( self ) )] string? exp = null)
+        public static T ThrowIfNull<T>( [NotNull] this T? self, [CallerArgumentExpression( nameof( self ) )] string? exp = null )
         {
-            return self is not null ? self : throw new ArgumentNullException(exp);
+            return self is not null ? self : throw new ArgumentNullException( exp );
         }
 
         public static string ThrowIfNullOrWhiteSpace( [NotNull] this string? self, [CallerArgumentExpression( nameof( self ) )] string? exp = null )
         {
-            self.ThrowIfNull(exp);
-            return !string.IsNullOrWhiteSpace(self) ? self : throw new ArgumentException("Argument is Null or White Space", exp);
+            self.ThrowIfNull( exp );
+            return !string.IsNullOrWhiteSpace( self ) ? self : throw new ArgumentException( "Argument is Null or White Space", exp );
         }
 
-        public static string ThrowIfNullOrWhitespaceOrLongerThan([NotNull] this string? self, int length, [CallerArgumentExpression( nameof( self ) )] string? exp = null)
+        public static string ThrowIfNullOrWhitespaceOrLongerThan( [NotNull] this string? self, int length, [CallerArgumentExpression( nameof( self ) )] string? exp = null )
         {
-            self.ThrowIfNullOrWhiteSpace(exp);
-            return self.Length <= length ? self : throw new ArgumentException($"Length of {self.Length} exceeds limit {length}", exp);
+            self.ThrowIfNullOrWhiteSpace( exp );
+            return self.Length <= length ? self : throw new ArgumentException( $"Length of {self.Length} exceeds limit {length}", exp );
         }
 
-        public static string ThrowIfNullOrLongerThan([NotNull] this string? self, int length, [CallerArgumentExpression( nameof( self ) )] string? exp = null)
+        public static string ThrowIfNullOrLongerThan( [NotNull] this string? self, int length, [CallerArgumentExpression( nameof( self ) )] string? exp = null )
         {
-            self.ThrowIfNull(exp);
-            return self.Length <= length ? self : throw new ArgumentException($"Length of {self.Length} exceeds limit {length}", exp);
+            self.ThrowIfNull( exp );
+            return self.Length <= length ? self : throw new ArgumentException( $"Length of {self.Length} exceeds limit {length}", exp );
         }
     }
 }

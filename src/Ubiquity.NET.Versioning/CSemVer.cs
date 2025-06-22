@@ -5,58 +5,80 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Globalization;
-using System.Linq;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
+
+using Sprache;
+
+using Ubiquity.NET.Versioning.Properties;
 
 namespace Ubiquity.NET.Versioning
 {
     /// <summary>Holds a Constrained Semantic Version (CSemVer) value</summary>
     /// <remarks>Based on CSemVer v1.0.0-rc.1</remarks>
     /// <seealso href="https://csemver.org/"/>
-    public class CSemVer
-        : IFormattable
+    public sealed class CSemVer
+        : IParsable<CSemVer>
         , IComparable<CSemVer>
-        , IEquatable<CSemVer>
         , IComparisonOperators<CSemVer, CSemVer, bool>
-        , IEqualityOperators<CSemVer, CSemVer, bool>
+        , IEquatable<CSemVer>
     {
-        /// <summary>Initializes a new instance of the <see cref="CSemVer"/> class</summary>
+        /// <summary>Initializes a new instance of the <see cref="CSemVer"/> class.</summary>
+        public CSemVer( )
+            : this( 0, 0, 0 )
+        {
+        }
+
+        /// <summary>Initializes a new instance of the <see cref="CSemVer"/> class.</summary>
         /// <param name="major">Major version value [0-99999]</param>
         /// <param name="minor">Minor version value [0-49999]</param>
         /// <param name="patch">Patch version value [0-9999]</param>
-        /// <param name="ciBuildInfo">CI build information for this build</param>
         /// <param name="preRelVersion">Pre-release version information (if a pre-release build)</param>
         /// <param name="buildMetaData">[Optional]Additional build meta data [default: empty string]</param>
+        /// <remarks>
+        /// This is used internally when converting from a File Version as those only have a single bit
+        /// to indicate if they are a Release/CI build. The rest of the information is lost and therefore
+        /// does not participate in ordering.
+        /// </remarks>
         public CSemVer( int major
                       , int minor
                       , int patch
-                      , PrereleaseVersion preRelVersion = default
-                      , CiBuildInfo ciBuildInfo = default
-                      , string buildMetaData = ""
+                      , PrereleaseVersion? preRelVersion = null
+                      , IEnumerable<string>? buildMetaData = null
                       )
-            : this( major, minor, patch, isCIBuild: ciBuildInfo.IsValid, preRelVersion, buildMetaData )
         {
-            CiBuildInfo = ciBuildInfo;
+            ConstrainedVersion = new SemVer(
+                major.ThrowIfOutOfRange( 0, 99999 ),
+                minor.ThrowIfOutOfRange( 0, 49999 ),
+                patch.ThrowIfOutOfRange( 0, 9999 ),
+                preRelVersion?.FormatElements(),
+                buildMetaData
+                );
+
+            PrereleaseVersion = preRelVersion;
         }
 
-        /// <summary>Gets the Major version value</summary>
-        public int Major { get; }
+        /// <summary>Gets the Major portion of the core version</summary>
+        public int Major => unchecked((int)ConstrainedVersion.Major); // explicitly unchecked as constructor guarantees success
 
-        /// <summary>Gets the Minor version value</summary>
-        public int Minor { get; }
+        /// <summary>Gets the Minor portion of the core version</summary>
+        public int Minor => unchecked((int)ConstrainedVersion.Minor);
 
-        /// <summary>Gets the Patch version value</summary>
-        public int Patch { get; }
+        /// <summary>Gets the Patch portion of the core version</summary>
+        public int Patch => unchecked((int)ConstrainedVersion.Patch);
 
         /// <summary>Gets the Pre-Release version value (if any)</summary>
-        public PrereleaseVersion PrereleaseVersion { get; }
+        public PrereleaseVersion? PrereleaseVersion { get; }
 
-        /// <summary>Gets the CI Build info (if any)</summary>
-        public CiBuildInfo CiBuildInfo { get; }
-
-        /// <summary>Gets the build meta data (or an empty string)</summary>
-        public string BuildMetaData { get; }
+        /// <summary>Gets the build components of the version</summary>
+        /// <remarks>
+        /// Each component is either an alphanumeric identifier or a sequence of digits
+        /// (including leading or all '0'). This collection contains only the identifiers
+        /// (no prefix or delimiters).
+        /// </remarks>
+        public ImmutableArray<string> BuildMeta => ConstrainedVersion.BuildMeta;
 
         /// <summary>Gets the <see cref="FileVersionQuad"/> representation of this <see cref="CSemVer"/></summary>
         /// <remarks>
@@ -69,7 +91,7 @@ namespace Ubiquity.NET.Versioning
             get
             {
                 ulong orderedNum = OrderedVersion << 1;
-                return FileVersionQuad.From( IsCIBuild ? orderedNum : orderedNum + 1 );
+                return FileVersionQuad.From( orderedNum + 1 ); // ODD numbers reserved for CI versions that are always "post-build"
             }
         }
 
@@ -85,36 +107,59 @@ namespace Ubiquity.NET.Versioning
             {
                 ulong retVal = ((ulong)Major * MulMajor) + ((ulong)Minor * MulMinor) + (((ulong)Patch + 1) * MulPatch);
 
-                if(IsPrerelease)
+                if(PrereleaseVersion.HasValue)
                 {
                     retVal -= MulPatch - 1; // Remove the fix+1 multiplier
-                    retVal += (ulong)PrereleaseVersion.Index * MulName;
-                    retVal += (ulong)PrereleaseVersion.Number * MulNum;
-                    retVal += (ulong)PrereleaseVersion.Fix;
+                    retVal += PrereleaseVersion.Value.Index * MulName;
+                    retVal += PrereleaseVersion.Value.Number * MulNum;
+                    retVal += PrereleaseVersion.Value.Fix;
                 }
 
                 return retVal;
             }
         }
 
-        /// <summary>Gets a value indicating whether this version represents a CI build</summary>
-        /// <remarks>
-        /// <para>Information regarding CI Builds are not included in the numeric representation (except a File Version "quad").
-        /// This is used to indicate if a build represents a CI build or not.</para>
-        /// <para>The CI build information is contained in the optional <see cref="CiBuildInfo"/> property. However, if this
-        /// instance was produced from a purely numeric value then such information is lost though it is possible to indicate
-        /// a CI build using the low bit of the revision part of a <see cref="FileVersionQuad"/>. Thus, it is possible for this
-        /// to return <see langword="true"/> even if <see cref="CiBuildInfo.IsValid"/> returns <see langword="false"/></para>
-        /// </remarks>
-        public bool IsCIBuild { get; }
-
         /// <summary>Gets a value indicating whether this is a pre-release version</summary>
-        public bool IsPrerelease => PrereleaseVersion.IsValid;
+        public bool IsPrerelease => PrereleaseVersion.HasValue;
 
-        #region Equality
+        /// <summary>Gets a value indicating whether this is a zero based version</summary>
+        public bool IsZero => Major == 0 && Minor == 0 && Patch == 0;
 
         /// <inheritdoc/>
-        public bool Equals( CSemVer? other ) => other is not null && CompareTo(other) == 0;
+        public override string ToString( )
+        {
+            return ConstrainedVersion.ToString();
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>
+        /// <see cref="CSemVer"/> follows ALL of the rules of SemVer ordering EXCEPT
+        /// that it is EXPLICITLY using case insensitive comparison for the AlphaNumeric
+        /// identifiers in a pre-release list.
+        /// </remarks>
+        public int CompareTo( CSemVer? other )
+        {
+            if(ReferenceEquals(this, other))
+            {
+                return 0;
+            }
+
+            if(other is null)
+            {
+                return 1;
+            }
+
+            // CSemVer always uses case insensitive comparisons, but otherwise follows the
+            // ordering rules of SemVer.
+            return SemVerComparer.SemVer.Compare(ConstrainedVersion, other.ConstrainedVersion);
+        }
+
+        /// <inheritdoc/>
+        public bool Equals( CSemVer? other )
+        {
+            return ReferenceEquals(this, other)
+                || (other is not null && SemVerComparer.SemVer.Compare(ConstrainedVersion, other.ConstrainedVersion) == 0);
+        }
 
         /// <inheritdoc/>
         public override bool Equals( object? obj )
@@ -125,109 +170,94 @@ namespace Ubiquity.NET.Versioning
         /// <inheritdoc/>
         public override int GetHashCode( )
         {
-            return HashCode.Combine(Major, Minor, Patch, PrereleaseVersion, CiBuildInfo, BuildMetaData);
-        }
-
-        /// <summary>Compares two <see cref="CSemVer"/> values (Equals)</summary>
-        /// <param name="left">Left hand side of the operation</param>
-        /// <param name="right">Right hand side of the operation</param>
-        /// <returns>Result of the comparison</returns>
-        public static bool operator ==( CSemVer? left, CSemVer? right ) => ReferenceEquals(left, right) || (left is not null && left.Equals(right));
-
-        /// <summary>Compares two <see cref="CSemVer"/> values (Not Equal)</summary>
-        /// <param name="left">Left hand side of the operation</param>
-        /// <param name="right">Right hand side of the operation</param>
-        /// <returns>Result of the comparison</returns>
-        public static bool operator !=( CSemVer? left, CSemVer? right ) => !(left == right);
-
-        #endregion
-
-        #region Comparison operators
-
-        /// <inheritdoc/>
-        public int CompareTo( CSemVer? other )
-        {
-            // By definition, any object compares greater than null, and two null references compare equal to each other.
-            if (other is null)
-            {
-                return 1;
-            }
-
-            int orderedCompare = OrderedVersion.CompareTo(other.OrderedVersion);
-
-            // If they are different without considering CI info or the CI info status is the same,
-            // then just use the ordered number comparison
-            if (orderedCompare != 0 || IsCIBuild == other.IsCIBuild)
-            {
-                return orderedCompare;
-            }
-
-            // account for any CI info
-            return CiBuildInfo.CompareTo(other.CiBuildInfo);
+            return ConstrainedVersion.GetHashCode();
         }
 
         /// <inheritdoc/>
-        public static bool operator <( CSemVer left, CSemVer right ) => left.CompareTo( right ) < 0;
+        public static bool operator >( CSemVer left, CSemVer right ) => left.CompareTo(right) > 0;
 
         /// <inheritdoc/>
-        public static bool operator <=( CSemVer left, CSemVer right ) => left.CompareTo( right ) <= 0;
+        public static bool operator >=( CSemVer left, CSemVer right ) => left.CompareTo(right) >= 0;
 
         /// <inheritdoc/>
-        public static bool operator >( CSemVer left, CSemVer right ) => left.CompareTo( right ) > 0;
+        public static bool operator <( CSemVer left, CSemVer right ) => left.CompareTo(right) < 0;
 
         /// <inheritdoc/>
-        public static bool operator >=( CSemVer left, CSemVer right ) => left.CompareTo( right ) >= 0;
-        #endregion
+        public static bool operator <=( CSemVer left, CSemVer right ) => left.CompareTo(right) <= 0;
 
         /// <inheritdoc/>
-        public override string ToString( ) => ToString( null, null );
+        public static bool operator ==( CSemVer? left, CSemVer? right ) => Equals(left, right);
 
-        /// <summary>Handles formatted string conversion</summary>
-        /// <param name="format">Format string (See remarks section for details of values supported)</param>
-        /// <param name="formatProvider">Format provider. [ignored, formatting is well defined externally and not subject to localization]</param>
-        /// <returns>String form of the version information</returns>
+        /// <inheritdoc/>
+        public static bool operator !=( CSemVer? left, CSemVer? right ) => !Equals(left, right);
+
+        private readonly SemVer ConstrainedVersion;
+
+        /// <summary>Tries to parse a <see cref="SemVer"/> as a <see cref="CSemVer"/></summary>
+        /// <param name="ver">Version to convert</param>
+        /// <param name="result">Result or default if not convertible</param>
+        /// <param name="reason">Reason that conversion is not allowed (or <see langword="null"/> if it is)</param>
+        /// <returns><see langword="true"/> if the conversion is performed or <see langword="false"/> if not (<paramref name="reason"/> will hold reason it is not successful)</returns>
         /// <remarks>
-        /// The values supported for <paramref name="format"/> are: <br/>
-        /// M - Include Meta data (if present) <br/>
-        /// S - Use short names for CI information <br/>
-        /// Any combination/ordering of those formats is valid.
+        /// While EVERY <see cref="CSemVer"/> conforms to valid <see cref="SemVer"/> the reverse is not always true.
+        /// This method attempts to make a conversion using the classic try pattern with the inclusion of a string
+        /// that explains the reason for any failures. This is useful in debugging or for creating wrappers that will
+        /// throw an exception.
         /// </remarks>
-        /// <exception cref="ArgumentException">The <paramref name="format"/> value specified, is invalid</exception>
-        /// <seealso href="https://csemver.org/">Formal documentation of Constrained Semantic Versions</seealso>
-        public string ToString( string? format, IFormatProvider? formatProvider )
+        public static bool TryFrom(
+            SemVer ver,
+            [MaybeNullWhen( false )] out CSemVer result,
+            [MaybeNullWhen( true )] out Exception reason
+            )
         {
-            format ??= "M";
+            result = default;
+            reason = default;
 
-            // Format provider is ignored; Representation is well defined externally and not dependent on culture
-            // formatProvider ??= CultureInfo.InvariantCulture;
-            if(format.Length > 2 || format.Any( c => c != 'M' && c != 'S' ))
+            // CSemVer.1 - covered by input version
+            // CSemVer.2 (Partial: max is 3 components)
+            if(ver.PreRelease.Length.IsOutOfRange( 0, 3 ))
             {
-                throw new ArgumentException( $"Invalid format '{format}'", nameof( format ) );
+                reason = new FormatException(Resources.CSemVer_pre_release_supports_no_more_than_3_components_0.Format( "[CSemVer.2]" ));
+                return false;
             }
 
-            bool includeMetadata = format.Contains('M', StringComparison.Ordinal);
-            bool useShortNames = format.Contains('S', StringComparison.Ordinal);
-
-            var bldr = new System.Text.StringBuilder( );
-
-            bldr.AppendFormat( CultureInfo.InvariantCulture, "{0}.{1}.{2}", Major, Minor, Patch );
-
-            if(IsPrerelease)
+            // CSemVer.3 unchecked here as SemVer is already parsed or constructed so not relevant
+            // CSemVer.4
+            if(ver.Major.IsOutOfRange( 0, 99999 ))
             {
-                bldr.AppendFormat( CultureInfo.InvariantCulture, useShortNames ? "{0:S}" : "{0:F}", PrereleaseVersion );
+                reason = new FormatException(Resources.value_0_must_be_in_range_1_2.Format( "CSemVer.Major", "[0-99999]", "[CSemVer.4]" ));
+                return false;
             }
 
-            if(CiBuildInfo.IsValid)
+            // CSemVer.5
+            if(ver.Minor.IsOutOfRange( 0, 49999 ))
             {
-                bldr.AppendFormat(CultureInfo.InvariantCulture, IsPrerelease ? "{0:P}" : "{0:R}", CiBuildInfo);
+                reason = new FormatException(Resources.value_0_must_be_in_range_1_2.Format( "CSemVer.Minor", "[0-49999]", "[CSemVer.5]" ));
+                return false;
             }
 
-            if(!string.IsNullOrWhiteSpace( BuildMetaData ) && includeMetadata)
+            if(ver.Patch.IsOutOfRange( 0, 9999 ))
             {
-                bldr.AppendFormat( CultureInfo.InvariantCulture, $"+{BuildMetaData}" );
+                reason = new FormatException(Resources.value_0_must_be_in_range_1_2.Format( "CSemVer.Patch", "[0-9999]", "[CSemVer.6]" ));
+                return false;
             }
 
-            return bldr.ToString();
+            IResult<PrereleaseVersion> preRel = Versioning.PrereleaseVersion.TryParseFrom( ver.PreRelease );
+            if(preRel.Failed(out reason))
+            {
+                return false;
+            }
+
+            try
+            {
+                result = new CSemVer( (int)ver.Major, (int)ver.Minor, (int)ver.Patch, preRel.Value );
+                return true;
+            }
+            catch(ArgumentException ex)
+            {
+                reason = ex;
+                return false;
+            }
         }
 
         /// <summary>Converts a file version form (as a <see cref="UInt64"/>) of a CSemVer into a full <see cref="CSemVer"/></summary>
@@ -248,28 +278,28 @@ namespace Ubiquity.NET.Versioning
         /// </para>
         /// <para>A file version cast as a <see cref="UInt64"/> is <i><b>NOT</b></i> the same as an Ordered version number. The file version
         /// includes a "bit" for the status as a CI Build. Thus a "file version" as a <see cref="UInt64"/> is the ordered version shifted
-        /// left by one bit and the LSB indicates if it is a CI build</para>
+        /// left by one bit and the LSB indicates if it is a CI build or release</para>
         /// </remarks>
-        public static CSemVer From( UInt64 fileVersion, string? buildMetaData = null )
+        public static CSemVer From( UInt64 fileVersion, IReadOnlyCollection<string>? buildMetaData = null )
         {
-            bool isCIBuild = (fileVersion & 1) == 0;
-            return FromOrderedVersion(fileVersion >> 1, isCIBuild, buildMetaData); // Drop the CI bit to get the "ordered" number
+            return (fileVersion & 1) == 1
+                ? FromOrderedVersion( fileVersion >> 1, buildMetaData )
+                : throw new ArgumentException( Resources.odd_file_versions_are_reserved_for_CI );
         }
 
         /// <summary>Converts a CSemVer ordered version integral value (UInt64) into a full <see cref="CSemVer"/></summary>
         /// <param name="orderedVersion">The ordered version value</param>
-        /// <param name="isCIBuild">Flag to indicate whether this is a CI build or not [default: <see langword="false"/></param>
         /// <param name="buildMetaData">Optional build meta data value for the version</param>
         /// <returns><see cref="CSemVer"/> corresponding to the ordered version number provided</returns>
-        public static CSemVer FromOrderedVersion(UInt64 orderedVersion, bool isCIBuild = false, string? buildMetaData = null)
+        public static CSemVer FromOrderedVersion( UInt64 orderedVersion, IReadOnlyCollection<string>? buildMetaData = null )
         {
-            // This effectively reverses the math used in computing the ordered version.
-            buildMetaData ??= string.Empty;
+            buildMetaData ??= [];
 
+            // This effectively reverses the math used in computing the ordered version.
             UInt64 accumulator = orderedVersion;
             UInt64 preRelPart = accumulator % MulPatch;
-            PrereleaseVersion preRelVersion = default;
-            if( preRelPart != 0)
+            PrereleaseVersion? preRelVersion = null;
+            if(preRelPart != 0)
             {
                 preRelPart -= 1;
 
@@ -280,7 +310,7 @@ namespace Ubiquity.NET.Versioning
                 preRelPart %= MulNum;
 
                 Int32 fix = (Int32)preRelPart;
-                preRelVersion = new PrereleaseVersion(index, number, fix);
+                preRelVersion = new PrereleaseVersion( checked((byte)index), checked((byte)number), checked((byte)fix) );
             }
             else
             {
@@ -295,65 +325,72 @@ namespace Ubiquity.NET.Versioning
 
             Int32 patch = (Int32)(accumulator / MulPatch);
 
-            return new CSemVer(major, minor, patch, isCIBuild, preRelVersion);
+            return new CSemVer( major, minor, patch, preRelVersion, buildMetaData );
         }
 
         /// <summary>Factory method to create a <see cref="CSemVer"/> from information available as part of a build</summary>
         /// <param name="buildVersionXmlPath">Path to the BuildVersion XML data for the repository</param>
-        /// <param name="timeStamp">TimeStamp of the build</param>
-        /// <param name="ciBuildName">CI Build name for the build</param>
         /// <param name="buildMeta">Additional Build meta data for the build</param>
         /// <returns><see cref="CSemVer"/></returns>
-        public static CSemVer From( string buildVersionXmlPath, DateTime timeStamp, string ciBuildName, string buildMeta )
+        public static CSemVer From( string buildVersionXmlPath, IReadOnlyCollection<string>? buildMeta )
         {
-            string ciBuildIndex = timeStamp.ToBuildIndex( );
-            var ciBuildInfo = new CiBuildInfo(ciBuildIndex, ciBuildName);
             var parsedBuildVersionXml = ParsedBuildVersionXml.ParseFile( buildVersionXmlPath );
 
             PrereleaseVersion preReleaseVersion = default;
             if(!string.IsNullOrWhiteSpace( parsedBuildVersionXml.PreReleaseName ))
             {
                 preReleaseVersion = new PrereleaseVersion( parsedBuildVersionXml.PreReleaseName
-                                                         , parsedBuildVersionXml.PreReleaseNumber
-                                                         , parsedBuildVersionXml.PreReleaseFix
+                                                         , checked((byte)parsedBuildVersionXml.PreReleaseNumber)
+                                                         , checked((byte)parsedBuildVersionXml.PreReleaseFix)
                                                          );
             }
 
             return new CSemVer( parsedBuildVersionXml.BuildMajor
-                              , parsedBuildVersionXml.BuildMinor
-                              , parsedBuildVersionXml.BuildPatch
-                              , preReleaseVersion
-                              , ciBuildInfo
-                              , buildMeta
-                              );
+                                , parsedBuildVersionXml.BuildMinor
+                                , parsedBuildVersionXml.BuildPatch
+                                , preReleaseVersion
+                                , buildMeta
+                                );
         }
 
-        /// <summary>Initializes a new instance of the <see cref="CSemVer"/> class.</summary>
-        /// <param name="major">Major version value [0-99999]</param>
-        /// <param name="minor">Minor version value [0-49999]</param>
-        /// <param name="patch">Patch version value [0-9999]</param>
-        /// <param name="isCIBuild">Indicates whether this is a CI build</param>
-        /// <param name="preRelVersion">Pre-release version information (if a pre-release build)</param>
-        /// <param name="buildMetaData">[Optional]Additional build meta data [default: empty string]</param>
-        /// <remarks>
-        /// This is used internally when converting from a File Version as those only have a single bit
-        /// to indicate if they are a Release/CI build. The rest of the information is lost and therefore
-        /// does not participate in ordering.
-        /// </remarks>
-        private CSemVer( int major
-                       , int minor
-                       , int patch
-                       , bool isCIBuild
-                       , PrereleaseVersion preRelVersion = default
-                       , string buildMetaData = ""
-                       )
+        /// <inheritdoc/>
+        public static CSemVer Parse( string s, IFormatProvider? provider )
         {
-            Major = major.ThrowIfOutOfRange(0, 99999 );
-            Minor = minor.ThrowIfOutOfRange(0, 49999 );
-            Patch = patch.ThrowIfOutOfRange(0, 9999 );
-            PrereleaseVersion = preRelVersion;
-            BuildMetaData = buildMetaData.ThrowIfNullOrLongerThan(20);
-            IsCIBuild = isCIBuild;
+            return TryParse(s, out CSemVer? retVal, out Exception? ex) ? retVal : throw ex;
+        }
+
+        /// <inheritdoc/>
+        public static bool TryParse( [NotNullWhen( true )] string? s, IFormatProvider? provider, [MaybeNullWhen( false )] out CSemVer result )
+        {
+            return TryParse(s, out result, out _);
+        }
+
+        /// <summary>Applies try pattern to attempt parsing a <see cref="CSemVer"/> from a string</summary>
+        /// <param name="s">Raw string to parse from</param>
+        /// <param name="result">Resulting version or default if parse is successful</param>
+        /// <param name="reason">Reason for failure to parse (as an <see cref="Exception"/>)</param>
+        /// <returns><see langword="true"/> if parse is successful or <see langword="false"/> if not</returns>
+        public static bool TryParse(
+            [NotNullWhen( true )] string? s,
+            [MaybeNullWhen( false )] out CSemVer result,
+            [MaybeNullWhen(true)] out Exception reason
+            )
+        {
+            if(string.IsNullOrWhiteSpace(s))
+            {
+                result = default;
+                reason = new ArgumentException(Resources.value_is_null_or_whitespace, nameof(s));
+                return false;
+            }
+
+            if(!SemVer.TryParse( s, out SemVer? semVer, out reason))
+            {
+                result = default;
+                return false;
+            }
+
+            // OK as a SemVer, so try and see if that conforms to a constrained form.
+            return TryFrom(semVer, out result, out reason);
         }
 
         private const ulong MulNum = 100;

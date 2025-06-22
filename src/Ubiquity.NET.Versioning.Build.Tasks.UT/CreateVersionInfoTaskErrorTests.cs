@@ -11,7 +11,7 @@ using System.Linq;
 using Microsoft.Build.Evaluation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Ubiquity.Versioning.Build.Tasks.UT
+namespace Ubiquity.NET.Versioning.Build.Tasks.UT
 {
     [TestClass]
     [TestCategory("Error Validation")]
@@ -32,9 +32,9 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "-1",
-                ["BuildMinor"] = "1",
-                ["BuildPatch"] = "2",
+                [PropertyNames.BuildMajor] = "-1",
+                [PropertyNames.BuildMinor] = "1",
+                [PropertyNames.BuildPatch] = "2",
             };
 
             using var collection = new ProjectCollection(globalProperties);
@@ -50,9 +50,9 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "100000",
-                ["BuildMinor"] = "1",
-                ["BuildPatch"] = "2",
+                [PropertyNames.BuildMajor] = "100000",
+                [PropertyNames.BuildMinor] = "1",
+                [PropertyNames.BuildPatch] = "2",
             };
 
             using var collection = new ProjectCollection(globalProperties);
@@ -68,9 +68,9 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "1",
-                ["BuildMinor"] = "-1",
-                ["BuildPatch"] = "2",
+                [PropertyNames.BuildMajor] = "1",
+                [PropertyNames.BuildMinor] = "-1",
+                [PropertyNames.BuildPatch] = "2",
             };
 
             using var collection = new ProjectCollection(globalProperties);
@@ -86,9 +86,9 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "1",
-                ["BuildMinor"] = "50000",
-                ["BuildPatch"] = "2",
+                [PropertyNames.BuildMajor] = "1",
+                [PropertyNames.BuildMinor] = "50000",
+                [PropertyNames.BuildPatch] = "2",
             };
 
             using var collection = new ProjectCollection(globalProperties);
@@ -104,9 +104,9 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "1",
-                ["BuildMinor"] = "1",
-                ["BuildPatch"] = "-1",
+                [PropertyNames.BuildMajor] = "1",
+                [PropertyNames.BuildMinor] = "1",
+                [PropertyNames.BuildPatch] = "-1",
             };
 
             using var collection = new ProjectCollection(globalProperties);
@@ -122,9 +122,9 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "1",
-                ["BuildMinor"] = "2",
-                ["BuildPatch"] = "10000",
+                [PropertyNames.BuildMajor] = "1",
+                [PropertyNames.BuildMinor] = "2",
+                [PropertyNames.BuildPatch] = "10000",
             };
 
             using var collection = new ProjectCollection(globalProperties);
@@ -140,10 +140,10 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "1",
-                ["BuildMinor"] = "2",
-                ["BuildPatch"] = "3",
-                ["PreReleaseName"] = "invalid" // not one of the 8 supported names...
+                [PropertyNames.BuildMajor] = "1",
+                [PropertyNames.BuildMinor] = "2",
+                [PropertyNames.BuildPatch] = "3",
+                [PropertyNames.PreReleaseName] = "invalid" // not one of the 8 supported names...
             };
 
             using var collection = new ProjectCollection(globalProperties);
@@ -159,11 +159,11 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "1",
-                ["BuildMinor"] = "2",
-                ["BuildPatch"] = "3",
-                ["PreReleaseName"] = "alpha",
-                ["PreReleaseNumber"] = "-1"
+                [PropertyNames.BuildMajor] = "1",
+                [PropertyNames.BuildMinor] = "2",
+                [PropertyNames.BuildPatch] = "3",
+                [PropertyNames.PreReleaseName] = "alpha",
+                [PropertyNames.PreReleaseNumber] = "-1"
             };
 
             using var collection = new ProjectCollection(globalProperties);
@@ -179,11 +179,11 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "1",
-                ["BuildMinor"] = "2",
-                ["BuildPatch"] = "3",
-                ["PreReleaseName"] = "alpha",
-                ["PreReleaseNumber"] = "100"
+                [PropertyNames.BuildMajor] = "1",
+                [PropertyNames.BuildMinor] = "2",
+                [PropertyNames.BuildPatch] = "3",
+                [PropertyNames.PreReleaseName] = "alpha",
+                [PropertyNames.PreReleaseNumber] = "100"
             };
 
             using var collection = new ProjectCollection(globalProperties);
@@ -199,12 +199,12 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "1",
-                ["BuildMinor"] = "2",
-                ["BuildPatch"] = "3",
+                [PropertyNames.BuildMajor] = "1",
+                [PropertyNames.BuildMinor] = "2",
+                [PropertyNames.BuildPatch] = "3",
 
-                // ["PreReleaseName"] = "alpha",
-                ["PreReleaseNumber"] = "100"
+                // [PropertyNames.PreReleaseName] = "alpha",
+                [PropertyNames.PreReleaseNumber] = "100"
             };
 
             using var collection = new ProjectCollection(globalProperties);
@@ -218,12 +218,12 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "1",
-                ["BuildMinor"] = "2",
-                ["BuildPatch"] = "3",
-                ["PreReleaseName"] = "alpha",
-                ["PreReleaseNumber"] = "1",
-                ["PreReleaseFix"] = "-1"
+                [PropertyNames.BuildMajor] = "1",
+                [PropertyNames.BuildMinor] = "2",
+                [PropertyNames.BuildPatch] = "3",
+                [PropertyNames.PreReleaseName] = "alpha",
+                [PropertyNames.PreReleaseNumber] = "1",
+                [PropertyNames.PreReleaseFix] = "-1"
             };
 
             using var collection = new ProjectCollection(globalProperties);
@@ -239,12 +239,12 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "1",
-                ["BuildMinor"] = "2",
-                ["BuildPatch"] = "3",
-                ["PreReleaseName"] = "alpha",
-                ["PreReleaseNumber"] = "1",
-                ["PreReleaseFix"] = "100"
+                [PropertyNames.BuildMajor] = "1",
+                [PropertyNames.BuildMinor] = "2",
+                [PropertyNames.BuildPatch] = "3",
+                [PropertyNames.PreReleaseName] = "alpha",
+                [PropertyNames.PreReleaseNumber] = "1",
+                [PropertyNames.PreReleaseFix] = "100"
             };
 
             using var collection = new ProjectCollection(globalProperties);
@@ -260,13 +260,13 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "1",
-                ["BuildMinor"] = "2",
-                ["BuildPatch"] = "3",
+                [PropertyNames.BuildMajor] = "1",
+                [PropertyNames.BuildMinor] = "2",
+                [PropertyNames.BuildPatch] = "3",
 
-                // ["PreReleaseName"] = "alpha",
-                ["PreReleaseNumber"] = "1",
-                ["PreReleaseFix"] = "100"
+                // [PropertyNames.PreReleaseName] = "alpha",
+                [PropertyNames.PreReleaseNumber] = "1",
+                [PropertyNames.PreReleaseFix] = "100"
             };
 
             using var collection = new ProjectCollection(globalProperties);
@@ -280,13 +280,13 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "1",
-                ["BuildMinor"] = "2",
-                ["BuildPatch"] = "3",
-                ["PreReleaseName"] = "alpha",
+                [PropertyNames.BuildMajor] = "1",
+                [PropertyNames.BuildMinor] = "2",
+                [PropertyNames.BuildPatch] = "3",
+                [PropertyNames.PreReleaseName] = "alpha",
 
-                // ["PreReleaseNumber"] = "1",
-                ["PreReleaseFix"] = "100"
+                // [PropertyNames.PreReleaseNumber] = "1",
+                [PropertyNames.PreReleaseFix] = "100"
             };
 
             using var collection = new ProjectCollection(globalProperties);
@@ -301,11 +301,11 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "1",
-                ["BuildMinor"] = "2",
-                ["BuildPatch"] = "3",
-                ["IsReleaseBuild"] = "true", // Bypasses props file setting of CiBuildName
-                ["CiBuildIndex"] = "ABC01234"
+                [PropertyNames.BuildMajor] = "1",
+                [PropertyNames.BuildMinor] = "2",
+                [PropertyNames.BuildPatch] = "3",
+                [EnvVarNames.IsReleaseBuild] = "true", // Bypasses props file setting of CiBuildName
+                [PropertyNames.CiBuildIndex] = "ABC01234"
             };
 
             using var collection = new ProjectCollection(globalProperties);
@@ -321,11 +321,11 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "1",
-                ["BuildMinor"] = "2",
-                ["BuildPatch"] = "3",
-                ["IsReleaseBuild"] = "true", // Bypasses props file setting of CiBuildName
-                ["CiBuildName"] = "01234ABC"
+                [PropertyNames.BuildMajor] = "1",
+                [PropertyNames.BuildMinor] = "2",
+                [PropertyNames.BuildPatch] = "3",
+                [EnvVarNames.IsReleaseBuild] = "true", // Bypasses props file setting of CiBuildName
+                [PropertyNames.CiBuildName] = "01234ABC"
             };
 
             using var collection = new ProjectCollection(globalProperties);
@@ -342,13 +342,13 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "1",
-                ["BuildMinor"] = "2",
-                ["BuildPatch"] = "3",
-                ["IsReleaseBuild"] = "true", // Bypasses props file setting of CiBuildName; and forces it to clear the CI info
-                ["CiBuildIndex"] = "ABC01234", // targets file uses "TreatAsLocalProperty" to allow override/mutability of these
-                ["CiBuildName"] = "01234ABC",
-                ["BuildTime"] = DateTime.UtcNow.ToString("o")
+                [PropertyNames.BuildMajor] = "1",
+                [PropertyNames.BuildMinor] = "2",
+                [PropertyNames.BuildPatch] = "3",
+                [EnvVarNames.IsReleaseBuild] = "true", // Bypasses props file setting of CiBuildName; and forces it to clear the CI info
+                [PropertyNames.CiBuildIndex] = "ABC01234", // targets file uses "TreatAsLocalProperty" to allow override/mutability of these
+                [PropertyNames.CiBuildName] = "01234ABC",
+                [PropertyNames.BuildTime] = DateTime.UtcNow.ToString("o")
             };
 
             using var collection = new ProjectCollection(globalProperties);
@@ -366,10 +366,10 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "1",
-                ["BuildMinor"] = "2",
-                ["BuildPatch"] = "3",
-                ["CiBuildIndex"] = "01234ABC="
+                [PropertyNames.BuildMajor] = "1",
+                [PropertyNames.BuildMinor] = "2",
+                [PropertyNames.BuildPatch] = "3",
+                [PropertyNames.CiBuildIndex] = "01234ABC="
             };
 
             using var collection = new ProjectCollection(globalProperties);
@@ -385,11 +385,11 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "1",
-                ["BuildMinor"] = "2",
-                ["BuildPatch"] = "3",
-                ["CiBuildIndex"] = "01234ABC",
-                ["CiBuildName"] = "01234_ABC"
+                [PropertyNames.BuildMajor] = "1",
+                [PropertyNames.BuildMinor] = "2",
+                [PropertyNames.BuildPatch] = "3",
+                [PropertyNames.CiBuildIndex] = "01234ABC",
+                [PropertyNames.CiBuildName] = "01234_ABC"
             };
 
             using var collection = new ProjectCollection(globalProperties);

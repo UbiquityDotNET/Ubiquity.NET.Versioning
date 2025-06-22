@@ -11,7 +11,7 @@ using System.Xml.Linq;
 
 namespace Ubiquity.NET.Versioning
 {
-    /// <summary>POCO version of information parsed from an Build version XML file</summary>
+    /// <summary>POCO version of information parsed from a Build version XML file</summary>
     /// <param name="BuildMajor">Major build number</param>
     /// <param name="BuildMinor">Minor build number</param>
     /// <param name="BuildPatch">Patch build number</param>

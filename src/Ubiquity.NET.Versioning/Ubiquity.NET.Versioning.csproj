@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <PackageId>Ubiquity.NET.Versioning</PackageId>
         <Authors>UbiquityDotNET</Authors>
@@ -17,9 +17,27 @@
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <PackageReadmeFile>ReadMe.md</PackageReadmeFile>
         <IsAotCompatible>True</IsAotCompatible>
+        <NeutralLanguage>en-US</NeutralLanguage>
     </PropertyGroup>
+    <ItemGroup>
+      <PackageReference Include="Sprache" />
+      <PackageReference Include="System.Text.RegularExpressions" />
+    </ItemGroup>
+    <ItemGroup>
+      <Compile Update="Properties\Resources.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resources.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Update="Properties\Resources.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
 
     <ItemGroup>
-        <None Update="PackageReadMe.md" Pack="true" PackagePath="ReadMe.md"/>
+        <None Update="PackageReadMe.md" Pack="true" PackagePath="ReadMe.md" />
     </ItemGroup>
 </Project>

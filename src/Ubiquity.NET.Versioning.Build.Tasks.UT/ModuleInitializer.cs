@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 
 using Microsoft.Build.Utilities.ProjectCreation;
 
-// .NET Module initializer to register MSBUILD resolver as per docs for library.
+// .NET Module initializer to register MSBUILD resolver as per docs for `Microsoft.Build.Utilities.ProjectCreation` library.
 internal static class ModuleInitializer
 {
     [ModuleInitializer]

@@ -15,9 +15,7 @@ using Microsoft.Build.Evaluation;
 using Microsoft.Build.Utilities.ProjectCreation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using Ubiquity.NET.Versioning;
-
-namespace Ubiquity.Versioning.Build.Tasks.UT
+namespace Ubiquity.NET.Versioning.Build.Tasks.UT
 {
     [TestClass]
     [TestCategory("Build Task Assembly")]
@@ -33,13 +31,11 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
 
         public TestContext Context { get; }
 
-        // Repo assembly versions are defined via PowerShell (Or hard coded in the project file
-        // for IDE builds) as the build task is not usable for itself. This verifies the build
-        // versioning used in the scripts matches what is expected for an end-consumer by testing
-        // the assemblies versioning information against the output from THAT task assembly. This
-        // should be identical for IDE builds AND command line builds. Basically this verifies the
-        // manual IDE properties as well as the automated build scripting matches what the task
-        // itself produces. If anything is out of whack, this will complain.
+        // Repo assembly versions are imported from `GeneratedVersion.props` as the build task is not usable for itself.
+        // This verifies the build versioning used in the scripts/build matches what is expected for an end-consumer by
+        // testing the assembly's versioning information against the output from the task assembly. This should be identical
+        // for IDE builds AND command line builds. Basically this verifies the manual IDE properties as well as the automated
+        // build scripting matches what the task itself produces. If anything is out of whack, this will complain.
         [TestMethod]
         [DataRow("netstandard2.0")]
         [DataRow("net48")]
@@ -48,36 +44,38 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             var globalProperties = new Dictionary<string,string>
             {
+                // for this test use the official repo-root build version to compare against
                 ["BuildVersionXml"] = Path.Combine(Context.GetRepoRoot(), "BuildVersion.xml"),
             };
 
             // For a CI build load the ciBuildIndex and ciBuildName from the generatedversion.props file
-            // so the test knows what to expect.
+            // so the test knows what to expect. If this test is run locally, as a PR buddy build, a CI build
+            // or a release, the results are different and the test needs to account for those differences.
             var (ciBuildIndex, ciBuildName, buildTime, envControl) = TestUtils.GetGeneratedBuildInfo();
             using(envControl)
             {
                 if(!string.IsNullOrWhiteSpace(ciBuildIndex))
                 {
-                    globalProperties["CiBuildIndex"] = ciBuildIndex;
+                    globalProperties[PropertyNames.CiBuildIndex] = ciBuildIndex;
                 }
 
                 // Build name depends on context of the build (Local, PR, CI, Release)
                 // and therefore is NOT hard-coded in the tests.
                 if(!string.IsNullOrWhiteSpace(ciBuildName))
                 {
-                    globalProperties["CiBuildName"] = ciBuildName;
+                    globalProperties[PropertyNames.CiBuildName] = ciBuildName;
                 }
 
                 if(!string.IsNullOrWhiteSpace(buildTime))
                 {
-                    // NOT using exact parsing as that's 'flaky' at best and doesn't actually handle all ISO-8601 formats
+                    // NOT using `exact` parsing as that's 'flaky' at best and doesn't actually handle all ISO-8601 formats
                     // Also, NOT using assumption of UTC as commit dates from repo are local time based. ToBuildIndex() will
                     // convert to UTC so that the resulting index is still consistent.
                     var parsedBuildTime = DateTime.Parse(buildTime, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
                     string indexFromLib = parsedBuildTime.ToBuildIndex();
                     Assert.AreEqual(indexFromLib, ciBuildIndex, "Index computed with versioning library should match the index computed by scripts");
 
-                    globalProperties["BuildTime"] = buildTime;
+                    globalProperties[PropertyNames.BuildTime] = buildTime;
                 }
 
                 using var collection = new ProjectCollection(globalProperties);

@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 // In SDK-style projects such as this one, several assembly attributes that were historically
@@ -21,3 +22,5 @@ using System.Runtime.InteropServices;
 [assembly: Guid( "cc26a3f0-0cb7-483f-b042-55dee985bfeb" )]
 
 [assembly: CLSCompliant( false )]
+
+[assembly: ExcludeFromCodeCoverage]

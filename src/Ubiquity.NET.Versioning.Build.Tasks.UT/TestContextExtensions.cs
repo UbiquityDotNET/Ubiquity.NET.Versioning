@@ -14,9 +14,7 @@ using Microsoft.Build.Execution;
 using Microsoft.Build.Utilities.ProjectCreation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using Ubiquity.NET.Versioning;
-
-namespace Ubiquity.Versioning.Build.Tasks.UT
+namespace Ubiquity.NET.Versioning.Build.Tasks.UT
 {
     internal static class TestContextExtensions
     {
@@ -38,28 +36,21 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
                    : throw new InvalidOperationException( "Context.TestRunDirectory is not available" );
         }
 
-        internal static ParsedBuildVersionXml ParseRepoBuildVersionXml( this TestContext ctx )
-        {
-            string buildVersionXmlPath = Path.Combine(GetRepoRoot(ctx), "BuildVersion.xml");
-            return ParsedBuildVersionXml.ParseFile( buildVersionXmlPath );
-        }
-
         internal static VersioningProjectBuildResults CreateTestProjectAndInvokeTestedPackage(
             this TestContext ctx,
             string targetFramework,
-            ProjectCollection projectCollection,
-            Action<ProjectCreator>? action = null
+            ProjectCollection projectCollection
             )
         {
 #pragma warning disable CA2000 // Dispose objects before losing scope
             // It doesn't "lose scope", the disposable members are transferred to the return
-            ProjectBuildResults buildResults = ctx.CreateAndRestoreTestProject( targetFramework, action, projectCollection );
+            ProjectBuildResults buildResults = ctx.CreateAndRestoreTestProject( targetFramework, projectCollection );
 #pragma warning restore CA2000 // Dispose objects before losing scope
             try
             {
                 if(!buildResults.Success)
                 {
-                    LogBuildErrors( ctx, buildResults.Output! );
+                    ctx.LogBuildErrors( buildResults.Output! );
                     return new( buildResults, default );
                 }
 
@@ -69,7 +60,7 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
                 Assert.IsNotNull( result.ProjectStateAfterBuild );
                 if(result.OverallResult != BuildResultCode.Success)
                 {
-                    LogBuildErrors( ctx, buildResults.Output );
+                    ctx.LogBuildErrors( buildResults.Output );
                 }
 
 #pragma warning disable CA2000 // Dispose objects before losing scope
@@ -90,8 +81,7 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         internal static ProjectBuildResults CreateAndRestoreTestProject(
             this TestContext ctx,
             string targetFramework,
-            Action<ProjectCreator>? action = null,
-            ProjectCollection? projectCollection = null
+            ProjectCollection projectCollection
             )
         {
             if(string.IsNullOrWhiteSpace( ctx.TestResultsDirectory ))
@@ -120,7 +110,7 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
 #pragma warning disable CA2000 // Dispose objects before losing scope
             // restoreBuildOutput doesn't lose scope here, it's provided to the return type
             var project = ProjectCreator.Templates
-                                        .VersioningProject(targetFramework, packageVersion, customAction: action, projectCollection: projectCollection )
+                                        .VersioningProject(targetFramework, packageVersion, projectCollection )
                                         .Save( projectPath )
                                         .TryRestore(out bool restoreResult, out BuildOutput restoreBuildOutput);
 #pragma warning restore CA2000 // Dispose objects before losing scope
@@ -147,7 +137,7 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
 
         internal static string CreateRandomFile(this TestContext ctx)
         {
-            string retVal = CreateRandomFilePath(ctx);
+            string retVal = ctx.CreateRandomFilePath();
             using var strm = File.Open(retVal, FileMode.CreateNew);
             return retVal;
         }
@@ -162,26 +152,26 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             int? preReleaseFix = null
             )
         {
-            string retVal = CreateRandomFilePath(ctx);
+            string retVal = ctx.CreateRandomFilePath();
             using var strm = File.Open(retVal, FileMode.CreateNew);
             var element = new XElement("BuildVersionData",
-                                        new XAttribute("BuildMajor", buildMajor),
-                                        new XAttribute("BuildMinor", buildMinor),
-                                        new XAttribute("BuildPatch", buildPatch)
+                                        new XAttribute(PropertyNames.BuildMajor, buildMajor),
+                                        new XAttribute(PropertyNames.BuildMinor, buildMinor),
+                                        new XAttribute(PropertyNames.BuildPatch, buildPatch)
                                         );
             if(!string.IsNullOrWhiteSpace( preReleaseName ))
             {
-                element.Add( new XAttribute( "PreReleaseName", preReleaseName ) );
+                element.Add( new XAttribute( PropertyNames.PreReleaseName, preReleaseName ) );
             }
 
             if(preReleaseNumber.HasValue)
             {
-                element.Add( new XAttribute( "PreReleaseNumber", preReleaseNumber.Value ) );
+                element.Add( new XAttribute( PropertyNames.PreReleaseNumber, preReleaseNumber.Value ) );
             }
 
             if(preReleaseFix.HasValue)
             {
-                element.Add( new XAttribute( "PreReleaseNumber", preReleaseFix.Value ) );
+                element.Add( new XAttribute( PropertyNames.PreReleaseNumber, preReleaseFix.Value ) );
             }
 
             element.Save( strm );
@@ -191,7 +181,7 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
 
         internal static string CreateEmptyBuildVersionXmlWithRandomName( this TestContext ctx )
         {
-            string retVal = CreateRandomFilePath(ctx);
+            string retVal = ctx.CreateRandomFilePath();
             using var strm = File.Open(retVal, FileMode.CreateNew);
             var element = new XElement("BuildVersionData");
             element.Save( strm );

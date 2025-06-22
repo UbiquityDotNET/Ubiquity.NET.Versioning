@@ -7,13 +7,12 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Globalization;
 using System.IO;
 
 using Microsoft.Build.Utilities.ProjectCreation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Ubiquity.Versioning.Build.Tasks.UT
+namespace Ubiquity.NET.Versioning.Build.Tasks.UT
 {
     // Provides common location for one time initialization for all tests in this assembly
     // Doing the package repo construction here, allows tests to run in parallel without
@@ -87,18 +86,18 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         private static PackageRepository? PackageRepo;
 
         private static readonly ImmutableArray<string> TaskInputPropertyNames = [
-            "BuildTime",
-            "IsPullRequestBuild",
-            "IsAutomatedBuild",
-            "IsReleaseBuild",
-            "CiBuildIndex",
-            "CiBuildName",
+            PropertyNames.BuildTime,
+            EnvVarNames.IsPullRequestBuild,
+            EnvVarNames.IsAutomatedBuild,
+            EnvVarNames.IsReleaseBuild,
+            PropertyNames.CiBuildIndex,
+            PropertyNames.CiBuildName,
             "BuildVersionXml",
-            "BuildMajor",
-            "FullBuildNumber",
-            "FileVersion",
-            "AssemblyVersion",
-            "InformationalVersion"
+            PropertyNames.BuildMajor,
+            PropertyNames.FullBuildNumber,
+            PropertyNames.FileVersion,
+            PropertyNames.AssemblyVersion,
+            PropertyNames.InformationalVersion
         ];
     }
 }

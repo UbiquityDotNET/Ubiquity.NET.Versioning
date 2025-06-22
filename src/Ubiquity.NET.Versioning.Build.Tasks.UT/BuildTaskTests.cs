@@ -11,9 +11,7 @@ using System.Globalization;
 using Microsoft.Build.Evaluation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using Ubiquity.NET.Versioning;
-
-namespace Ubiquity.Versioning.Build.Tasks.UT
+namespace Ubiquity.NET.Versioning.Build.Tasks.UT
 {
     [TestClass]
     public class BuildTaskTests
@@ -36,10 +34,10 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "20",
-                ["BuildMinor"] = "1",
-                ["BuildPatch"] = "4",
-                ["PreReleaseName"] = "alpha",
+                [PropertyNames.BuildMajor] = "20",
+                [PropertyNames.BuildMinor] = "1",
+                [PropertyNames.BuildPatch] = "4",
+                [PropertyNames.PreReleaseName] = "alpha",
             };
 
             using var collection = new ProjectCollection(globalProperties);
@@ -111,8 +109,8 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             const string buildIndex = "ABCDEF12";
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildTime"] = buildTime, // should be ignored as presence of explicit CiBuildIndex overrides it
-                ["CiBuildIndex"] = buildIndex,
+                [PropertyNames.BuildTime] = buildTime, // should be ignored as presence of explicit CiBuildIndex overrides it
+                [PropertyNames.CiBuildIndex] = buildIndex,
                 ["BuildVersionXml"] = buildVersionXml
             };
 
@@ -180,20 +178,20 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             // NOT using BuildVersion.xml, all values set as globals to test handling of that
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "20",
-                ["BuildMinor"] = "1",
-                ["BuildPatch"] = "5",
-                ["PreReleaseName"] = "delta",
-                ["PreReleaseNumber"] = "0",
-                ["PreReleaseFix"] = "1",
-                ["BuildTime"] = "2025-06-02T10:15:48-07:00", // Format typical of commit date time stamp
-                ["CiBuildName"] = "QRP", // Intentionally, not a standard value
+                [PropertyNames.BuildMajor] = "20",
+                [PropertyNames.BuildMinor] = "1",
+                [PropertyNames.BuildPatch] = "5",
+                [PropertyNames.PreReleaseName] = "delta",
+                [PropertyNames.PreReleaseNumber] = "0",
+                [PropertyNames.PreReleaseFix] = "1",
+                [PropertyNames.BuildTime] = "2025-06-02T10:15:48-07:00", // Format typical of commit date time stamp
+                [PropertyNames.CiBuildName] = "QRP", // Intentionally, not a standard value
             };
 
             // compute build index from the time stamp to get the expected value of the index
             // Technically, this is const as the time stamp itself is a const, but this saves on
             // "magic numbers" and allows easier updates to validate a different time stamp.
-            var parsedBuildTime = DateTime.Parse(globalProperties["BuildTime"], CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+            var parsedBuildTime = DateTime.Parse(globalProperties[PropertyNames.BuildTime], CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
             string expectedIndex = parsedBuildTime.ToBuildIndex();
 
             using var collection = new ProjectCollection(globalProperties);
@@ -225,15 +223,15 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             Assert.AreEqual("delta", props.PreReleaseName);
 
             Assert.IsNotNull(props.PreReleaseNumber, "Should have a value set for 'PreReleaseNumber'");
-            Assert.AreEqual((UInt16)0u, props.PreReleaseNumber);
+            Assert.AreEqual((ushort)0u, props.PreReleaseNumber);
 
             Assert.IsNotNull(props.PreReleaseFix, "Should have a value set for 'PreReleaseFix'");
-            Assert.AreEqual((UInt16)1u, props.PreReleaseFix);
+            Assert.AreEqual((ushort)1u, props.PreReleaseFix);
 
             Assert.AreEqual(expectedFullBuildNumber, props.FullBuildNumber);
             Assert.AreEqual(expectedFullBuildNumber, props.PackageVersion);
 
-            Assert.AreEqual(globalProperties["BuildTime"], props.BuildTime);
+            Assert.AreEqual(globalProperties[PropertyNames.BuildTime], props.BuildTime);
             Assert.AreEqual(expectedIndex, props.CiBuildIndex);
 
             Assert.AreEqual("QRP", props.CiBuildName);
@@ -264,20 +262,20 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             // NOT using BuildVersion.xml, all values set as globals to test handling of that
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "20",
-                ["BuildMinor"] = "1",
-                ["BuildPatch"] = "5",
-                ["PreReleaseName"] = "delta",
-                ["PreReleaseNumber"] = "1",
-                ["PreReleaseFix"] = "0",
-                ["BuildTime"] = "2025-06-02T10:15:48-07:00", // Format typical of commit date time stamp
-                ["CiBuildName"] = "QRP", // Intentionally, not a standard value
+                [PropertyNames.BuildMajor] = "20",
+                [PropertyNames.BuildMinor] = "1",
+                [PropertyNames.BuildPatch] = "5",
+                [PropertyNames.PreReleaseName] = "delta",
+                [PropertyNames.PreReleaseNumber] = "1",
+                [PropertyNames.PreReleaseFix] = "0",
+                [PropertyNames.BuildTime] = "2025-06-02T10:15:48-07:00", // Format typical of commit date time stamp
+                [PropertyNames.CiBuildName] = "QRP", // Intentionally, not a standard value
             };
 
             // compute build index from the time stamp to get the expected value of the index
             // Technically, this is const as the time stamp itself is a const, but this saves on
             // "magic numbers" and allows easier updates to validate a different time stamp.
-            var parsedBuildTime = DateTime.Parse(globalProperties["BuildTime"], CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+            var parsedBuildTime = DateTime.Parse(globalProperties[PropertyNames.BuildTime], CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
             string expectedIndex = parsedBuildTime.ToBuildIndex();
 
             using var collection = new ProjectCollection(globalProperties);
@@ -309,15 +307,15 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             Assert.AreEqual("delta", props.PreReleaseName);
 
             Assert.IsNotNull(props.PreReleaseNumber, "Should have a value set for 'PreReleaseNumber'");
-            Assert.AreEqual((UInt16)1u, props.PreReleaseNumber);
+            Assert.AreEqual((ushort)1u, props.PreReleaseNumber);
 
             Assert.IsNotNull(props.PreReleaseFix, "Should have a value set for 'PreReleaseFix'");
-            Assert.AreEqual((UInt16)0u, props.PreReleaseFix);
+            Assert.AreEqual((ushort)0u, props.PreReleaseFix);
 
             Assert.AreEqual(expectedFullBuildNumber, props.FullBuildNumber);
             Assert.AreEqual(expectedFullBuildNumber, props.PackageVersion);
 
-            Assert.AreEqual(globalProperties["BuildTime"], props.BuildTime);
+            Assert.AreEqual(globalProperties[PropertyNames.BuildTime], props.BuildTime);
             Assert.AreEqual(expectedIndex, props.CiBuildIndex);
 
             Assert.AreEqual("QRP", props.CiBuildName);
@@ -354,9 +352,9 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             // NOT using BuildVersion.xml, all values set as globals to test handling of that
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "20",
-                ["BuildMinor"] = "1",
-                ["BuildPatch"] = "4",
+                [PropertyNames.BuildMajor] = "20",
+                [PropertyNames.BuildMinor] = "1",
+                [PropertyNames.BuildPatch] = "4",
             };
 
             string expectedFullBuildNumber = "20.1.4";
@@ -364,17 +362,17 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
 
             if (isPreRelease)
             {
-                globalProperties["PreReleaseName"] = "delta";
-                globalProperties["PreReleaseNumber"] = "1";
-                globalProperties["PreReleaseFix"] = "0";
+                globalProperties[PropertyNames.PreReleaseName] = "delta";
+                globalProperties[PropertyNames.PreReleaseNumber] = "1";
+                globalProperties[PropertyNames.PreReleaseFix] = "0";
                 expectedFullBuildNumber += "-delta.1";
                 expectedShortNumber += "-d01";
             }
 
             if (isCiBuild)
             {
-                globalProperties["CiBuildIndex"] = "MyIndex"; // Intentionally not a standard value
-                globalProperties["CiBuildName"] = "QRP"; // Intentionally, not a standard value
+                globalProperties[PropertyNames.CiBuildIndex] = "MyIndex"; // Intentionally not a standard value
+                globalProperties[PropertyNames.CiBuildName] = "QRP"; // Intentionally, not a standard value
                 string ciSuffix = isPreRelease ? ".ci.MyIndex.QRP" : "--ci.MyIndex.QRP";
                 expectedFullBuildNumber += ciSuffix;
                 expectedShortNumber += ciSuffix;
@@ -382,12 +380,12 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             else
             {
                 // if this isn't set, the targets will assume it is a CI build and provide defaults
-                globalProperties["IsReleaseBuild"] = "true";
+                globalProperties[EnvVarNames.IsReleaseBuild] = "true";
             }
 
             if (includeMeta)
             {
-                globalProperties["BuildMeta"] = "MyMeta";
+                globalProperties[PropertyNames.BuildMeta] = "MyMeta";
                 expectedFullBuildNumber += "+MyMeta";
             }
 
@@ -413,10 +411,10 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
                 Assert.AreEqual("delta", props.PreReleaseName);
 
                 Assert.IsNotNull(props.PreReleaseNumber, "Should have a value set for 'PreReleaseNumber'");
-                Assert.AreEqual((UInt16)1u, props.PreReleaseNumber);
+                Assert.AreEqual((ushort)1u, props.PreReleaseNumber);
 
                 Assert.IsNotNull(props.PreReleaseFix, "Should have a value set for 'PreReleaseFix'");
-                Assert.AreEqual((UInt16)0u, props.PreReleaseFix);
+                Assert.AreEqual((ushort)0u, props.PreReleaseFix);
             }
 
             if (isCiBuild)
@@ -460,8 +458,8 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             {
                 FileVersionQuad retVal = isPreRelease ? new(5, 44854, 3876, 34610) : new(5, 44854, 3878, 23338);
 
-                // NOTE: Release build is +1 (FileVersionRevision)!
-                return !isCiBuild ? retVal with { Revision = (UInt16)(retVal.Revision + 1u) } : retVal;
+                // NOTE: ODD numbered revisions are for CI builds.
+                return !isCiBuild ? retVal with { Revision = (ushort)(retVal.Revision + 1u) } : retVal;
             }
         }
     }

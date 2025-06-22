@@ -30,6 +30,7 @@ builtinop
 byref
 byval
 castable
+ci
 cibuild
 Cmp
 Comdat
@@ -50,6 +51,7 @@ docfx
 docfxconsole
 dotnet
 endianess
+endianness
 enum
 Enums
 env
@@ -93,6 +95,7 @@ paren
 perf
 pointee
 Pre
+prerelease
 proj
 readonly
 refactor
@@ -103,6 +106,7 @@ RMW
 runtimes
 RValue
 sizeof
+Sprache
 src
 Stateful
 struct

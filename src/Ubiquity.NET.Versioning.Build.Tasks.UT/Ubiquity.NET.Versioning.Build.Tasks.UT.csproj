@@ -17,7 +17,6 @@
       <PrivateAssets>All</PrivateAssets>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\Ubiquity.NET.Versioning\Ubiquity.NET.Versioning.csproj" />
   </ItemGroup>
 
 </Project>

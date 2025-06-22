@@ -10,7 +10,7 @@ using System.Globalization;
 using Microsoft.Build.Execution;
 using Microsoft.Build.Utilities.ProjectCreation;
 
-namespace Ubiquity.Versioning.Build.Tasks.UT
+namespace Ubiquity.NET.Versioning.Build.Tasks.UT
 {
     internal static class ProjectInstanceExtensions
     {

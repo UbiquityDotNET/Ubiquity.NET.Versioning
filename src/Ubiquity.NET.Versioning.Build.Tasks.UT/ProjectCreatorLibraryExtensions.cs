@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Xml.Linq;
@@ -13,10 +12,15 @@ using System.Xml.Linq;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Utilities.ProjectCreation;
 
-namespace Ubiquity.Versioning.Build.Tasks.UT
+namespace Ubiquity.NET.Versioning.Build.Tasks.UT
 {
     internal static class ProjectCreatorLibraryExtensions
     {
+        /// <summary>Adds Source mapping to a <see cref="PackageRepository"/></summary>
+        /// <param name="pkgRepo">Repository to add source mapping to</param>
+        /// <param name="pkgSourceKey">Source mapping key</param>
+        /// <param name="pattern">pattern to use for this mapping</param>
+        /// <returns><paramref name="pkgRepo"/> for fluent use</returns>
         public static PackageRepository SourceMapping( this PackageRepository pkgRepo, string pkgSourceKey, string pattern )
         {
             var nugetConfig = XDocument.Load(pkgRepo.NuGetConfigPath);
@@ -28,42 +32,39 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             return pkgRepo;
         }
 
+        /// <summary>Creates a versioning project for test builds</summary>
+        /// <param name="templates">Key for extension method syntax</param>
+        /// <param name="targetFramework">Target framework to set the project for</param>
+        /// <param name="packageVersion">Package version for the NuGet import of the tasks</param>
+        /// <param name="projectCollection">Project collection for the project</param>
+        /// <returns><see cref="ProjectCreator"/> that created this project for fluent use</returns>
         [SuppressMessage( "Style", "IDE0060:Remove unused parameter", Justification = "Syntactical sugar" )]
         [SuppressMessage( "Style", "IDE0046:Convert to conditional expression", Justification = "Result is Less than 'simplified'" )]
         public static ProjectCreator VersioningProject(
             this ProjectCreatorTemplates templates,
             string targetFramework,
             string packageVersion,
-            Action<ProjectCreator>? customAction = null,
-            string? path = null,
-            string? defaultTargets = null,
-            string? initialTargets = null,
-            string sdk = "Microsoft.NET.Sdk",
-            string? toolsVersion = null,
-            string? treatAsLocalProperty = null,
-            ProjectCollection? projectCollection = null,
-            IDictionary<string, string>? globalProperties = null,
-            NewProjectFileOptions? projectFileOptions = NewProjectFileOptions.None )
+            ProjectCollection projectCollection
+            )
         {
             ArgumentException.ThrowIfNullOrWhiteSpace( targetFramework );
 
             return templates.SdkCsproj(
-                                path,
-                                sdk,
+                                path: null,
+                                sdk: "Microsoft.NET.Sdk",
                                 targetFramework,
                                 outputType: null,
-                                null,
-                                defaultTargets,
-                                initialTargets,
-                                treatAsLocalProperty,
+                                projectCreator: null,
+                                defaultTargets: null,
+                                initialTargets: null,
+                                treatAsLocalProperty: null,
                                 projectCollection,
-                                projectFileOptions,
-                                globalProperties
+                                projectFileOptions: NewProjectFileOptions.None,
+                                globalProperties: null
                                 ).ItemPackageReference( PackageUnderTestId, version: packageVersion, privateAssets: "All" )
                                  .Property( "Nullable", "disable" )
                                  .Property( "ManagePackageVersionsCentrally", "false" )
-                                 .Property( "ImplicitUsings", "disable" )
-                                 .CustomAction(customAction);
+                                 .Property( "ImplicitUsings", "disable" );
         }
 
         private static XElement GetOrCreateSourceMappingElement( XElement configuration )

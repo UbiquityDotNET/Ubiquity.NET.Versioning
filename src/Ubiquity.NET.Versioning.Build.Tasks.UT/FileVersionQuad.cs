@@ -7,44 +7,13 @@
 using System;
 using System.Numerics;
 
-namespace Ubiquity.NET.Versioning
+namespace Ubiquity.NET.Versioning.Build.Tasks.UT
 {
-    /// <summary>Represents a traditional "File" version QUAD of 16bit values</summary>
-    /// <param name="Major">Major version number</param>
-    /// <param name="Minor">Minor version number</param>
-    /// <param name="Build">Build version number</param>
-    /// <param name="Revision">Revision number</param>
-    /// <remarks>
-    /// <para>The "FILEVERSION" structure was first used in Windows as part of the Resource compiler's
-    /// "VERSION" information (Still used to this day). However, it's use in other places exists
-    /// and has grown as it is simple, and naturally fits (maps to) an unsigned 64bit value. Thus,
-    /// CSemVer defines a specific mapping of values to this common format.</para>
-    /// <para>A standard .NET <see cref="Version"/> is very similar except that the bit width of each
-    /// field is larger AND they are signed values. That is, every <see cref="FileVersionQuad"/> can
-    /// produce a valid .NET <see cref="Version"/>. However, not every <see cref="Version"/> can result
-    /// in a valid <see cref="FileVersionQuad"/>.</para>
-    /// <para>A file version is a quad of 4 <see cref="UInt16"/> values. This is convertible to a <see cref="UInt64"/> in the
-    /// following pattern:
-    /// (bits are numbered with MSB as the highest numeric value [Actual byte ordering depends on platform endianess])
-    /// <list type="table">
-    ///     <listheader><term>Field</term><term>Description</term></listheader>
-    ///     <item><term>bits 48-63</term><description> Major part of Build number</description></item>
-    ///     <item><term>bits 32-47</term><description> Minor part of Build number</description></item>
-    ///     <item><term>bits 16-31</term><description> Build part of Build number</description></item>
-    ///     <item><term>bits 0-15</term><description> Revision part of Build number (LSB == 0 indicates a CI build; LSB == 1 indicates a release build)</description></item>
-    /// </list>
-    /// </para>
-    /// <note type="important">
-    /// The role of the LSB for the Revision field is confusing as it indicates a CI build or not which itself is confusing. A CI
-    /// build occurs AFTER a release! CI builds are ordered AFTER a release (or for a pre-release based on time only [0.0.0]). That is,
-    /// a CI build ***always*** has a Patch+1 of a released build or [Major.Minor.Patch] == [0.0.0].
-    /// </note>
-    /// <para>A file version cast as a <see cref="UInt64"/> is <i><b>NOT</b></i> the same as an Ordered version number.
-    /// The file version includes a "bit" for the status as a CI Build. Thus, a "file version" as a <see cref="UInt64"/> is the
-    /// ordered version shifted left by one bit and the LSB indicates if it is a Release/CI build</para>
-    /// </remarks>
-    /// <seealso href="https://csemver.org/"/>
-    public readonly record struct FileVersionQuad( UInt16 Major, UInt16 Minor, UInt16 Build, UInt16 Revision )
+    /// <summary>File version QUAD used for testing</summary>
+    /// <para>This is a clone of the code in the `Ubiquity.NET.Versioning`. Cloning this for the tests, means
+    /// they are independent of the versioning library, which makes that library a candidate for isolation in
+    /// a different repo/build that depends on the TASK package for generation of versions</para>
+    internal readonly record struct FileVersionQuad( ushort Major, ushort Minor, ushort Build, ushort Revision )
         : IComparable<FileVersionQuad>
         , IComparisonOperators<FileVersionQuad, FileVersionQuad, bool>
     {
@@ -77,11 +46,11 @@ namespace Ubiquity.NET.Versioning
         /// Major, Minor, Build, Revision. Thus, while the actual byte ordering of the data making
         /// up an integral value will depend on the system architecture, it's VALUE does not.
         /// </remarks>
-        public UInt64 ToUInt64( )
+        public ulong ToUInt64( )
         {
-            return ((UInt64)Major << 48)
-                 + ((UInt64)Minor << 32)
-                 + ((UInt64)Build << 16)
+            return ((ulong)Major << 48)
+                 + ((ulong)Minor << 32)
+                 + ((ulong)Build << 16)
                  + Revision;
         }
 
@@ -92,14 +61,14 @@ namespace Ubiquity.NET.Versioning
         /// The File version form of a CSemVer value includes a bit to indicate if the version is a CI build
         /// or not. This condition is important for ordering
         /// </remarks>
-        public UInt64 ToOrderedVersion(out bool isCIBuild)
+        public ulong ToOrderedVersion(out bool isCIBuild)
         {
             isCIBuild = IsCiBuild;
             return ToUInt64() >> 1;
         }
 
         /// <inheritdoc cref="ToOrderedVersion(out bool)"/>
-        public UInt64 ToOrderedVersion()
+        public ulong ToOrderedVersion()
         {
             return ToOrderedVersion(out _);
         }
@@ -126,32 +95,32 @@ namespace Ubiquity.NET.Versioning
         /// <summary>Converts a <see cref="Version"/> value to a <see cref="FileVersionQuad"/> if possible</summary>
         /// <param name="v">Version to convert</param>
         /// <returns>Resulting <see cref="FileVersionQuad"/></returns>
-        /// <exception cref="ArgumentOutOfRangeException">At least one of the members of <paramref name="v"/> is out of range of a <see cref="UInt16"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException">At least one of the members of <paramref name="v"/> is out of range of a <see cref="ushort"/></exception>
         public static FileVersionQuad From( Version v)
         {
-            ArgumentOutOfRangeException.ThrowIfGreaterThan(v.Major, UInt16.MaxValue);
-            ArgumentOutOfRangeException.ThrowIfGreaterThan(v.Minor, UInt16.MaxValue);
-            ArgumentOutOfRangeException.ThrowIfGreaterThan(v.Build, UInt16.MaxValue);
-            ArgumentOutOfRangeException.ThrowIfGreaterThan(v.Revision, UInt16.MaxValue);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(v.Major, ushort.MaxValue);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(v.Minor, ushort.MaxValue);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(v.Build, ushort.MaxValue);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(v.Revision, ushort.MaxValue);
 
-            return new((UInt16)v.Major, (UInt16)v.Minor, (UInt16)v.Build, (UInt16)v.Revision);
+            return new((ushort)v.Major, (ushort)v.Minor, (ushort)v.Build, (ushort)v.Revision);
         }
 
         /// <summary>Converts a version integral value into a <see cref="FileVersionQuad"/></summary>
         /// <param name="value">Value to convert</param>
         /// <returns> <see cref="FileVersionQuad"/> variant of <paramref name="value"/></returns>
-        public static FileVersionQuad From( UInt64 value )
+        public static FileVersionQuad From( ulong value )
         {
-            UInt16 revision = (UInt16)(value % 65536);
-            UInt64 rem = (value - revision) / 65536;
+            ushort revision = (ushort)(value % 65536);
+            ulong rem = (value - revision) / 65536;
 
-            UInt16 build = (UInt16)(rem % 65536);
+            ushort build = (ushort)(rem % 65536);
             rem = (rem - build) / 65536;
 
-            UInt16 minor = (UInt16)(rem % 65536);
+            ushort minor = (ushort)(rem % 65536);
             rem = (rem - minor) / 65536;
 
-            UInt16 major = (UInt16)(rem % 65536);
+            ushort major = (ushort)(rem % 65536);
             return new( major, minor, build, revision );
         }
     }

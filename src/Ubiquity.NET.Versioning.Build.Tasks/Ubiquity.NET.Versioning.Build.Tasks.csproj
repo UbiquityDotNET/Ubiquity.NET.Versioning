@@ -22,13 +22,32 @@
         <!-- Set output assembly into the "tasks" folder so it is usable as a "task"-->
         <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
         <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+
         <!--
         Explicitly declaring no docs for this build only assembly. Even though it is used by consumers there
-        is no API to document, only the task itself is documented (And that is pure markdown)
+        is no API for them to call, and therefore nothing to  document, only the task itself is documented
+        (and that is pure markdown).
         -->
         <GenerateDocumentationFile>false</GenerateDocumentationFile>
     </PropertyGroup>
 
+    <!--
+    // NOTE:
+    //  Due to constraints, limitations and general issues with MSBUILD Tasks and dependency resolution
+    //  this must NOT have any dependencies beyond MSBUILD itself, and therefore, does it all locally.
+    //  This is not as complete as what is offered in the Ubiquity.NET.Versioning library but enables
+    //  the tasks to function with the least of changes to the consumer (Update to package name and
+    //  version, gets updated/corrected version)
+    //
+    // For gory details of the problems of creating a task with dependencies
+    // See: https://natemcmaster.com/blog/2017/11/11/msbuild-task-with-dependencies/
+    //
+    // Note that there is a problem with the recommendation Nate makes in that a console tool
+    // has additional dependency problems with the runtime identifier and or the framework
+    // runtime needed to run it. If it's .NET or something else the supporting runtime and
+    // the RID version is needed to execute it. So this just builds a task that is constrained
+    // only by the requirements of MSBUILD itself.
+    -->
     <ItemGroup>
         <PackageReference Include="Microsoft.Build.Framework" PrivateAssets="All" />
         <PackageReference Include="Microsoft.Build.Utilities.Core" PrivateAssets="All" />

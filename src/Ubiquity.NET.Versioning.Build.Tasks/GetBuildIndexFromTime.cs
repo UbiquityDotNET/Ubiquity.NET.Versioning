@@ -28,6 +28,7 @@ namespace Ubiquity.NET.Versioning.Build.Tasks
             // establish an increasing build index based on the number of seconds from a common UTC date
             var timeStamp = TimeStamp.ToUniversalTime( );
             Log.LogMessage(MessageImportance.Low, $"Time Stamp(UTC; ISO-8601): {timeStamp:o}");
+
             var midnightUtc = new DateTime( timeStamp.Year, timeStamp.Month, timeStamp.Day, 0, 0, 0, DateTimeKind.Utc );
             Log.LogMessage(MessageImportance.Low, $"Midnight (UTC; ISO-8601): {midnightUtc:o}");
 

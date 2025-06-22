@@ -1,10 +1,10 @@
 <!--
-This file is updated on a public release to set the next build that pre-releases will increment to
+This file is updated on a public release to set the build number for a release and that all subsequent CI builds
+will be based on
 -->
 <BuildVersionData
     BuildMajor = "5"
     BuildMinor = "0"
-    BuildPatch = "0"
-    PreReleaseName = "rc"
-    PreReleaseNumber = "2"
+    BuildPatch = "1"
+    PreReleaseName = "alpha"
 />

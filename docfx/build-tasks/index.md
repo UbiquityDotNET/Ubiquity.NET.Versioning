@@ -35,31 +35,31 @@ SemVer is only concerned with official releases. This makes CI builds producing
 versioned packages challenging. Fortunately, someone has already defined a solution
 to using SemVer in a specially constrained way to ensure compatibility, while also 
 allowing for automated CI builds. These new versions are called a [Constrained Semantic
-Version](http://csemver.org) (CSemVer).
+Version](http://csemver.org) (CSemVer and CSemVer-CI).
 
-A CSemVer is unique for each CI build and always increments while still supporting official
+A CSemVer is unique for each build and always increments while still supporting official
 releases. However, in the real world, there are often cases where there are additional builds
-that are distinct from official releases and CI builds. These include local developer builds
-and builds generated from a Pull Request (a.k.a Automated buddy build). Neither SemVer, nor
-CSemVer explicitly define any format for these cases. So this library defines a pattern of
-versioning that is fully compatible with CSemVer and allows for the additional build types
-in a way that retains precedence having the least surprising consequences. In particular,
-local build versions have a higher precedence than CI or release versions if all other
-components of the version match. This ensures that what you are building includes the dependent
-components you just built instead of the last one released publicly.
+that are distinct from official releases and formal CI builds. These include local developer
+builds and builds generated from a Pull Request (a.k.a Automated buddy build). Neither SemVer,
+nor CSemVer explicitly define any format for these cases. So this library defines a pattern of
+versioning that is fully compatible with CSemVer[-CI] and allows for the additional build
+types in a way that retains precedence having the least surprising consequences. In particular,
+local build versions have a higher precedence than automated or release versions if all other
+components of the version match<sup>[1](#footnote_1)</sup>. This ensures that what you are building includes
+the dependent components you just built instead of the last one released publicly.
 
 The following is a list of the version formats in descending order of precedence:
 
 | Build Type | Format |
 |------------|--------|
-| Local build  | `{BuildMajor}.{BuildMinor}.{BuildPatch}--ci-{CiBuildIndex}-ZZZ+{BuildMeta}` |
-| Pull Request | `{BuildMajor}.{BuildMinor}.{BuildPatch}--ci-{CiBuildIndex}-PRQ+{BuildMeta}` |
-| Official CI builds | `{BuildMajor}.{BuildMinor}.{BuildPatch}--ci-{CiBuildIndex}-BLD+{BuildMeta}` |
+| Local build  | `{BuildMajor}.{BuildMinor}.{BuildPatch}.ci.{CiBuildIndex}.ZZZ+{BuildMeta}` |
+| Pull Request | `{BuildMajor}.{BuildMinor}.{BuildPatch}.ci.{CiBuildIndex}.PRQ+{BuildMeta}` |
+| Official CI builds | `{BuildMajor}.{BuildMinor}.{BuildPatch}.ci-{CiBuildIndex}.BLD+{BuildMeta}` |
 | Official PreRelease | `{BuildMajor}.{BuildMinor}.{BuildPatch}-{PreReleaseName}[.PreReleaseNumber][.PreReleaseFix]+{BuildMeta}` |
 | Official Release | `{BuildMajor}.{BuildMinor}.{BuildPatch}+{BuildMeta}` |
 
-That is the, CI BuildName is chosen to ensure the ordering matches the expected behavior for
-a build.
+That is the, CI BuildName is specifically chosen to ensure the ordering matches the expected
+behavior for a build while making sense for most uses.
 
 This project provides an MSBUILD task to automate the generation of these versions in an easy
 to use NuGet Package.
@@ -83,15 +83,7 @@ signing functions properly to enable loading different versions in the same proc
 > A file version quad representation of a CSemVer does NOT carry with it the CI information nor
 > the build metadata. It only contains a single bit to indicate a Release vs. a CI build. In
 > fact, the official CSemVer specs are silent on the use of this bit though the "playground"
-> does indicate an ODD numbered revision is a CI build. However, that leads to problems (see
-> this: [Spec issue](https://github.com/CK-Build/csemver.org/issues/2) for more details).
-> Thus, the `Ubiquity.NET.Versioning.*` libraries do NOT work that way. In these libraries,
-> an odd numbered revision indicates a RELEASE build whereas an EVEN numbered form represents
-> a CI build. This results in the correct behavior for comparisons of the File version. The
-> file version comparisons MUST result in correct ordering or an underlying Windows OS and
-> related APIs will NOT behave as expected. (A CI build is ALWAYS ordered less then a release
-> build)
-
+> does indicate an ODD numbered revision is a CI build.
 
 The Major, Minor and Patch versions are only updated in the primary branch at the time
 of a release. This ensures the concept that SemVer versions define released products. The
@@ -109,11 +101,17 @@ CSemVer.Build uses MSBuild properties to determine the final version number.
 | PreReleaseNumber  | `<Undefined>` or value read from BuildVersion.xml if present | PreRelease Number of the CSemVer |
 | PreReleaseFix     | `<Undefined>` or value read from BuildVersion.xml if present | PreRelease Fix of the CSemVer |
 | BuildMeta         | `<undefined>`                                                | Build meta for the version
-| CiBuildIndex      | ISO 8601 formated UTC time-stamp for the build or the commit ID for automated builds | Provides a unique build to build value guaranteed to increase with each build
+| CiBuildIndex      | ISO 8601 formated UTC time-stamp for the build               | Provides a unique build to build value guaranteed to increase with each build
 | CiBuildName       | `<see notes>`                                                | CSemVer CI name
-| PackageVersionUsesShortForm | `<Undefined>` => false | Determines if the PackageVersion is set to the short form for legacy NuGet clients |
 | GeneratedVersionInfoHeader | `<undefined>` | Full path of the header file to generate [No header generated if not set] [Only applies to a VCXPROJ file ] |
-| GenerateAssemblyInfo | `<undefined>` | If set, creates `$(IntermediateOutputPath)AssemblyVersionInfo.g.cs` and includes it for compilation. Used for legacy CSPROJ files as new SDK projects handle this automatically now |
+| GenerateAssemblyInfo | `<undefined>` | If set, creates `$(IntermediateOutputPath)AssemblyVersionInfo.g.cs` and includes it for compilation. Generally, only used for legacy CSPROJ files as new SDK projects handle this automatically now |
+
+### CiBuildIndex
+Unless specified or a release build [$(IsReleaseBuild) is true] this indicates the CSemVer CI
+Build index for a build. For a CI build this will default to the ISO-8601 formatted time stamp
+of the build. Consumers can specify any value desired as an override but should ensure the
+value is ALWAYS increasing according to the rules of a CSemVer-CI. Generating duplicates for
+the same build is an error condition and can lead to consumer confusion.
 
 ### CiBuildName
 Unless explicitly provided, the CiBuildName is determined by a set of properties that indicate
@@ -146,10 +144,98 @@ example for setting them based on an AppVeyor build in the `Directory.Build.prop
 </PropertyGroup>
 ```
 
-### PackageVersionUsesShortForm
-The MSBuild Property `PackageVersionUsesShortForm` is used by the task to determine the format to use for the
-`PackageVersion` property. The default is to use the long form supported by modern NuGet clients, however if your are
-in need of the legacy format support a project may set this property to `true` to observe the legacy behavior.
+Commonly a build is scripted in a build service such as GitHub Actions or AppVeyor. Such
+scripting should set these values based on conditions from the back end system. An example
+of this for common systems like GitHub and AppVeyor could look like this:
+
+``` PowerShell
+enum BuildKind
+{
+    LocalBuild
+    PullRequestBuild
+    CiBuild
+    ReleaseBuild
+}
+
+function Get-CurrentBuildKind
+{
+<#
+.SYNOPSIS
+    Determines the kind of build for the current environment
+
+.DESCRIPTION
+    This function retrieves environment values set by various automated builds
+    to determine the kind of build the environment is for. The return is one of
+    the [BuildKind] enumeration values:
+
+    | Name             | Description |
+    |------------------|-------------|
+    | LocalBuild       | This is a local developer build (e.g. not an automated build)
+    | PullRequestBuild | This is a build from a PullRequest with untrusted changes, so build should limit the steps appropriately |
+    | CiBuild          | This build is from a Continuous Integration (CI) process, usually after a PR is accepted and merged to the branch |
+    | ReleaseBuild     | This is an official release build, the output is ready for publication (Automated builds may use this to automatically publish) |
+#>
+    [OutputType([BuildKind])]
+    param()
+
+    $currentBuildKind = [BuildKind]::LocalBuild
+
+    # IsAutomatedBuild is the top level gate (e.g. if it is false, all the others must be false)
+    # This supports identification of APPVEYOR or GitHub explicitly but also supports the common
+    # `CI` environment variable. Additional build back-ends that don't set the env var therefore,
+    # would need special handling here.
+    $isAutomatedBuild = [System.Convert]::ToBoolean($env:CI) `
+                        -or [System.Convert]::ToBoolean($env:APPVEYOR) `
+                        -or [System.Convert]::ToBoolean($env:GITHUB_ACTIONS)
+
+    if( $isAutomatedBuild )
+    {
+        # PR and release builds have externally detected indicators that are tested
+        # below, so default to a CiBuild (e.g. not a PR, And not a RELEASE)
+        $currentBuildKind = [BuildKind]::CiBuild
+
+        # Based on back-end type - determine if this is a release or CI build
+        # The assumption here is that a TAG is pushed to the repo for releases
+        # and therefore that is what distinguishes a release build. Other conditions
+        # would need to use other criteria to determine a PR buddy build, CI build
+        # and release build.
+
+        # IsPullRequestBuild indicates an automated buddy build and should not be trusted
+        $isPullRequestBuild = $env:GITHUB_BASE_REF -or $env:APPVEYOR_PULL_REQUEST_NUMBER
+
+        if($isPullRequestBuild)
+        {
+            $currentBuildKind = [BuildKind]::PullRequestBuild
+        }
+        else
+        {
+            if([System.Convert]::ToBoolean($env:APPVEYOR))
+            {
+                $isReleaseBuild = $env:APPVEYOR_REPO_TAG
+            }
+            elseif([System.Convert]::ToBoolean($env:GITHUB_ACTIONS))
+            {
+                $isReleaseBuild = $env:GITHUB_REF -like 'refs/tags/*'
+            }
+
+            if($isReleaseBuild)
+            {
+                $currentBuildKind = [BuildKind]::ReleaseBuild
+            }
+        }
+    }
+
+    return $currentBuildKind
+}
+
+$currentBuildKind = Get-CurrentBuildKind
+
+# set/reset legacy environment vars for non-script tools (i.e. msbuild.exe)
+$env:IsAutomatedBuild = $currentBuildKind -ne [BuildKind]::LocalBuild
+$env:IsPullRequestBuild = $currentBuildKind -eq [BuildKind]::PullRequestBuild
+$env:IsReleaseBuild = $currentBuildKind -eq [BuildKind]::ReleaseBuild
+
+```
 
 ## BuildVersion.xml
 If the MSBuild property `BuildMajor` is not set, then the base build version is read from the
@@ -239,7 +325,7 @@ section of this document.
 | CSM103 | PreReleaseName is unknown |
 | CSM104 | PreReleaseNumber value must be in range [0-99] |
 | CSM105 | PreReleaseFix value must be in range [0-99] |
-| CSM106<sup>1</sup> | If CiBuildIndex is set then CiBuildName must also be set; If CiBuildIndex is NOT set then CiBuildName must not be set. |
+| CSM106<sup>[2](#footnote_2)</sup> | If CiBuildIndex is set then CiBuildName must also be set; If CiBuildIndex is NOT set then CiBuildName must not be set. |
 | CSM107 | CiBuildIndex does not match syntax defined by CSemVer |
 | CSM108 | CiBuildName does not match syntax defined by CSemVer |
 
@@ -253,7 +339,14 @@ section of this document.
 | CSM204 | XML format of file specified by `$(BuildVersionXml)' is invalid |
 
 ----
-<sup>1</sup> CSM106 is essentially an internal sanity test. The props/targets files ensure that
+<sup><a id="footnote_1">1</a></sup> CSemVer-CI uses a latest build format and therefore all version numbers for a CI
+build, including local builds use a `Patch+1` pattern as defined by CSemVer-CI. This ensures
+that all forms of CI builds have a higher precedence than any release they are based on. To
+simplify that, a CI build contains everything in a given release and then some more. What
+release that will eventually become is intentionally undefined.
+
+
+<sup><a id="footnote_2">2</a></sup> CSM106 is essentially an internal sanity test. The props/targets files ensure that
 `$(CiBuildIndex)` and `$(CiBuildName)` have a value unless $(IsReleaseBuild) is set. In that case
 the targets file will force them to empty. So, there's no way to test for or hit this condition
 without completely replacing/bypassing the props/targets files for the task. Which is obviously,

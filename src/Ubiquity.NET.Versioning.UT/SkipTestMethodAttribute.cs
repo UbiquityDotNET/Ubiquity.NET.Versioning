@@ -22,7 +22,9 @@ namespace Ubiquity.NET.Versioning.UT
     {
         public override TestResult[] Execute( ITestMethod testMethod )
         {
-            return [new() { Outcome = UnitTestOutcome.Ignored }];
+            return [new() { Outcome = UnitTestOutcome.Ignored, TestContextMessages = ContextMessage }];
         }
+
+        public string? ContextMessage { get; set; } = "Explicitly skipped";
     }
 }

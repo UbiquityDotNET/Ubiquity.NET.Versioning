@@ -13,7 +13,7 @@ using System.Xml.Linq;
 using Microsoft.Build.Evaluation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Ubiquity.Versioning.Build.Tasks.UT
+namespace Ubiquity.NET.Versioning.Build.Tasks.UT
 {
     [TestClass]
     [TestCategory("Error Validation")]
@@ -97,9 +97,9 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
             using(var strm = File.Open(buildVersionXmlPath, FileMode.CreateNew))
             {
                 var element = new XElement("BuildVersionData",
-                                           new XAttribute("BuildMajor", "1"),
-                                           new XAttribute("BuildMinor", "2"),
-                                           new XAttribute("BuildPatch", "3"),
+                                           new XAttribute(PropertyNames.BuildMajor, "1"),
+                                           new XAttribute(PropertyNames.BuildMinor, "2"),
+                                           new XAttribute(PropertyNames.BuildPatch, "3"),
                                            new XAttribute("Unknown", "Uh-oh!")
                                           );
                 element.Save( strm );

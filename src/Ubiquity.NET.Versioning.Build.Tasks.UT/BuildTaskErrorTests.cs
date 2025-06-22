@@ -11,7 +11,7 @@ using System.Linq;
 using Microsoft.Build.Evaluation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Ubiquity.Versioning.Build.Tasks.UT
+namespace Ubiquity.NET.Versioning.Build.Tasks.UT
 {
     [TestClass]
     [TestCategory("Error Validation")]
@@ -51,7 +51,7 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "10"
+                [PropertyNames.BuildMajor] = "10"
             };
 
             using var collection = new ProjectCollection(globalProperties);
@@ -67,8 +67,8 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "10",
-                ["BuildMinor"] = "1",
+                [PropertyNames.BuildMajor] = "10",
+                [PropertyNames.BuildMinor] = "1",
             };
 
             using var collection = new ProjectCollection(globalProperties);
@@ -84,10 +84,10 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "10",
-                ["BuildMinor"] = "1",
-                ["BuildPatch"] = "2",
-                ["FullBuildNumber"] = "\t", // Present but all whitespace; Presence of this skips the CreateVersionInfoTask
+                [PropertyNames.BuildMajor] = "10",
+                [PropertyNames.BuildMinor] = "1",
+                [PropertyNames.BuildPatch] = "2",
+                [PropertyNames.FullBuildNumber] = "\t", // Present but all whitespace; Presence of this skips the CreateVersionInfoTask
             };
 
             using var collection = new ProjectCollection(globalProperties);
@@ -103,11 +103,11 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "10",
-                ["BuildMinor"] = "1",
-                ["BuildPatch"] = "2",
-                ["FullBuildNumber"] = "\t", // Present but all whitespace; Presence of this skips the CreateVersionInfoTask
-                ["FileVersionMajor"] = "1", // avoid CSM004 to allow testing of next field requirement
+                [PropertyNames.BuildMajor] = "10",
+                [PropertyNames.BuildMinor] = "1",
+                [PropertyNames.BuildPatch] = "2",
+                [PropertyNames.FullBuildNumber] = "\t", // Present but all whitespace; Presence of this skips the CreateVersionInfoTask
+                [PropertyNames.FileVersionMajor] = "1", // avoid CSM004 to allow testing of next field requirement
             };
 
             using var collection = new ProjectCollection(globalProperties);
@@ -123,12 +123,12 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "10",
-                ["BuildMinor"] = "1",
-                ["BuildPatch"] = "2",
-                ["FullBuildNumber"] = "\t", // Present but all whitespace; Presence of this skips the CreateVersionInfoTask
-                ["FileVersionMajor"] = "1", // avoid CSM004 to allow testing of next field requirement
-                ["FileVersionMinor"] = "2", // avoid CSM005 to allow testing of next field requirement
+                [PropertyNames.BuildMajor] = "10",
+                [PropertyNames.BuildMinor] = "1",
+                [PropertyNames.BuildPatch] = "2",
+                [PropertyNames.FullBuildNumber] = "\t", // Present but all whitespace; Presence of this skips the CreateVersionInfoTask
+                [PropertyNames.FileVersionMajor] = "1", // avoid CSM004 to allow testing of next field requirement
+                [PropertyNames.FileVersionMinor] = "2", // avoid CSM005 to allow testing of next field requirement
             };
 
             using var collection = new ProjectCollection(globalProperties);
@@ -144,13 +144,13 @@ namespace Ubiquity.Versioning.Build.Tasks.UT
         {
             var globalProperties = new Dictionary<string, string>
             {
-                ["BuildMajor"] = "10",
-                ["BuildMinor"] = "1",
-                ["BuildPatch"] = "2",
-                ["FullBuildNumber"] = "\t", // Present but all whitespace; Presence of this skips the CreateVersionInfoTask
-                ["FileVersionMajor"] = "1", // avoid CSM004 to allow testing of next field requirement
-                ["FileVersionMinor"] = "2", // avoid CSM005 to allow testing of next field requirement
-                ["FileVersionBuild"] = "3", // avoid CSM006 to allow testing of next field requirement
+                [PropertyNames.BuildMajor] = "10",
+                [PropertyNames.BuildMinor] = "1",
+                [PropertyNames.BuildPatch] = "2",
+                [PropertyNames.FullBuildNumber] = "\t", // Present but all whitespace; Presence of this skips the CreateVersionInfoTask
+                [PropertyNames.FileVersionMajor] = "1", // avoid CSM004 to allow testing of next field requirement
+                [PropertyNames.FileVersionMinor] = "2", // avoid CSM005 to allow testing of next field requirement
+                [PropertyNames.FileVersionBuild] = "3", // avoid CSM006 to allow testing of next field requirement
             };
 
             using var collection = new ProjectCollection(globalProperties);

@@ -48,7 +48,7 @@ namespace Ubiquity.NET.Versioning.UT
         {
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             // VALIDATING behavior of API is the point of this test.
-            var argnex = Assert.ThrowsExactly<ArgumentNullException>(()=>_=new CSemVerCI((string?)null, "c-name", null));
+            var argnex = Assert.ThrowsExactly<ArgumentNullException>(()=>_=new CSemVerCI(null, "c-name", null));
             Assert.AreEqual("index", argnex.ParamName, "null parameter should throw"); // sadly there is no refactoring safe nameof() expression for a parameter at the call site...
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
@@ -149,8 +149,6 @@ namespace Ubiquity.NET.Versioning.UT
             var ver_name_1_same = new CSemVerCI( new CSemVer( 20, 1, 4 ), "BuildIndex01", "BuildName01" );
             var ver_name_2 = new CSemVerCI( new CSemVer( 20, 1, 4 ), "BuildIndex01", "BuildName02" );
 
-            Assert.IsTrue(ver_name_1.CompareTo(null) > 0, "Any instance should compare greater than null");
-
             Assert.IsTrue(ver_name_1.CompareTo(ver_name_2) < 0);
             Assert.IsTrue(ver_name_2.CompareTo(ver_name_1) > 0);
 
@@ -166,7 +164,6 @@ namespace Ubiquity.NET.Versioning.UT
             var ver_name_1 = new CSemVerCI( new CSemVer( 20, 1, 4, null, [ "buildMeta" ] ), "BuildIndex01", "BuildName01" );
             var ver_name_1_same = new CSemVerCI( new CSemVer( 20, 1, 4, null, [ "buildMeta" ] ), "BuildIndex01", "BuildName01" );
             var ver_name_2 = new CSemVerCI( new CSemVer( 20, 1, 4, null, [ "buildMeta" ] ), "BuildIndex01", "BuildName02" );
-            Assert.IsTrue(ver_name_1.CompareTo(null) > 0, "Any instance should compare greater than null");
 
             Assert.IsTrue(ver_name_1.CompareTo(ver_name_2) < 0);
             Assert.IsTrue(ver_name_2.CompareTo(ver_name_1) > 0);
@@ -184,7 +181,6 @@ namespace Ubiquity.NET.Versioning.UT
             var ver_name_1 = new CSemVerCI( new CSemVer( 1, 2, 3, alpha_0_1 ), "BuildIndex01", "BuildName01" );
             var ver_name_1_same = new CSemVerCI( new CSemVer( 1, 2, 3, alpha_0_1 ), "BuildIndex01", "BuildName01" );
             var ver_name_2 = new CSemVerCI( new CSemVer( 1, 2, 3, alpha_0_1 ), "BuildIndex01", "BuildName02" );
-            Assert.IsTrue(ver_name_1.CompareTo(null) > 0, "Any instance should compare greater than null");
 
             Assert.IsTrue(ver_name_1.CompareTo(ver_name_2) < 0);
             Assert.IsTrue(ver_name_2.CompareTo(ver_name_1) > 0);
@@ -204,7 +200,6 @@ namespace Ubiquity.NET.Versioning.UT
             var ver_name_1 = new CSemVerCI( new CSemVer( 1, 2, 3, alpha_0_1, ["BuildMeta"] ), "BuildIndex01", "BuildName01" );
             var ver_name_1_same = new CSemVerCI( new CSemVer( 1, 2, 3, alpha_0_1, ["BuildMeta", "MoreMeta"] ), "BuildIndex01", "BuildName01" );
             var ver_name_2 = new CSemVerCI( new CSemVer( 1, 2, 3, alpha_0_1, ["SomeOhterMeta"] ), "BuildIndex01", "BuildName02" );
-            Assert.IsTrue(ver_name_1.CompareTo(null) > 0, "Any instance should compare greater than null");
 
             Assert.IsTrue(ver_name_1.CompareTo(ver_name_2) < 0);
             Assert.IsTrue(ver_name_2.CompareTo(ver_name_1) > 0);

@@ -58,8 +58,8 @@ The following is a list of the version formats in descending order of precedence
 | Official PreRelease | `{BuildMajor}.{BuildMinor}.{BuildPatch}-{PreReleaseName}[.PreReleaseNumber][.PreReleaseFix]+{BuildMeta}` |
 | Official Release | `{BuildMajor}.{BuildMinor}.{BuildPatch}+{BuildMeta}` |
 
-That is the, CI BuildName is specifically chosen to ensure the ordering matches the expected
-behavior for a build while making sense for most uses.
+That is the, CI BuildName (`ZZZ`, `PRQ`, `BLD`) is specifically chosen to ensure the ordering
+matches the expected behavior for a build while still making sense for most uses.
 
 This project provides an MSBUILD task to automate the generation of these versions in an easy
 to use NuGet Package.
@@ -80,10 +80,10 @@ guarantees that each build has a different file and assembly version so that str
 signing functions properly to enable loading different versions in the same process.
 
 >[!IMPORTANT]
-> A file version quad representation of a CSemVer does NOT carry with it the CI information nor
-> the build metadata. It only contains a single bit to indicate a Release vs. a CI build. In
-> fact, the official CSemVer specs are silent on the use of this bit though the "playground"
-> does indicate an ODD numbered revision is a CI build.
+> A file version quad representation of a CSemVer does NOT carry with it the CI information
+> nor any build metadata. It only contains a single bit to indicate a Release vs. a CI build.
+> In fact, the official CSemVer specs are silent on the use of this bit though the "playground"
+> does indicate an ODD numbered revision is reserved as a CI build.
 
 The Major, Minor and Patch versions are only updated in the primary branch at the time
 of a release. This ensures the concept that SemVer versions define released products. The
@@ -111,22 +111,26 @@ Unless specified or a release build [$(IsReleaseBuild) is true] this indicates t
 Build index for a build. For a CI build this will default to the ISO-8601 formatted time stamp
 of the build. Consumers can specify any value desired as an override but should ensure the
 value is ALWAYS increasing according to the rules of a CSemVer-CI. Generating duplicates for
-the same build is an error condition and can lead to consumer confusion.
+the same build is an error condition and can lead to consumer confusion. Usually, if set
+externally, this is set to the time stamp of the head commit of a repository so that any
+automated builds are consistent with the build number. (For PullRequest buddy builds this is
+usually left as a build time stamp)
 
 ### CiBuildName
 Unless explicitly provided, the CiBuildName is determined by a set of properties that indicate
 the nature of the build. The properties used (in evaluation order) are:
 
 |Name               |Default Value  |CiBuildName    | Description|
-|-------------------|---------------|---------------|------------|
+|:-----------------:|:-------------:|:-------------:|:-----------|
 |IsPullRequestBuild | `<Undefined>` |`PRQ` if true  | Used to indicate if the build is from a pull request |
 |IsAutomatedBuild   | `<Undefined>` |`BLD` if true  | Used to indicate if the build is an automated build |
 |IsReleaseBuild     | `<Undefined>` |`ZZZ` if !true | Used to indicate if the build is an official release build |
 
-These three values are determined by the automated build in some form. These are either explicit
-variables set for the build definition or determined on the fly based on values set by the build.
-Commonly a `directory.build.props` for a repository will specify these. The following is an
-example for setting them based on an AppVeyor build in the `Directory.Build.props` file:
+These three values are determined by the automated build in some form. These are either
+explicit variables set for the build definition or determined on the fly based on values set by
+the build. Commonly a `directory.build.props` for a repository will specify these. The
+following is an example for setting them based on an AppVeyor build in the
+`Directory.Build.props` file:
 
 ```xml
 <PropertyGroup>
@@ -230,7 +234,7 @@ function Get-CurrentBuildKind
 
 $currentBuildKind = Get-CurrentBuildKind
 
-# set/reset legacy environment vars for non-script tools (i.e. msbuild.exe)
+# set/reset legacy environment vars for non-script tools
 $env:IsAutomatedBuild = $currentBuildKind -ne [BuildKind]::LocalBuild
 $env:IsPullRequestBuild = $currentBuildKind -eq [BuildKind]::PullRequestBuild
 $env:IsReleaseBuild = $currentBuildKind -eq [BuildKind]::ReleaseBuild

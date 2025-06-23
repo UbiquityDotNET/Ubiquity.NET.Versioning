@@ -31,10 +31,10 @@ namespace Ubiquity.NET.Versioning
     /// <note>
     /// Once published in a non-preview release, the name of a switch CANNOT change. It may become inert, but
     /// is NEVER re-purposed to a different meaning or even changed to correct a mis-spelling. Such a correction
-    /// would ADD a new (correctly spelled) name and the adjust the implementation to treat them identically. The
-    /// published name and it's associated behavior is immutable. Whether it does anything or not depends on the version,
-    /// but the behavior itself may never be re-defined. That is, it always either does what it was documented to do in the
-    /// first release available, or it does nothing. It NEVER does something else.
+    /// would ADD a new (correctly spelled) name and then adjust the implementation to treat the old and new forms
+    /// identically. The published name and it's associated behavior is immutable. Whether it does anything or not
+    /// depends on the version, but the behavior itself may never be re-defined. That is, it always either does what
+    /// it was documented to do in the first release available, or it does nothing. It ***NEVER*** does something else.
     /// </note>
     /// </remarks>
     /// <seealso href="https://csemver.org/"/>
@@ -42,7 +42,7 @@ namespace Ubiquity.NET.Versioning
     {
         /// <summary>Name of the switch that controls the <see cref="CSemVerCIOnlySupportsBuildMetaOnZeroTimedVersions"/> property</summary>
         public const string CSemVerCIOnlySupportsBuildMetaOnZeroTimedVersionsName
-            = "Ubiquity.NET.Versioning.AppContextSwitches.CSemVerCIOnlySupportsBuildMetaOnZeroTimedVersions"; //<== DO NOT change name (even when refactoring!)
+            = "Ubiquity.NET.Versioning.AppContextSwitches.CSemVerCIOnlySupportsBuildMetaOnZeroTimedVersions";
 
         /// <summary>Gets or sets a value indicating whether the <see cref="CSemVerCIOnlySupportsBuildMetaOnZeroTimedVersionsName"/> switch is enabled or not</summary>
         /// <remarks>

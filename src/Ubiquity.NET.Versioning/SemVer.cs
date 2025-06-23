@@ -26,22 +26,20 @@ namespace Ubiquity.NET.Versioning
     /// <para>In practical terms any such component will likely "down convert" to an integer. If a
     /// version component in the real world exceeds the size of an integer, then there is probably
     /// something wrong with how the versioning is maintained.</para>
-    /// <para>This type is intentionally NOT a value type or `record struct` etc... as the ONLY
+    /// <note type="important">
+    /// <para>This type is ***intentionally*** NOT a value type or `record struct` etc... as the ONLY
     /// valid comparison that is always correct is reference equality. Any other comparison/ordering
     /// requires a specific comparer that not only understands the rules of a Semantic Version, but
     /// also deals with case sensitivity of those comparisons. Sadly, the SemVer spec is silent on
     /// the point of case comparisons and different major component repositories have chosen different
     /// interpretations of the spec as a result. Thus any consumer must explicitly decide which comparison
     /// to use.</para>
-    /// <note type="note">
-    /// Technically, the SemVer spec states that alphanumeric Identifiers are ordered lexicographically,
+    /// <para>Technically, the SemVer spec states that alphanumeric Identifiers are ordered lexicographically,
     /// which would make them case sensitive. However, since MAJOR framework repositories have chosen
-    /// to use each approach the real world of ambiguity, sadly, wins.
+    /// to use each approach the real world of ambiguity, sadly, wins.</para>
     /// </note>
     /// </remarks>
     /// <seealso href="https://semver.org/"/>
-    /// <seealso cref="SemVerComparer.CaseSensitive.SemVer"/>
-    /// <seealso cref="SemVerComparer.SemVer"/>
     public sealed class SemVer
         : IParsable<SemVer>
     {
@@ -122,24 +120,6 @@ namespace Ubiquity.NET.Versioning
             }
 
             return bldr.ToString();
-        }
-
-        /// <summary>Gets a comparer for a <see cref="SemVer"/> value</summary>
-        /// <param name="caseSensitive">Indicates if comparisons are case sensitive or not</param>
-        /// <returns>Comparer for <see cref="SemVer"/></returns>
-        /// <remarks>
-        /// Ordering of semantic versions is complicated by the fact that the spec does NOT
-        /// mention case sensitivity for comparing AlphaNumeric IDs. Worse, multiple real world
-        /// implementations adopted policies based on assumptions of sensitivity. Originally, these
-        /// were OS platform specific and not a general problem. However, as cross platform runtimes
-        /// is now common the issue is a serious one as incorrect handling can lead to surprising
-        /// results. <see cref="CSemVer"/> and <see cref="CSemVerCI"/> are explicit in the spec and
-        /// always use case insensitive comparison. But <see cref="SemVer"/> is ambiguous. Thus, calling
-        /// code MUST explicitly declare which it intends to use.
-        /// </remarks>
-        public static IComparer<SemVer> GetComparer(bool caseSensitive/* = false; No default value BY DESIGN - callers must be explicit on intent*/)
-        {
-            return caseSensitive ? SemVerComparer.CaseSensitive.SemVer : SemVerComparer.SemVer;
         }
 
         #region Parsing

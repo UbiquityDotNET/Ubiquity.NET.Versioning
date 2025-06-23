@@ -74,10 +74,11 @@
         "fileMetadataFiles": [],
         "postProcessors": [],
         "globalMetadata": {
-            "_appTitle": "Ubiquity.NET",
+            "_appTitle": "Ubiquity.NET.Versioning",
             "_appFooter": "Copyright (C) 2017-2025, Ubiquity.NET Contributors",
             "_appLogoPath": "favicon-32x32.png",
             "_disableBreadcrumb": true,
+            "_enableNewTab": true,
             "_gitContribute": {
                 "repo": "https://github.com/UbiquityDotNET/CSemVer.GitBuild",
                 "branch": "develop"

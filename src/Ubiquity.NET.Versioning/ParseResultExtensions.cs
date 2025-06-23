@@ -14,9 +14,9 @@ namespace Ubiquity.NET.Versioning
 {
     internal static class ParseResultExtensions
     {
-        internal static void ThrowIfFailed<T>([NotNull] this IResult<T> result)
+        internal static void ThrowIfFailed<T>([NotNull] this IResult<T> result, [CallerArgumentExpression(nameof(result))] string? exp = null)
         {
-            if(result.Failed(out Exception? ex))
+            if(result.Failed(out Exception? ex, exp))
             {
                 throw ex;
             }

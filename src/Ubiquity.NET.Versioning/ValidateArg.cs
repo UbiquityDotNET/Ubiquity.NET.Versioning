@@ -9,6 +9,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
+using Sprache;
+
 namespace Ubiquity.NET.Versioning
 {
     // TODO: With C#14 extensions it should be possible to make these a static method extension to the exception types
@@ -22,6 +24,15 @@ namespace Ubiquity.NET.Versioning
         {
             self.ThrowIfNull( exp );
             return regex.IsMatch( self ) ? self : throw new ArgumentException( $"Input '{self}' does not match expected pattern '{regex}'", exp );
+        }
+
+        public static string ThrowIfNotMatch<T>( [NotNull] this string self, Parser<T> parser, [CallerArgumentExpression( nameof( self ) )] string? exp = null )
+        {
+            self.ThrowIfNull( exp ); // whitespace or empty allowed here, but parser may reject it.
+            var parseResult = parser.TryParse(self);
+            return !parseResult.Failed(out Exception? ex, exp)
+                   ? self
+                   : throw new ArgumentException(ex.Message, exp, ex);
         }
 
         public static bool IsOutOfRange<T>( [NotNullWhen(false)] this T? self, T min, T max )

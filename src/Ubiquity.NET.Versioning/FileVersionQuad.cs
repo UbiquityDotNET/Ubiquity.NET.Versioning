@@ -31,7 +31,7 @@ namespace Ubiquity.NET.Versioning
     ///     <item><term>bits 48-63</term><description> Major part of Build number</description></item>
     ///     <item><term>bits 32-47</term><description> Minor part of Build number</description></item>
     ///     <item><term>bits 16-31</term><description> Build part of Build number</description></item>
-    ///     <item><term>bits 0-15</term><description> Revision part of Build number (LSB == 0 indicates a CI build; LSB == 1 indicates a release build)</description></item>
+    ///     <item><term>bits 0-15</term><description> Revision part of Build number (LSB indicates a release/CI build see remarks section for details)</description></item>
     /// </list>
     /// </para>
     /// <note type="important">

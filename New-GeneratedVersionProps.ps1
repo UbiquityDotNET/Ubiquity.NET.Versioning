@@ -342,7 +342,7 @@ try
     $propGroupElement.AppendChild($assemblyVersionElement) | Out-Null
 
     $informationalVersionElement = $xmlDoc.CreateElement('InformationalVersion')
-    $informationalVersionElement.InnerText = $csemVer.ToString($true, $false) # long form of version
+    $informationalVersionElement.InnerText = $csemVer.ToString($true) # (With metadata)
     $propGroupElement.AppendChild($informationalVersionElement) | Out-Null
 
     # inform unit testing of the environment as the env vars are NOT accessible to the tests

@@ -41,7 +41,7 @@ namespace Ubiquity.NET.Versioning.UT
         [TestMethod]
         public void DefaultConstructorTests( )
         {
-            var ver = new CSemVer();
+            var ver = default( CSemVer );
             Assert.AreEqual( 0, ver.Major );
             Assert.AreEqual( 0, ver.Minor );
             Assert.AreEqual( 0, ver.Patch );

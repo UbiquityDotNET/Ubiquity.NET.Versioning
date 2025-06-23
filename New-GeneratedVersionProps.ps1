@@ -69,9 +69,6 @@ class PreReleaseVersion
     [ValidateSet('alpha', 'beta', 'delta', 'epsilon', 'gamma', 'kappa', 'prerelease', 'rc')]
     [string] $Name;
 
-    [ValidateSet('a', 'b', 'd', 'e', 'g', 'k', 'p', 'r')]
-    [string] $ShortName;
-
     [ValidateRange(-1,7)]
     [int] $Index;
 
@@ -91,7 +88,6 @@ class PreReleaseVersion
             if($this.Index -ge 0)
             {
                 $this.Name = [PreReleaseVersion]::PreReleaseNames[$this.Index]
-                $this.ShortName = [PreReleaseVersion]::PreReleaseShortNames[$this.Index]
             }
 
             $this.Number = $buildVersionXmlData['PreReleaseNumber'];
@@ -103,15 +99,15 @@ class PreReleaseVersion
         }
     }
 
-    [string] ToString([bool] $useShortForm = $false)
+    [string] ToString()
     {
         $hasPreRel = $this.Index -ge 0
 
         $bldr = [System.Text.StringBuilder]::new()
         if($hasPreRel)
         {
-            $bldr.Append('-').Append($useShortForm ? $this.ShortName : $this.Name)
-            $delimFormat = $useShortForm ? '-{0:D02}' : '.{0}'
+            $bldr.Append('-').Append( $this.Name)
+            $delimFormat = '.{0}'
             if(($this.Number -gt 0))
             {
                 $bldr.AppendFormat($delimFormat, $this.Number)
@@ -126,7 +122,6 @@ class PreReleaseVersion
     }
 
     hidden static [string[]] $PreReleaseNames = @('alpha', 'beta', 'delta', 'epsilon', 'gamma', 'kappa', 'prerelease', 'rc' );
-    hidden static [string[]] $PreReleaseShortNames = @('a', 'b', 'd', 'e', 'g', 'k', 'p', 'r');
 
     hidden static [int] GetPrerelIndex([string] $preRelName)
     {
@@ -138,17 +133,8 @@ class PreReleaseVersion
                          Where-Object {$_['Name'] -ieq $preRelName} |
                          ForEach-Object {$_['Index']} |
                          Select-Object -First 1
-
-            # if not found in long names, test against the short names
-            if($preRelIndex -lt 0)
-            {
-                $preRelIndex = [PreReleaseVersion]::PreReleaseShortNames |
-                             ForEach-Object {$index=0} {@{Name = $_; Index = $index++}} |
-                             Where-Object {$_['Name'] -ieq $preRelName} |
-                             ForEach-Object {$_['Index']} |
-                             Select-Object -First 1
-            }
         }
+
         return $preRelIndex
     }
 
@@ -224,13 +210,13 @@ class CSemVer
         $this.FileVersion = [CSemVer]::ConvertToVersion($fileVer64)
     }
 
-    [string] ToString([bool] $includeMetadata, [bool]$useShortForm)
+    [string] ToString([bool] $includeMetadata)
     {
         $bldr = [System.Text.StringBuilder]::new()
         $bldr.AppendFormat('{0}.{1}.{2}', $this.Major, $this.Minor, $this.Patch)
         if($this.PreReleaseVersion)
         {
-            $bldr.Append($this.PreReleaseVersion.ToString($useShortForm))
+            $bldr.Append($this.PreReleaseVersion.ToString())
         }
 
         $hasPreRel = $this.PreReleaseVersion -and $this.PreReleaseVersion.Index -ge 0
@@ -344,11 +330,11 @@ try
     $propGroupElement.AppendChild($fileVersionElement) | Out-Null
 
     $packageVersionElement = $xmlDoc.CreateElement('PackageVersion')
-    $packageVersionElement.InnerText = $csemVer.ToString($false,$false) # long form of version (No metadata)
+    $packageVersionElement.InnerText = $csemVer.ToString($false) # (No metadata)
     $propGroupElement.AppendChild($packageVersionElement) | Out-Null
 
     $productVersionElement = $xmlDoc.CreateElement('ProductVersion')
-    $productVersionElement.InnerText = $csemVer.ToString($true, $false) # long form of version (With metadata)
+    $productVersionElement.InnerText = $csemVer.ToString($true) # (With metadata)
     $propGroupElement.AppendChild($productVersionElement) | Out-Null
 
     $assemblyVersionElement = $xmlDoc.CreateElement('AssemblyVersion')
@@ -356,12 +342,13 @@ try
     $propGroupElement.AppendChild($assemblyVersionElement) | Out-Null
 
     $informationalVersionElement = $xmlDoc.CreateElement('InformationalVersion')
-    $informationalVersionElement.InnerText = $csemVer.ToString($true, $false) # long form of version
+    $informationalVersionElement.InnerText = $csemVer.ToString($true) # (With metadata)
     $propGroupElement.AppendChild($informationalVersionElement) | Out-Null
 
     # inform unit testing of the environment as the env vars are NOT accessible to the tests
     # Sadly, the `dotnet test` command does not spawn the tests with an inherited environment.
-    # So they cannot know what the scenario is.
+    # So they cannot know what the scenario is unless that information is conveyed by some other
+    # means.
     $buildKindElement = $xmlDoc.CreateElement('BuildKind')
     $buildKindElement.InnerText = $buildKind
     $propGroupElement.AppendChild($buildKindElement) | Out-Null

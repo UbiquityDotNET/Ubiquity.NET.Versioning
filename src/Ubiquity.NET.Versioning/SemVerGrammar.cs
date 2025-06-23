@@ -43,7 +43,7 @@ namespace Ubiquity.NET.Versioning
 
         private static Parser<char> IdentifierChar => Digit.Or( NonDigit ).Named("<identifier character>");
 
-        private static Parser<string> IdentifierChars => IdentifierChar.AtLeastOnce().Named("<Identifier characters>").Text();
+        internal static Parser<string> IdentifierChars => IdentifierChar.AtLeastOnce().Named("<Identifier characters>").Text();
 
         private static Parser<string> Digits => Digit.AtLeastOnce().Named("<digits>").Text();
 
@@ -69,9 +69,9 @@ namespace Ubiquity.NET.Versioning
                .Named("<numeric identifier>")
                .Text();
 
-        public static Parser<string> PreReleaseIdentifier => AlphaNumericIdentifier.Or( NumericIdentifier ).Named("<prerelease-identifier");
+        internal static Parser<string> PreReleaseIdentifier => AlphaNumericIdentifier.Or( NumericIdentifier ).Named("<prerelease-identifier");
 
-        public static Parser<string> BuildIdentifier => AlphaNumericIdentifier.Or(Digits).Named("<build-identifier");
+        internal static Parser<string> BuildIdentifier => AlphaNumericIdentifier.Or(Digits).Named("<build-identifier");
 
         // Formally, SemVer has no limits on a "numeric identifier" so use a BigInteger
         // and worry about down conversion in consumers
@@ -107,7 +107,7 @@ namespace Ubiquity.NET.Versioning
                from patch in IntegralValue.Named("<patch>")
                select new SemVer( major, minor, patch );
 
-        public static Parser<SemVer> SemanticVersion
+        internal static Parser<SemVer> SemanticVersion
             => ( from vc in VersionCore.Named("<version core>")
                  from preRel in PreReleaseData.Named("<pre-release>").XOptional()
                  from build in BuildMetaData.Named("<build>").XOptional()

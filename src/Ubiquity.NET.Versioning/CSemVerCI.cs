@@ -10,7 +10,8 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Numerics;
-using System.Text.RegularExpressions;
+
+using Sprache;
 
 using Ubiquity.NET.Versioning.Properties;
 
@@ -25,13 +26,13 @@ namespace Ubiquity.NET.Versioning
     /// product exists to base it on.
     /// </remarks>
     /// <seealso href="https://csemver.org"/>
-    public sealed partial class CSemVerCI
+    public readonly struct CSemVerCI
         : IParsable<CSemVerCI>
         , IComparable<CSemVerCI>
         , IComparisonOperators<CSemVerCI, CSemVerCI, bool>
         , IEquatable<CSemVerCI>
     {
-        /// <summary>Initializes a new instance of the <see cref="CSemVerCI"/> class as a "CSemVer-CI ZeroTimed' value</summary>
+        /// <summary>Initializes a new instance of the <see cref="CSemVerCI"/> struct as a "CSemVer-CI ZeroTimed' value</summary>
         /// <param name="index">Index of this CI build</param>
         /// <param name="name">Name of this CI build</param>
         /// <param name="buildMeta">Optional Build meta</param>
@@ -41,7 +42,7 @@ namespace Ubiquity.NET.Versioning
         {
         }
 
-        /// <summary>Initializes a new instance of the <see cref="CSemVerCI"/> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="CSemVerCI"/> struct.</summary>
         /// <param name="baseBuild">Base build version this CI version is based on</param>
         /// <param name="index">Index for this CI build</param>
         /// <param name="name">Name for this CI build</param>
@@ -53,7 +54,6 @@ namespace Ubiquity.NET.Versioning
         /// <seealso href="https://csemver.org">CSemVer-CI §2-6</seealso>
         public CSemVerCI( CSemVer baseBuild, string index, string name )
         {
-            ArgumentNullException.ThrowIfNull(baseBuild);
             ArgumentException.ThrowIfNullOrWhiteSpace(index);
             ArgumentException.ThrowIfNullOrWhiteSpace(name);
 
@@ -82,8 +82,8 @@ namespace Ubiquity.NET.Versioning
             }
 
             PrereleaseVersion = baseBuild.PrereleaseVersion;
-            Index = index.ThrowIfNotMatch( CiBuildIdRegex );
-            Name = name.ThrowIfNotMatch( CiBuildIdRegex );
+            Index = index.ThrowIfNotMatch( SemVerGrammar.IdentifierChars.End() );
+            Name = name.ThrowIfNotMatch( SemVerGrammar.IdentifierChars.End() );
         }
 
         /// <summary>Gets the Major portion of the core version</summary>
@@ -131,34 +131,23 @@ namespace Ubiquity.NET.Versioning
         /// that it is EXPLICITLY using case insensitive comparison for the AlphaNumeric
         /// identifiers in a pre-release list.
         /// </remarks>
-        public int CompareTo( CSemVerCI? other )
+        public int CompareTo( CSemVerCI other )
         {
-            if(ReferenceEquals(this, other))
-            {
-                return 0;
-            }
-
-            if(other is null)
-            {
-                return 1;
-            }
-
             // CSemVerCI always uses case insensitive comparisons, but otherwise follows the
             // ordering rules of SemVer.
             return SemVerComparer.SemVer.Compare(ConstrainedVersion, other.ConstrainedVersion);
         }
 
         /// <inheritdoc/>
-        public bool Equals( CSemVerCI? other )
+        public bool Equals( CSemVerCI other )
         {
-            return ReferenceEquals(this, other)
-                || (other is not null && SemVerComparer.SemVer.Compare(ConstrainedVersion, other.ConstrainedVersion) == 0);
+            return CompareTo(other) == 0;
         }
 
         /// <inheritdoc/>
         public override bool Equals( object? obj )
         {
-            return Equals(obj as CSemVerCI);
+            return obj is CSemVerCI v && Equals(v);
         }
 
         /// <inheritdoc/>
@@ -199,10 +188,10 @@ namespace Ubiquity.NET.Versioning
         public static bool operator <=( CSemVerCI left, CSemVerCI right ) => left.CompareTo(right) <= 0;
 
         /// <inheritdoc/>
-        public static bool operator ==( CSemVerCI? left, CSemVerCI? right ) => Equals(left, right);
+        public static bool operator ==( CSemVerCI left, CSemVerCI right ) => Equals(left, right);
 
         /// <inheritdoc/>
-        public static bool operator !=( CSemVerCI? left, CSemVerCI? right ) => !Equals(left, right);
+        public static bool operator !=( CSemVerCI left, CSemVerCI right ) => !Equals(left, right);
 
         private readonly SemVer ConstrainedVersion;
 
@@ -235,7 +224,7 @@ namespace Ubiquity.NET.Versioning
             }
 
             var nonCiVer = new SemVer(ver.Major, ver.Minor, ver.Patch, nonCiPreRel, ver.BuildMeta);
-            if(!CSemVer.TryFrom(nonCiVer, out CSemVer? baseBuild, out reason))
+            if(!CSemVer.TryFrom(nonCiVer, out CSemVer baseBuild, out reason))
             {
                 return false;
             }
@@ -260,7 +249,7 @@ namespace Ubiquity.NET.Versioning
         /// <inheritdoc/>
         public static CSemVerCI Parse( string s, IFormatProvider? provider )
         {
-            return TryParse(s, out CSemVerCI? retVal, out Exception? ex) ? retVal : throw ex;
+            return TryParse(s, out CSemVerCI retVal, out Exception? ex) ? retVal : throw ex;
         }
 
         /// <inheritdoc/>
@@ -311,10 +300,5 @@ namespace Ubiquity.NET.Versioning
             return (ver.PreRelease.Length == 3 && ver.PreRelease[ 0 ] == "-ci")
                 || (ver.PreRelease.Length == 6 && ver.PreRelease[ 3 ] == "ci");
         }
-
-        private static readonly Regex CiBuildIdRegex = GetGeneratedBuildIdRegex();
-
-        [GeneratedRegex( @"\A[0-9a-zA-Z\-]+\Z" )]
-        private static partial Regex GetGeneratedBuildIdRegex( );
     }
 }

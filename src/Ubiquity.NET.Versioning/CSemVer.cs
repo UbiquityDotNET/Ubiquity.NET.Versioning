@@ -19,19 +19,13 @@ namespace Ubiquity.NET.Versioning
     /// <summary>Holds a Constrained Semantic Version (CSemVer) value</summary>
     /// <remarks>Based on CSemVer v1.0.0-rc.1</remarks>
     /// <seealso href="https://csemver.org/"/>
-    public sealed class CSemVer
+    public readonly struct CSemVer
         : IParsable<CSemVer>
         , IComparable<CSemVer>
         , IComparisonOperators<CSemVer, CSemVer, bool>
         , IEquatable<CSemVer>
     {
-        /// <summary>Initializes a new instance of the <see cref="CSemVer"/> class.</summary>
-        public CSemVer( )
-            : this( 0, 0, 0 )
-        {
-        }
-
-        /// <summary>Initializes a new instance of the <see cref="CSemVer"/> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="CSemVer"/> struct.</summary>
         /// <param name="major">Major version value [0-99999]</param>
         /// <param name="minor">Minor version value [0-49999]</param>
         /// <param name="patch">Patch version value [0-9999]</param>
@@ -61,13 +55,13 @@ namespace Ubiquity.NET.Versioning
         }
 
         /// <summary>Gets the Major portion of the core version</summary>
-        public int Major => unchecked((int)ConstrainedVersion.Major); // explicitly unchecked as constructor guarantees success
+        public int Major => unchecked((int)(ConstrainedVersion?.Major ?? 0)); // explicitly unchecked as constructor guarantees success
 
         /// <summary>Gets the Minor portion of the core version</summary>
-        public int Minor => unchecked((int)ConstrainedVersion.Minor);
+        public int Minor => unchecked((int)(ConstrainedVersion?.Minor ?? 0));
 
         /// <summary>Gets the Patch portion of the core version</summary>
-        public int Patch => unchecked((int)ConstrainedVersion.Patch);
+        public int Patch => unchecked((int)(ConstrainedVersion?.Patch ?? 0));
 
         /// <summary>Gets the Pre-Release version value (if any)</summary>
         public PrereleaseVersion? PrereleaseVersion { get; }
@@ -78,7 +72,7 @@ namespace Ubiquity.NET.Versioning
         /// (including leading or all '0'). This collection contains only the identifiers
         /// (no prefix or delimiters).
         /// </remarks>
-        public ImmutableArray<string> BuildMeta => ConstrainedVersion.BuildMeta;
+        public ImmutableArray<string> BuildMeta => ConstrainedVersion?.BuildMeta ?? [];
 
         /// <summary>Gets the <see cref="FileVersionQuad"/> representation of this <see cref="CSemVer"/></summary>
         /// <remarks>
@@ -128,7 +122,7 @@ namespace Ubiquity.NET.Versioning
         /// <inheritdoc/>
         public override string ToString( )
         {
-            return ConstrainedVersion.ToString();
+            return ConstrainedVersion?.ToString() ?? string.Empty;
         }
 
         /// <inheritdoc/>
@@ -137,40 +131,29 @@ namespace Ubiquity.NET.Versioning
         /// that it is EXPLICITLY using case insensitive comparison for the AlphaNumeric
         /// identifiers in a pre-release list.
         /// </remarks>
-        public int CompareTo( CSemVer? other )
+        public int CompareTo( CSemVer other )
         {
-            if(ReferenceEquals(this, other))
-            {
-                return 0;
-            }
-
-            if(other is null)
-            {
-                return 1;
-            }
-
             // CSemVer always uses case insensitive comparisons, but otherwise follows the
             // ordering rules of SemVer.
             return SemVerComparer.SemVer.Compare(ConstrainedVersion, other.ConstrainedVersion);
         }
 
         /// <inheritdoc/>
-        public bool Equals( CSemVer? other )
+        public bool Equals( CSemVer other )
         {
-            return ReferenceEquals(this, other)
-                || (other is not null && SemVerComparer.SemVer.Compare(ConstrainedVersion, other.ConstrainedVersion) == 0);
+            return CompareTo( other ) == 0;
         }
 
         /// <inheritdoc/>
         public override bool Equals( object? obj )
         {
-            return Equals(obj as CSemVer);
+            return obj is CSemVer v && Equals(v);
         }
 
         /// <inheritdoc/>
         public override int GetHashCode( )
         {
-            return ConstrainedVersion.GetHashCode();
+            return ConstrainedVersion?.GetHashCode() ?? 0;
         }
 
         /// <inheritdoc/>
@@ -186,12 +169,12 @@ namespace Ubiquity.NET.Versioning
         public static bool operator <=( CSemVer left, CSemVer right ) => left.CompareTo(right) <= 0;
 
         /// <inheritdoc/>
-        public static bool operator ==( CSemVer? left, CSemVer? right ) => Equals(left, right);
+        public static bool operator ==( CSemVer left, CSemVer right ) => Equals(left, right);
 
         /// <inheritdoc/>
-        public static bool operator !=( CSemVer? left, CSemVer? right ) => !Equals(left, right);
+        public static bool operator !=( CSemVer left, CSemVer right ) => !Equals(left, right);
 
-        private readonly SemVer ConstrainedVersion;
+        private readonly SemVer? ConstrainedVersion;
 
         /// <summary>Tries to parse a <see cref="SemVer"/> as a <see cref="CSemVer"/></summary>
         /// <param name="ver">Version to convert</param>
@@ -356,7 +339,7 @@ namespace Ubiquity.NET.Versioning
         /// <inheritdoc/>
         public static CSemVer Parse( string s, IFormatProvider? provider )
         {
-            return TryParse(s, out CSemVer? retVal, out Exception? ex) ? retVal : throw ex;
+            return TryParse(s, out CSemVer retVal, out Exception? ex) ? retVal : throw ex;
         }
 
         /// <inheritdoc/>

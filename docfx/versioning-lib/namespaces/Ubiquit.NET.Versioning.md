@@ -11,7 +11,7 @@ types in this namespace:
 
 ``` mermaid
 classDiagram
-    note for SemVer "ALL CsemVer[-CI] instances are syntactically valid SemVer. However, the reverse is not always true."
+    note for SemVer "ALL CsemVer[-CI] strings are syntactically valid SemVer. However, the reverse is not always true."
     class SemVer {
         + BigInteger Major
         + BigInteger Minor

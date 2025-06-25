@@ -17,9 +17,9 @@ This repo includes support for versioning numbers. This support includes:
 > operating correctly.
 
 ## Status
-![Nuget](https://img.shields.io/nuget/dt/CSemVer.Build.Tasks.svg)
-![PR/CI Workflow Status](https://img.shields.io/github/actions/workflow/status/UbiquityDotNET/CSemVer.GitBuild/pr-build.yml?label=PR%2FCI%20Build%20Status)
-![Release Workflow Status](https://img.shields.io/github/actions/workflow/status/UbiquityDotNET/CSemVer.GitBuild/release-build.yml?label=Release%20Build%20Status)
+![NuGet](https://img.shields.io/nuget/dt/CSemVer.Build.Tasks.svg)
+![PR/CI Work Flow Status](https://img.shields.io/github/actions/workflow/status/UbiquityDotNET/CSemVer.GitBuild/pr-build.yml?label=PR%2FCI%20Build%20Status)
+![Release Work Flow Status](https://img.shields.io/github/actions/workflow/status/UbiquityDotNET/CSemVer.GitBuild/release-build.yml?label=Release%20Build%20Status)
 
 ## Overview
 Officially, NUGET Packages use a SemVer 2.0 (see http://semver.org).

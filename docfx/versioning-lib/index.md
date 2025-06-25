@@ -46,5 +46,6 @@ the spec is not explicit on case sensitive comparison of AlphaNumeric Identifier
 Unfortunately, major repositories using SemVer have chosen to use different comparisons. Thus,
 a consumer is required to know a-priori if the version is compared insensitive or not.
 `IComparer<SemVer>` instances are available for both cases via the static class
-`SemVerComparer`.
+[SemVerComparer](xref:Ubiquity.NET.Versioning.SemVerComparer) and
+[CSmeVerComparer.CaseSensitive](xref:Ubiquity.NET.Versioning.SemVerComparer.CaseSensitive).
 

@@ -23,7 +23,7 @@ classDiagram
     class CSemVer {
         + FileVersionQuad FileVersion
         + Int64 OrderedVersion
-        + Nullable~PreReleaseVersion~ PreReleaseVersion
+        + PreReleaseVersion? PreReleaseVersion
     }
 
     class CSemVerCI {
@@ -86,11 +86,11 @@ Major, Minor and Patch version numbers.
 In particular the values are constrained
 as follows:
 
-| Name | Range |
-|:----:|:-----:|
+| Name  | Range |
+|-------|-----------|
 | Major | [0-99999] |
 | Minor | [0-49999] |
-| Patch | [0-9999] |
+| Patch | [0-9999]  |
 
 ## CSemVer constraints on the release sequence
 Technically, SemVer does not limit the number of components to a pre-release value. It could
@@ -100,16 +100,16 @@ CSemVer may have up to three pre-release components that are interpreted accordi
 following table:
 
 | Index | Name | Description |
-|:-----:|:----:|:------------|
-| 0     | Name<sup>[1](#footnote_1)</sup> | Name of the pre-release (one of a fixed set of 8 names) |
-| 1     | Number | pre-release number for a build |
-| 2     | Fix  | pre-release fix for a build |
+|-------|------|-------------|
+| 0 | Name<sup>[1](#footnote_1)</sup> | Name of the pre-release (one of a fixed set of 8 names) |
+| 1 | Number | pre-release number for a build |
+| 2 | Fix  | pre-release fix for a build |
 
 ### CSemVer[CI] Pre-release names
 The names of a pre-release are constrained in CSemVer[-CI] to the following:<sup>[1](#footnote_1)</sup>
 
-|Name     | Index |
-|:-------:|:-----:|
+| Name | Index |
+|------|-------|
 | alpha   | 0 |
 | beta    | 1 |
 | delta   | 2 |
@@ -130,3 +130,5 @@ they recognize one when parsing.
 
 <sup><a id="footnote_2">2</a></sup> `prerelease` is always considered valid as well. Internally
 it is automatically converted to the shorter `pre` form.
+
+----

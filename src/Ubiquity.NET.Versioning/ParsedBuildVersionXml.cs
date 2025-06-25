@@ -11,26 +11,58 @@ using System.Xml.Linq;
 
 namespace Ubiquity.NET.Versioning
 {
-    /// <summary>POCO version of information parsed from a Build version XML file</summary>
-    /// <param name="BuildMajor">Major build number</param>
-    /// <param name="BuildMinor">Minor build number</param>
-    /// <param name="BuildPatch">Patch build number</param>
-    /// <param name="PreReleaseName">Pre-release name for the build</param>
-    /// <param name="PreReleaseNumber">Pre-release number for the build</param>
-    /// <param name="PreReleaseFix">Pre-release fix for the build</param>
+    /// <summary>
+    /// <see href="https://learn.microsoft.com/en-us/dotnet/standard/glossary#poco">POCO</see>
+    /// version of information parsed from a Build version XML file
+    /// </summary>
     /// <remarks>
     /// This structure holds the values parsed from a build version XML file, these values serve
     /// as a common base input for generation of a final <see cref="CSemVer"/> for a given build.
     /// </remarks>
-    public readonly record struct ParsedBuildVersionXml(
-        int BuildMajor,
-        int BuildMinor,
-        int BuildPatch,
-        string PreReleaseName,
-        int PreReleaseNumber,
-        int PreReleaseFix
-        )
+    public readonly record struct ParsedBuildVersionXml
     {
+        /// <summary>Initializes a new instance of the <see cref="ParsedBuildVersionXml"/> struct.</summary>
+        /// <param name="buildMajor">Major build number</param>
+        /// <param name="buildMinor">Minor build number</param>
+        /// <param name="buildPatch">Patch build number</param>
+        /// <param name="preReleaseName">Pre-release name for the build</param>
+        /// <param name="preReleaseNumber">Pre-release number for the build</param>
+        /// <param name="preReleaseFix">Pre-release fix for the build</param>
+        public ParsedBuildVersionXml(
+            int buildMajor,
+            int buildMinor,
+            int buildPatch,
+            string preReleaseName,
+            int preReleaseNumber,
+            int preReleaseFix
+        )
+        {
+            BuildMajor = buildMajor;
+            BuildMinor = buildMinor;
+            BuildPatch = buildPatch;
+            PreReleaseName = preReleaseName;
+            PreReleaseNumber = preReleaseNumber;
+            PreReleaseFix = preReleaseFix;
+        }
+
+        /// <summary>Gets the major portion of the build information</summary>
+        public int BuildMajor { get; }
+
+        /// <summary>Gets the minor portion of the build information</summary>
+        public int BuildMinor { get; }
+
+        /// <summary>Gets the patch portion of the build information</summary>
+        public int BuildPatch { get; }
+
+        /// <summary>Gets the pre-release name portion of the build information</summary>
+        public string PreReleaseName { get; }
+
+        /// <summary>Gets the pre-release number portion of the build information</summary>
+        public int PreReleaseNumber { get; }
+
+        /// <summary>Gets the pre-release fix portion of the build information</summary>
+        public int PreReleaseFix { get; }
+
         /// <summary>Parse a <see cref="ParsedBuildVersionXml"/> from an <see cref="XDocument"/></summary>
         /// <param name="xdoc">Document to parse</param>
         /// <returns>Parsed version information</returns>
@@ -39,14 +71,36 @@ namespace Ubiquity.NET.Versioning
         /// call this to perform the actual parsing of XML data.</para>
         /// <para>The schema requirements of the XML file are fairly simple. It
         /// consists of a single element 'BuildVersionData' which has a number of optional attributes:</para>
-        /// <para><list type="list">
-        /// <item><term>BuildMajor</term><description>Major build number [default: 0]</description></item>
-        /// <item><term>BuildMinor</term><description>Minor build number [default: 0]</description></item>
-        /// <item><term>BuildPatch</term><description>Build Patch number [default: 0]</description></item>
-        /// <item><term>PreReleaseName</term><description>Pre-Release Name [default: Empty String]</description></item>
-        /// <item><term>PreReleaseNumber</term><description>Pre-Release number [default: 0]</description></item>
-        /// <item><term>PreReleaseFix</term><description>Pre-Release fix number [default: 0]</description></item>
-        /// </list></para>
+        /// <list type="table">
+        ///   <listheader>
+        ///     <term>Attribute Name</term>
+        ///     <description>Description</description>
+        ///   </listheader>
+        ///   <item>
+        ///     <term>BuildMajor</term>
+        ///     <description>Major build number [default: 0]</description>
+        ///   </item>
+        ///   <item>
+        ///     <term>BuildMinor</term>
+        ///     <description>Minor build number [default: 0]</description>
+        ///   </item>
+        ///   <item>
+        ///     <term>BuildPatch</term>
+        ///     <description>Build Patch number [default: 0]</description>
+        ///   </item>
+        ///   <item>
+        ///     <term>PreReleaseName</term>
+        ///     <description>Pre-Release Name [default: Empty String]</description>
+        ///   </item>
+        ///   <item>
+        ///     <term>PreReleaseNumber</term>
+        ///     <description>Pre-Release number [default: 0]</description>
+        ///   </item>
+        ///   <item>
+        ///     <term>PreReleaseFix</term>
+        ///     <description>Pre-Release fix number [default: 0]</description>
+        ///   </item>
+        /// </list>
         /// <para>Other elements are ignored, Though other attributes on the 'BuildVersionData' result in an exception.</para>
         /// </remarks>
         /// <exception cref="FormatException">Data format of the document is not valid</exception>
@@ -111,6 +165,7 @@ namespace Ubiquity.NET.Versioning
         /// <summary>Parse Build version XML from a <see cref="TextReader"/></summary>
         /// <param name="reader">Reader to parse data from</param>
         /// <returns>Parsed version information</returns>
+        /// <seealso cref="Parse(XDocument)"/>
         public static ParsedBuildVersionXml Parse(TextReader reader)
         {
             return Parse(XDocument.Load( reader, LoadOptions.None ));
@@ -122,6 +177,7 @@ namespace Ubiquity.NET.Versioning
         /// <remarks>
         /// This is mostly used for internal testing where the XML is a string constant/literal.
         /// </remarks>
+        /// <seealso cref="Parse(XDocument)"/>
         public static ParsedBuildVersionXml Parse(string xmlTxt)
         {
             using var rdr = new StringReader(xmlTxt);
@@ -131,6 +187,11 @@ namespace Ubiquity.NET.Versioning
         /// <summary>Parse XML data for Build version information from an XML file</summary>
         /// <param name="path">Path of the file to parse</param>
         /// <returns>Parsed version information</returns>
+        /// <remarks>
+        /// This "overload" of parsing is intentionally renamed to avoid ambiguity with <see cref="Parse(string)"/>,
+        /// which parses a string as XML. This method will parse a file with a path specified as a string.
+        /// </remarks>
+        /// <seealso cref="Parse(XDocument)"/>
         public static ParsedBuildVersionXml ParseFile(string path)
         {
             using var rdr = File.OpenText( path );

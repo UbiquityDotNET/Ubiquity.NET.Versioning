@@ -8,3 +8,12 @@ final render of such things.
 .typelist.inheritedMembers {
     display: none
 }
+
+ /*
+ For reasons, unknown style sets this to 100% which forces all tables to the available width.
+ That makes for rather ugly tables and surprising results as the editor doesn't do that for
+ it's preview mode.
+ */
+.table {
+    width: auto
+}

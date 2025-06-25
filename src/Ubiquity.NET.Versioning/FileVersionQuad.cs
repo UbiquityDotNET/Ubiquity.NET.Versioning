@@ -108,10 +108,11 @@ namespace Ubiquity.NET.Versioning
         /// <returns>Values of this instance as a <see cref="Version"/></returns>
         /// <remarks>
         /// <note type="important">
-        /// This conversion INCLUDES the CI build information bit and thus ordering
-        /// of the result is NOT correct. (In File version Quads an ODD revision
-        /// indicates a CI build, but any such build has an ordering that is LESS
-        /// then any without it and therefore does NOT match the numeric ordering)
+        /// <para>This conversion INCLUDES the CI build information bit and thus ordering
+        /// of the result remains correct. (In File version Quads an ODD revision
+        /// indicates a CI build which is ordered AFTER the build it depends on!)</para>
+        /// <para>Keep in mind that a CI build is a POST release build numbering and does
+        /// not reflect what release the build may ever become.</para>
         /// </note>
         /// </remarks>
         public Version ToVersion( )

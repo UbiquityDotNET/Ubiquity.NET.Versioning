@@ -39,7 +39,7 @@ try
     $buildInfo = Initialize-BuildEnvironment -FullInit
     if(!$buildInfo -or $buildInfo -isnot [hashtable])
     {
-        throw "build scripts BUSTED; Got null buildinfo hashtable..."
+        throw "build scripts BUSTED; Got null build info hashtable..."
     }
 
     if((Test-Path -PathType Container $buildInfo['BuildOutputPath']) -and $ForceClean )

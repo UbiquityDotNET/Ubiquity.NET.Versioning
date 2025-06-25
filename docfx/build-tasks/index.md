@@ -132,7 +132,7 @@ the build. Commonly a `directory.build.props` for a repository will specify thes
 following is an example for setting them based on an AppVeyor build in the
 `Directory.Build.props` file:
 
-```xml
+```XML
 <PropertyGroup>
     <!-- If running in APPVEYOR it is an automated build -->
     <IsAutomatedBuild Condition="'$(IsAutomatedBuild)'=='' AND '$(APPVEYOR)'!=''">true</IsAutomatedBuild>
@@ -260,7 +260,7 @@ The available attributes are:
 
 Only the Major, minor and Patch numbers are required.
 Example:  
-```xml
+```XML
 <BuildVersionData
     BuildMajor = "5"
     BuildMinor = "0"

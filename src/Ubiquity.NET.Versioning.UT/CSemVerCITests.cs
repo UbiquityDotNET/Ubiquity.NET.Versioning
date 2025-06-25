@@ -99,9 +99,13 @@ namespace Ubiquity.NET.Versioning.UT
         [TestMethod]
         [TestCategory("Constructor")]
         [TestCategory("AppContext Switch")]
+        [DoNotParallelize]
         public void CSemVerCI_with_BuildMeta_and_switch_enabled_throws( )
         {
             // Temporarily enable the switch to validate behavior
+            // This is an assembly/process wide change so the test is marked with "DoNotParallelizeAttribute" to
+            // ensure that it is NOT run in parallel with any other tests even if the assembly default is changed
+            // to allow such a thing.
             Assert.IsFalse(AppContextSwitches.CSemVerCIOnlySupportsBuildMetaOnZeroTimedVersions, "Default switch state should be OFF");
             using(var x = AutoRestoreAppContextSwitch.Configure(AppContextSwitches.CSemVerCIOnlySupportsBuildMetaOnZeroTimedVersionsName, true))
             {

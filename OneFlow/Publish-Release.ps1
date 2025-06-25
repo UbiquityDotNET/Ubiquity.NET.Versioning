@@ -23,7 +23,7 @@ using module '../PsModules/RepoBuild/RepoBuild.psd1'
 Param()
 $buildInfo = Initialize-BuildEnvironment
 
-# merging the tag to develop branch on the official repository triggers the official build and release of the Nuget Packages
+# merging the tag to develop branch on the official repository triggers the official build and release of the NuGet Packages
 $tagName = Get-BuildVersionTag $buildInfo
 $officialRemoteName = Get-GitRemoteName $buildInfo official
 $forkRemoteName = Get-GitRemoteName $buildInfo fork
@@ -39,7 +39,7 @@ Write-Information "Switching to release branch [$officialReleaseBranch]"
 Invoke-External git switch '-C' $releasebranch $officialReleaseBranch
 
 Write-Information 'Creating tag of this branch as the release'
-Invoke-External git tag $tagname '-m' "Official release: $tagname"
+Invoke-External git tag $tagName '-m' "Official release: $tagName"
 
 Write-Information 'Pushing tag to official remote [Starts automated build release process]'
 Invoke-External git push $officialRemoteName '--tags'

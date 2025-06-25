@@ -13,34 +13,34 @@ using System.Numerics;
 namespace Ubiquity.NET.Versioning
 {
     /// <summary>Static class to host comparison logic for various parts of a <see cref="SemVer"/></summary>
+    /// <remarks>
+    /// <para>Sadly, the SemVer specs are silent on the point of case sensitivity. Various implementations
+    /// have taken different approaches to doing that. Generally, those choices were along OS platform
+    /// lines. With multiple cross platform runtimes and support that becomes a real nightmare as ignoring
+    /// the issue and how it impacts ordering can have VERY surprising results. Thus, this library requires
+    /// explicit selection of the behavior for comparisons.</para>
+    /// <note type="important">
+    /// There is NO support for mixed comparisons (Comparisons where one of the versions uses case-sensitivity
+    /// but the other does not). Such comparisons are undefined. There is no way to know what the ordering is
+    /// supposed to be for each. An application MUST ensure it is ordering versions in a consistent fashion
+    /// and DOCUMENT what that is.
+    /// </note>
+    /// </remarks>
     public static class SemVerComparer
     {
         /// <summary>Case-sensitive comparison of AlphaNumeric IDs</summary>
-        /// <remarks>
-        /// Sadly, the SemVer specs are silent on the point of case sensitivity. Various implementations
-        /// have taken different approaches to doing that. Generally, those choices were along OS platform
-        /// lines. With multiple cross platform runtimes and support that becomes a real nightmare as ignoring
-        /// the issue and how it impacts ordering can have VERY surprising results. Thus, this library requires
-        /// explicit selection of the behavior for comparisons.
-        /// <note type="important">
-        /// There is NO support for mixed comparisons (Comparisons where one of the versions uses case-sensitivity
-        /// but the other does not). Such comparisons are undefined. There is no way to know what the ordering is
-        /// supposed to be for each. An application MUST ensure it is ordering versions in a consistent fashion
-        /// and DOCUMENT what that is.
-        /// </note>
-        /// </remarks>
         [SuppressMessage( "Design", "CA1034:Nested types should not be visible", Justification = "Simpler to read, use and maintain this way" )]
         public static class CaseSensitive
         {
             /// <summary>Gets a comparer that compares the values of pre-release identifier</summary>
             /// <remarks>
             /// This comparison takes account of the rules for AlphaNumeric vs Numeric values and the
-            /// combinations of them according to the rules of the SemVer spec §11.4. (case-insensitive)
+            /// combinations of them according to the rules of the SemVer spec §11.4. (case-sensitive)
             /// </remarks>
             private static IComparer<string> PrereleaseIdentifier { get; }
                 = new PrereleaseIdentifierComparer( caseSensitive: true );
 
-            /// <summary>Gets a comparer that compares the values of a pre-release list (case-insensitive)</summary>
+            /// <summary>Gets a comparer that compares the values of a pre-release list (case-sensitive)</summary>
             private static IComparer<IReadOnlyList<string>> PrereleaseIdentifierList { get; }
                 = new PrereleaseIdentifierListComparer( PrereleaseIdentifier );
 

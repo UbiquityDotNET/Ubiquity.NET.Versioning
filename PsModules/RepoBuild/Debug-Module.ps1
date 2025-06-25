@@ -1,5 +1,5 @@
 # This script is used for debugging the module when using the
-# [Powershell Tools for VisualStudio 2022](https://marketplace.visualstudio.com/items?itemName=AdamRDriscoll.PowerShellToolsVS2022)
+# [PowerShell Tools for VisualStudio 2022](https://marketplace.visualstudio.com/items?itemName=AdamRDriscoll.PowerShellToolsVS2022)
 Import-Module $PSScriptRoot\RepoBuild.psd1 -Force -Verbose
 
 # Get and show the Functions to export to allow easy updates of the PSD file

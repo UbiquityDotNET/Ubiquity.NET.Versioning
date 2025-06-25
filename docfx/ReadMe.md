@@ -1,12 +1,12 @@
 # Documentation
 >NOTE:
-> This file itself does NOT particpate in the generated docs output. It documents the input
+> This file itself does NOT participate in the generated docs output. It documents the input
 > to the doc generation and the process for maintainers of this library (Who clearly don't
 > have great memories or are otherwise easily confused. :nerd_face:)
 
 DocFX is used to generate the documentation for this library. There is confusion on
 what the statictoc template means and requires. It is ***LITERALLY*** that the Table
-of Contents (TOC) is staticly generated. So that the entire site is servable from a
+of Contents (TOC) is statically generated. So that the entire site is servable from a
 file path. This ***DOES NOT*** mean that the default+modern template is unusable for
 hosted static site scenarios like 'gh-pages' in GitHub. It only means that the TOC
 support will ***require*** a hosted site to provide the contents needed by the generated
@@ -15,7 +15,7 @@ of decent docs explaining the details [Yeah, this project previously fell into t
 and even constructed a custom template to deal with it... Sigh, what a waste of time...
 :facepalm: ])
 
-DocFX has obsoleted the `docfxconsole` NuGet pacakge that was used to run docfx for
+DocFX has obsoleted the `docfxconsole` NuGet package that was used to run docfx for
 a project via MSBUILD. Instead it focused on a .NET tool to do it all via the
 command line. Ultimately the docfx.json serves as the "project" file for the
 different site builds. The PowerShell script `Build-Docs.ps1` was updated to use the
@@ -28,7 +28,7 @@ There are a lot of files used to generate the docs and the concept of a Table of
 
 ### .gitignore
 This marks the files that are generated as ignored for GIT operations (Don't include
-generated sources in the repo - the automated build will generate them) Some spcific
+generated sources in the repo - the automated build will generate them) Some specific
 files are excluded from this but most of the api-* folders are ignored.
 
 ### docfx.json
@@ -39,7 +39,7 @@ in JSON format and unlike any other project is unusable directly in an IDE as th
 understand the format of such a thing.
 
 ### favicon.ico
-This provides the standard web brower icon for the site as a whole.
+This provides the standard web browser icon for the site as a whole.
 
 ### index.md
 Markdown for the index (Home) of this site.

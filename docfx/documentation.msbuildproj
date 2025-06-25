@@ -1,7 +1,14 @@
 ﻿<Project Sdk="Microsoft.Build.NoTargets">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <!--
+    Workaround annoying recurring bug: (IDE, MSBUILD, NoTargets?) Force x86 to AnyCPU.
+    Bug is that anything cares or sets a default that the IDE can't set causing it to occur.
+    -->
+    <Platform Condition="'$(Platform)'=='x86'">AnyCPU</Platform>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
   <!--
   This projects serves as a convenient placeholder to reference the doc files. It uses project relative include
   and exclude patterns to simplify referencing ALL files but skipping over the generated API files.

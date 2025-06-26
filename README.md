@@ -57,8 +57,11 @@ Full documentation on the tasks is available in the project's [docs site](https:
 > components comes into play it can impact the behavior as well. How are `1.0.0-b03-01` and
 > `1.0.0-b-03-01` ordered in relation to each other? Is the former even a valid CSemVer?
 >
-> This implementation is assuming the former is a typographical error and a delimiter is
-> required in all cases. ***That is, `1.0.0-b03-01` is not a valid CSemVer.***
+> ***This implementation is making no assumptions and simply does NOT support the short form.***
+> That may seem like a hard stance but given the ambiguities of the spaec, documenting the behavior
+> is difficult. Addditionally, handling all the potential variations makes for extremely complex
+> implementation code. All of that for a feature in support of a NuGET client that is now obsolete.
+> (NuGet v3 can handle the full name just fine!). Thus, the lack of support in this library.
 
 ## Building the tasks
 The build uses a common PowerShell module pattern for Ubiquity.NET projects. To build the

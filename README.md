@@ -49,7 +49,7 @@ of the last one released publicly.
 > `1.0.0-b-03-01` ordered in relation to each other? Is the former even a valid CSemVer?
 >
 > ***This implementation is making no assumptions and simply does NOT support the short form.***
-> That may seem like a hard stance but given the ambiguities of the spaec, documenting the behavior
+> That may seem like a hard stance but given the ambiguities of the spec, documenting the behavior
 > is difficult. Addditionally, handling all the potential variations makes for extremely complex
 > implementation code. All of that for a feature in support of a NuGet client that is now obsolete.
 > (NuGet v3 can handle the full name just fine!). Thus, the lack of support in this library.

@@ -50,7 +50,7 @@ of the last one released publicly.
 >
 > ***This implementation is making no assumptions and simply does NOT support the short form.***
 > That may seem like a hard stance but given the ambiguities of the spec, documenting the behavior
-> is difficult. Addditionally, handling all the potential variations makes for extremely complex
+> is difficult. Additionally, handling all the potential variations makes for extremely complex
 > implementation code. All of that for a feature in support of a NuGet client that is now obsolete.
 > (NuGet v3 can handle the full name just fine!). Thus, the lack of support in this library.
 
@@ -58,7 +58,7 @@ of the last one released publicly.
 Full documentation on the tasks is available in the project's [docs site](https://ubiquitydotnet.github.io/CSemVer.GitBuild/)
 
 ## Building the tasks
-Documentation on building and general maintencance of this repo are provided in the [Wiki](https://github.com/UbiquityDotNET/CSemVer.GitBuild/wiki).
+Documentation on building and general maintenance of this repo are provided in the [Wiki](https://github.com/UbiquityDotNET/CSemVer.GitBuild/wiki).
 
 ----
 <sup><a id="footnote_1">1</a></sup>See: [This issue](https://github.com/CK-Build/csemver.org/issues/2) which was reported upon

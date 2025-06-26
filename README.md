@@ -47,7 +47,7 @@ Full documentation on the tasks is available in the project's [docs site](https:
 
 >[!WARNING]
 > The formal 'spec' for [CSemVer](https://csemver.org) remains silent on the point of the short
-> format.^1^ Instead it relies on only examples. However, the examples are inconsistent on the
+> format.<sup>[1](#footnote_1)</sup> Instead it relies on only examples. However, the examples are inconsistent on the
 > requirement of a delimiter between the short name and number components of a version. It
 > shows two examples '1.0.0-b03-01' ***AND*** '5.0.0-r-04-13'. So, which is it? Is the
 > delimiter required or not?
@@ -78,5 +78,5 @@ support, and you must be willing to maintain such support going forward.)
 > (or any time the `buildversion.xml` changes).
 
 ----
-^1^See: [This issue](https://github.com/CK-Build/csemver.org/issues/2) which was reported upon
+<sup><a id="footnote_1">1</a></sup>See: [This issue](https://github.com/CK-Build/csemver.org/issues/2) which was reported upon
 testing this library and found inconsistencies.

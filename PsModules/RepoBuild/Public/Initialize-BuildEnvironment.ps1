@@ -32,9 +32,9 @@ function Initialize-BuildEnvironment
     values. In essence, the result is like a derived type from the common base. The
     additional properties added are:
 
-    | Name                       | Description                                                                                            |
-    |----------------------------|--------------------------------------------------------------------------------------------------------|
-    | OfficialGitRemoteUrl       | GIT Remote URL for ***this*** repository                                                               |
+    | Name                       | Description                              |
+    |----------------------------|------------------------------------------|
+    | OfficialGitRemoteUrl       | GIT Remote URL for ***this*** repository |
 #>
     # support common parameters
     [cmdletbinding()]
@@ -66,11 +66,6 @@ function Initialize-BuildEnvironment
         New-Item -ItemType Directory -Path $buildInfo['BuildOutputPath'] -ErrorAction SilentlyContinue | Out-Null
         New-Item -ItemType Directory -Path $buildInfo['PackagesRoot'] -ErrorAction SilentlyContinue | Out-Null
         New-Item -ItemType Directory $buildInfo['NuGetOutputPath'] -ErrorAction SilentlyContinue | Out-Null
-
-        # Disable the default "terminal logger" support as it's a breaking change that should NEVER
-        # have been anything but OPT-IN. It's a terrible experience that ends up hiding/overwriting
-        # information and generally makes it HARDER to see what's going on, not easier as it claims.
-        $env:MSBUILDTERMINALLOGGER='off'
 
         return $buildInfo
     }

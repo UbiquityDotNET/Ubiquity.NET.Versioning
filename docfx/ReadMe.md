@@ -54,7 +54,8 @@ There are a few folders containing input for the site generation.
 
 #### api-*
 These folders contain the Generated contents for each project as (YAML) metadata files
-parsed and generated from the source.
+parsed and generated from the source. Since most of these files are generated they are
+excluded from git in the [.gitignore](#gitignore) file.
 
 ##### api-*/Index.md
 This contains the main landing page for a given library it has the top bar navigation
@@ -68,8 +69,54 @@ set of namespaces, types, enums etc... Each library project generates it's own v
 of this file. Since this is generated it is listed in the [.gitignore](#gitignore) file.
 
 #### Library Content
-These folders (named after the `*` portion of the [api-*](#api-*) folder names contains
+These folders (named after the `*` portion of the [api-*](#api) folder names contains
 manually written additional files, articles, samples etc... related to a given library.
 >NOTE
 > The TOC.YML file format used in these topics is DIFFERENT from what is auto generated.
 >
+
+#### namespaces
+The `namespaces` folder contains overrides markdown files to allow documenting whole
+namespaces. .NET doc comments do not allow namespace documentation comments. However,
+docfx, when leveraged properly can. These files, when they include the correct YAML
+header are merged to the contents for the docs before generation of the final static
+site. This is enabled by adding the namespace content to the `overwrite` section of the
+docfx.json file:
+``` JSON
+{
+  "build":{
+    "content":[
+      "files":[
+        "<project dir>.**.{md,yml}"
+      ],
+      // Exclude the namespace overwrites as they are listed explicitly elsewhere
+      "exclude": [
+          "**/namespaces/**.md"
+      ]
+    ],
+    "overwrite": [
+      {
+        "files": [
+          "**/apidocs/**.md",
+          "**/namespaces/**.md"
+        ]
+      }
+    ],
+  }
+}
+```
+
+The YAML header should include the following:
+``` YAML
+---
+uid: <namespace UID>
+remarks: *content
+---
+```
+
+The `<namespace UID>` is usually just the full name of the namespace but is verifiable
+by examining the generated YML files in the [api-*](#api) folder. The `remarks` entry
+causes the contents of the file to merge to the contents of the remarks section. This
+will order the content ahead of the normally generated list of members. It is generally
+recommended to finish all such documents with a horizontal rule (`---` in markdown) to
+allow separation of the namespace remarks from the generated content. 

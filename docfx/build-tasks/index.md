@@ -238,7 +238,6 @@ $currentBuildKind = Get-CurrentBuildKind
 $env:IsAutomatedBuild = $currentBuildKind -ne [BuildKind]::LocalBuild
 $env:IsPullRequestBuild = $currentBuildKind -eq [BuildKind]::PullRequestBuild
 $env:IsReleaseBuild = $currentBuildKind -eq [BuildKind]::ReleaseBuild
-
 ```
 
 ## BuildVersion.xml
@@ -343,15 +342,18 @@ section of this document.
 | CSM204 | XML format of file specified by `$(BuildVersionXml)' is invalid |
 
 ----
-<sup><a id="footnote_1">1</a></sup> CSemVer-CI uses a latest build format and therefore all version numbers for a CI
-build, including local builds use a `Patch+1` pattern as defined by CSemVer-CI. This ensures
-that all forms of CI builds have a higher precedence than any release they are based on. To
-simplify that, a CI build contains everything in a given release and then some more. What
-release that will eventually become is intentionally undefined.
+<sup><a id="footnote_1">1</a></sup> CSemVer-CI uses a latest build format and therefore all
+version numbers for a CI build, including local builds use a `Patch+1` pattern as defined by
+CSemVer-CI. This ensures that all forms of CI builds have a higher precedence than any release
+they are based on. To clarify the understanding of that, a CI build contains everything in a
+given release and then some more. How much more, or what release that will eventually become
+is intentionally undefined. This allows selection of the final release version based on the
+contents of the actual changes. CI builds are understood unstable and subject to complete
+changes or even abandoned lines of thought.
 
 
-<sup><a id="footnote_2">2</a></sup> CSM106 is essentially an internal sanity test. The props/targets files ensure that
-`$(CiBuildIndex)` and `$(CiBuildName)` have a value unless $(IsReleaseBuild) is set. In that case
-the targets file will force them to empty. So, there's no way to test for or hit this condition
-without completely replacing/bypassing the props/targets files for the task. Which is obviously,
-an unsupported scenario :grin:.
+<sup><a id="footnote_2">2</a></sup> CSM106 is essentially an internal sanity test. The
+props/targets files ensure that `$(CiBuildIndex)` and `$(CiBuildName)` have a value unless
+$(IsReleaseBuild) is set. In that case the targets file will force them to empty. So, there's
+no way to test for or hit this condition without completely replacing/bypassing the props/targets
+files for the task. Which is obviously, an unsupported scenario :grin:.

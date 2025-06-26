@@ -7,14 +7,8 @@ This repo includes support for versioning numbers. This support includes:
     - [CSemVer](https://csemver.org)
         - This is a Constrained Semantic Version (That is, a strict subset of a SemVer)
     - [CSemVer-CI](https://csemver.org)
-        - This is also a Constrained Semantic Version but is designed for ***POST-RELEASE** CI
+        - This is also a Constrained Semantic Version but is designed for ***POST-RELEASE*** CI
           build numbering. It is NOT a CSemVer but IS a SemVer.
-
->[!NOTE]
-> This repository is historically named for only the build tasks but that name is not very
-> very representative of reality anymore. The repo does contain actual build tasks, but also
-> a library for working with versions that includes a number of unit tests to ensure it is
-> operating correctly.
 
 ## Status
 ![NuGet](https://img.shields.io/nuget/dt/CSemVer.Build.Tasks.svg)
@@ -22,7 +16,7 @@ This repo includes support for versioning numbers. This support includes:
 ![Release Work Flow Status](https://img.shields.io/github/actions/workflow/status/UbiquityDotNET/CSemVer.GitBuild/release-build.yml?label=Release%20Build%20Status)
 
 ## Overview
-Officially, NUGET Packages use a SemVer 2.0 (see http://semver.org).
+Officially, NuGet Packages use a SemVer 2.0 (see http://semver.org).
 However, SemVer 2.0 doesn't consider or account for publicly available CI builds.
 SemVer is only concerned with official releases. This makes CI builds producing 
 versioned packages challenging. Fortunately, someone has already defined a solution
@@ -57,7 +51,7 @@ of the last one released publicly.
 > ***This implementation is making no assumptions and simply does NOT support the short form.***
 > That may seem like a hard stance but given the ambiguities of the spaec, documenting the behavior
 > is difficult. Addditionally, handling all the potential variations makes for extremely complex
-> implementation code. All of that for a feature in support of a NuGET client that is now obsolete.
+> implementation code. All of that for a feature in support of a NuGet client that is now obsolete.
 > (NuGet v3 can handle the full name just fine!). Thus, the lack of support in this library.
 
 ## End User Documentation

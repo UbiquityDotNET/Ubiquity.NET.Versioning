@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Method From | Ubiquity.NET </title>
+      <title>Method From | Ubiquity.NET.Versioning </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Method From | Ubiquity.NET ">
+      <meta name="title" content="Method From | Ubiquity.NET.Versioning ">
       
       
       <link rel="icon" href="../../favicon.ico">
@@ -86,7 +86,7 @@
 
 
 <h1 id="Ubiquity_NET_Versioning_CSemVer_From_" data-uid="Ubiquity.NET.Versioning.CSemVer.From*" class="text-break">
-Method From  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.0-rc.1/src/Ubiquity.NET.Versioning/CSemVer.cs/#L253"><i class="bi bi-code-slash"></i></a>
+Method From  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.2-alpha/src/Ubiquity.NET.Versioning/CSemVer.cs/#L264"><i class="bi bi-code-slash"></i></a>
 </h1>
 
 <div class="facts text-secondary">
@@ -114,9 +114,9 @@ Method From  <a class="header-action link-secondary" title="View source" href="h
 
 <a id="Ubiquity_NET_Versioning_CSemVer_From_" data-uid="Ubiquity.NET.Versioning.CSemVer.From*"></a>
 
-<h3 id="Ubiquity_NET_Versioning_CSemVer_From_System_UInt64_System_String_" data-uid="Ubiquity.NET.Versioning.CSemVer.From(System.UInt64,System.String)">
-  From(ulong, string?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.0-rc.1/src/Ubiquity.NET.Versioning/CSemVer.cs/#L253"><i class="bi bi-code-slash"></i></a>
+<h3 id="Ubiquity_NET_Versioning_CSemVer_From_System_UInt64_System_Collections_Generic_IReadOnlyCollection_System_String__" data-uid="Ubiquity.NET.Versioning.CSemVer.From(System.UInt64,System.Collections.Generic.IReadOnlyCollection{System.String})">
+  From(ulong, IReadOnlyCollection&lt;string&gt;?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.2-alpha/src/Ubiquity.NET.Versioning/CSemVer.cs/#L264"><i class="bi bi-code-slash"></i></a>
 </h3>
 
 <div class="markdown level1 summary"><p>Converts a file version form (as a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a>) of a CSemVer into a full <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a></p>
@@ -124,7 +124,7 @@ Method From  <a class="header-action link-secondary" title="View source" href="h
 <div class="markdown level1 conceptual"></div>
 
 <div class="codewrapper">
-  <pre><code class="lang-csharp hljs">public static CSemVer From(ulong fileVersion, string? buildMetaData = null)</code></pre>
+  <pre><code class="lang-csharp hljs">public static CSemVer From(ulong fileVersion, IReadOnlyCollection&lt;string&gt;? buildMetaData = null)</code></pre>
 </div>
 
 <h4 class="section">Parameters</h4>
@@ -132,7 +132,7 @@ Method From  <a class="header-action link-secondary" title="View source" href="h
   <dt><code>fileVersion</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a></dt>
   <dd><p>File version as an unsigned 64 bit value</p>
 </dd>
-  <dt><code>buildMetaData</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+  <dt><code>buildMetaData</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlycollection-1">IReadOnlyCollection</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
   <dd><p>Optional build meta data value for the version</p>
 </dd>
 </dl>
@@ -150,7 +150,7 @@ Method From  <a class="header-action link-secondary" title="View source" href="h
 
 
 
-<h4 class="section" id="Ubiquity_NET_Versioning_CSemVer_From_System_UInt64_System_String__remarks">Remarks</h4>
+<h4 class="section" id="Ubiquity_NET_Versioning_CSemVer_From_System_UInt64_System_Collections_Generic_IReadOnlyCollection_System_String___remarks">Remarks</h4>
 <div class="markdown level1 remarks"><p>A file version is a quad of 4 <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a> values. This is convertible to a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a> in the following
 pattern:
 (bits are numbered with MSB as the highest numeric value [Actual ordering depends on platform endianess])
@@ -158,7 +158,7 @@ pattern:
 
 <p>A file version cast as a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a> is <i><b>NOT</b></i> the same as an Ordered version number. The file version
 includes a "bit" for the status as a CI Build. Thus a "file version" as a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a> is the ordered version shifted
-left by one bit and the LSB indicates if it is a CI build</p>
+left by one bit and the LSB indicates if it is a CI build or release</p>
 </div>
 
 
@@ -166,9 +166,9 @@ left by one bit and the LSB indicates if it is a CI build</p>
 
 <a id="Ubiquity_NET_Versioning_CSemVer_From_" data-uid="Ubiquity.NET.Versioning.CSemVer.From*"></a>
 
-<h3 id="Ubiquity_NET_Versioning_CSemVer_From_System_String_System_DateTime_System_String_System_String_" data-uid="Ubiquity.NET.Versioning.CSemVer.From(System.String,System.DateTime,System.String,System.String)">
-  From(string, DateTime, string, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.0-rc.1/src/Ubiquity.NET.Versioning/CSemVer.cs/#L307"><i class="bi bi-code-slash"></i></a>
+<h3 id="Ubiquity_NET_Versioning_CSemVer_From_System_String_System_Collections_Generic_IReadOnlyCollection_System_String__" data-uid="Ubiquity.NET.Versioning.CSemVer.From(System.String,System.Collections.Generic.IReadOnlyCollection{System.String})">
+  From(string, IReadOnlyCollection&lt;string&gt;?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.2-alpha/src/Ubiquity.NET.Versioning/CSemVer.cs/#L316"><i class="bi bi-code-slash"></i></a>
 </h3>
 
 <div class="markdown level1 summary"><p>Factory method to create a <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a> from information available as part of a build</p>
@@ -176,7 +176,7 @@ left by one bit and the LSB indicates if it is a CI build</p>
 <div class="markdown level1 conceptual"></div>
 
 <div class="codewrapper">
-  <pre><code class="lang-csharp hljs">public static CSemVer From(string buildVersionXmlPath, DateTime timeStamp, string ciBuildName, string buildMeta)</code></pre>
+  <pre><code class="lang-csharp hljs">public static CSemVer From(string buildVersionXmlPath, IReadOnlyCollection&lt;string&gt;? buildMeta)</code></pre>
 </div>
 
 <h4 class="section">Parameters</h4>
@@ -184,13 +184,7 @@ left by one bit and the LSB indicates if it is a CI build</p>
   <dt><code>buildVersionXmlPath</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
   <dd><p>Path to the BuildVersion XML data for the repository</p>
 </dd>
-  <dt><code>timeStamp</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetime">DateTime</a></dt>
-  <dd><p>TimeStamp of the build</p>
-</dd>
-  <dt><code>ciBuildName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-  <dd><p>CI Build name for the build</p>
-</dd>
-  <dt><code>buildMeta</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+  <dt><code>buildMeta</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlycollection-1">IReadOnlyCollection</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
   <dd><p>Additional Build meta data for the build</p>
 </dd>
 </dl>
@@ -198,7 +192,7 @@ left by one bit and the LSB indicates if it is a CI build</p>
 <h4 class="section">Returns</h4>
 <dl class="parameters">
   <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a></dt>
-  <dd><p><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a></p>
+  <dd><p>Version information parsed from the build XML</p>
 </dd>
 </dl>
 
@@ -215,7 +209,7 @@ left by one bit and the LSB indicates if it is a CI build</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.0-rc.1/src/Ubiquity.NET.Versioning/CSemVer.cs/#L253" class="edit-link">Edit this page</a>
+          <a href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.2-alpha/src/Ubiquity.NET.Versioning/CSemVer.cs/#L264" class="edit-link">Edit this page</a>
         </div>
 
 

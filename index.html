@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Ubiquity.NET.Versioning | Ubiquity.NET </title>
+      <title>Ubiquity.NET.Versioning | Ubiquity.NET.Versioning </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Ubiquity.NET.Versioning | Ubiquity.NET ">
+      <meta name="title" content="Ubiquity.NET.Versioning | Ubiquity.NET.Versioning ">
       
       
       <link rel="icon" href="favicon.ico">
@@ -72,7 +72,6 @@
 but the primary focus is automated build versioning that embraces the principal of least surprise
 while conforming to the syntax of CSemVer and CSemVer-CI</p>
 <h2 id="the-libraries-in-this-repository">The Libraries in this repository</h2>
-<p>(At least the ones generating docs at this point anyway! 😁)</p>
 <table>
 <thead>
 <tr>
@@ -91,6 +90,20 @@ while conforming to the syntax of CSemVer and CSemVer-CI</p>
 </tr>
 </tbody>
 </table>
+<div class="IMPORTANT">
+<h5>Important</h5>
+<p>There is confusion on the ordering of a CI build with relation to a release build with
+CSemVer-CI. A CI Build is either an initial build of an unreleased version with
+[Major.Minor.Patch] == [0.0.0]. Or, it is based on the previously released version and
+is [Major.Minor.Patch+1]. That is, a CI build is ordered <em><strong>BEFORE</strong></em> all release builds,
+or it is ordered <em><strong>AFTER</strong></em> the <em><strong>specific</strong></em> release it is based on! In particular a
+CI build version does <em><strong>NOT</strong></em> indicate what it will become when it is finally released,
+but what release it was based on (If any). To simplify that, for clarity, a CI build
+contains everything in the release it was based on and additional changes (that might
+remove things). CI builds are, by definition NOT stable and consumers cannot rely on
+them for predictions of future stability. A given CI build may even represent an
+abandoned approach that never becomes a release!</p>
+</div>
 <hr>
 <p><a href="Attributions.html">Attributions</a></p>
 

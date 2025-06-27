@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Constructor CSemVer | Ubiquity.NET </title>
+      <title>Constructor CSemVer | Ubiquity.NET.Versioning </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Constructor CSemVer | Ubiquity.NET ">
+      <meta name="title" content="Constructor CSemVer | Ubiquity.NET.Versioning ">
       
       
       <link rel="icon" href="../../favicon.ico">
@@ -86,7 +86,7 @@
 
 
 <h1 id="Ubiquity_NET_Versioning_CSemVer__ctor_" data-uid="Ubiquity.NET.Versioning.CSemVer.#ctor*" class="text-break">
-Constructor CSemVer  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.0-rc.1/src/Ubiquity.NET.Versioning/CSemVer.cs/#L31"><i class="bi bi-code-slash"></i></a>
+Constructor CSemVer  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.2-alpha/src/Ubiquity.NET.Versioning/CSemVer.cs/#L34"><i class="bi bi-code-slash"></i></a>
 </h1>
 
 <div class="facts text-secondary">
@@ -114,17 +114,17 @@ Constructor CSemVer  <a class="header-action link-secondary" title="View source"
 
 <a id="Ubiquity_NET_Versioning_CSemVer__ctor_" data-uid="Ubiquity.NET.Versioning.CSemVer.#ctor*"></a>
 
-<h3 id="Ubiquity_NET_Versioning_CSemVer__ctor_System_Int32_System_Int32_System_Int32_Ubiquity_NET_Versioning_PrereleaseVersion_Ubiquity_NET_Versioning_CiBuildInfo_System_String_" data-uid="Ubiquity.NET.Versioning.CSemVer.#ctor(System.Int32,System.Int32,System.Int32,Ubiquity.NET.Versioning.PrereleaseVersion,Ubiquity.NET.Versioning.CiBuildInfo,System.String)">
-  CSemVer(int, int, int, PrereleaseVersion, CiBuildInfo, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.0-rc.1/src/Ubiquity.NET.Versioning/CSemVer.cs/#L31"><i class="bi bi-code-slash"></i></a>
+<h3 id="Ubiquity_NET_Versioning_CSemVer__ctor_System_Int32_System_Int32_System_Int32_System_Nullable_Ubiquity_NET_Versioning_PrereleaseVersion__System_Collections_Generic_IEnumerable_System_String__" data-uid="Ubiquity.NET.Versioning.CSemVer.#ctor(System.Int32,System.Int32,System.Int32,System.Nullable{Ubiquity.NET.Versioning.PrereleaseVersion},System.Collections.Generic.IEnumerable{System.String})">
+  CSemVer(int, int, int, PrereleaseVersion?, IEnumerable&lt;string&gt;?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.2-alpha/src/Ubiquity.NET.Versioning/CSemVer.cs/#L34"><i class="bi bi-code-slash"></i></a>
 </h3>
 
-<div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a> class</p>
+<div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a> struct.</p>
 </div>
 <div class="markdown level1 conceptual"></div>
 
 <div class="codewrapper">
-  <pre><code class="lang-csharp hljs">public CSemVer(int major, int minor, int patch, PrereleaseVersion preRelVersion = default, CiBuildInfo ciBuildInfo = default, string buildMetaData = &quot;&quot;)</code></pre>
+  <pre><code class="lang-csharp hljs">public CSemVer(int major, int minor, int patch, PrereleaseVersion? preRelVersion = null, IEnumerable&lt;string&gt;? buildMetaData = null)</code></pre>
 </div>
 
 <h4 class="section">Parameters</h4>
@@ -138,14 +138,11 @@ Constructor CSemVer  <a class="header-action link-secondary" title="View source"
   <dt><code>patch</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
   <dd><p>Patch version value [0-9999]</p>
 </dd>
-  <dt><code>preRelVersion</code> <a class="xref" href="Ubiquity.NET.Versioning.PrereleaseVersion.html">PrereleaseVersion</a></dt>
+  <dt><code>preRelVersion</code> <a class="xref" href="Ubiquity.NET.Versioning.PrereleaseVersion.html">PrereleaseVersion</a>?</dt>
   <dd><p>Pre-release version information (if a pre-release build)</p>
 </dd>
-  <dt><code>ciBuildInfo</code> <a class="xref" href="Ubiquity.NET.Versioning.CiBuildInfo.html">CiBuildInfo</a></dt>
-  <dd><p>CI build information for this build</p>
-</dd>
-  <dt><code>buildMetaData</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-  <dd><p>[Optional]Additional build meta data [default: empty string]</p>
+  <dt><code>buildMetaData</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+  <dd><p>Any additional build meta data [default: empty string]</p>
 </dd>
 </dl>
 
@@ -163,7 +160,7 @@ Constructor CSemVer  <a class="header-action link-secondary" title="View source"
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.0-rc.1/src/Ubiquity.NET.Versioning/CSemVer.cs/#L31" class="edit-link">Edit this page</a>
+          <a href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.2-alpha/src/Ubiquity.NET.Versioning/CSemVer.cs/#L34" class="edit-link">Edit this page</a>
         </div>
 
 

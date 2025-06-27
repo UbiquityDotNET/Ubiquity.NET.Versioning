@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Constructor FileVersionQuad | Ubiquity.NET </title>
+      <title>Constructor FileVersionQuad | Ubiquity.NET.Versioning </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Constructor FileVersionQuad | Ubiquity.NET ">
+      <meta name="title" content="Constructor FileVersionQuad | Ubiquity.NET.Versioning ">
       
       
       <link rel="icon" href="../../favicon.ico">
@@ -86,7 +86,7 @@
 
 
 <h1 id="Ubiquity_NET_Versioning_FileVersionQuad__ctor_" data-uid="Ubiquity.NET.Versioning.FileVersionQuad.#ctor*" class="text-break">
-Constructor FileVersionQuad  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.0-rc.1/src/Ubiquity.NET.Versioning/FileVersionQuad.cs/#L48"><i class="bi bi-code-slash"></i></a>
+Constructor FileVersionQuad  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.2-alpha/src/Ubiquity.NET.Versioning/FileVersionQuad.cs/#L47"><i class="bi bi-code-slash"></i></a>
 </h1>
 
 <div class="facts text-secondary">
@@ -116,7 +116,7 @@ Constructor FileVersionQuad  <a class="header-action link-secondary" title="View
 
 <h3 id="Ubiquity_NET_Versioning_FileVersionQuad__ctor_System_UInt16_System_UInt16_System_UInt16_System_UInt16_" data-uid="Ubiquity.NET.Versioning.FileVersionQuad.#ctor(System.UInt16,System.UInt16,System.UInt16,System.UInt16)">
   FileVersionQuad(ushort, ushort, ushort, ushort)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.0-rc.1/src/Ubiquity.NET.Versioning/FileVersionQuad.cs/#L48"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.2-alpha/src/Ubiquity.NET.Versioning/FileVersionQuad.cs/#L47"><i class="bi bi-code-slash"></i></a>
 </h3>
 
 <div class="markdown level1 summary"><p>Represents a traditional &quot;File&quot; version QUAD of 16bit values</p>
@@ -162,13 +162,12 @@ in a valid <a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.html">F
 <p>A file version is a quad of 4 <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a> values. This is convertible to a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a> in the
 following pattern:
 (bits are numbered with MSB as the highest numeric value [Actual byte ordering depends on platform endianess])
-<table><thead><tr><th class="term">Field</th><th class="term">Description</th></tr></thead><tbody><tr><td class="term">bits 48-63</td><td class="description"> Major part of Build number</td></tr><tr><td class="term">bits 32-47</td><td class="description"> Minor part of Build number</td></tr><tr><td class="term">bits 16-31</td><td class="description"> Build part of Build number</td></tr><tr><td class="term">bits 0-15</td><td class="description"> Revision part of Build number (LSB == 1 indicates a Release build; LSB == 0 indicates a CI build)</td></tr></tbody></table>
+<table><thead><tr><th class="term">Field</th><th class="term">Description</th></tr></thead><tbody><tr><td class="term">bits 48-63</td><td class="description"> Major part of Build number</td></tr><tr><td class="term">bits 32-47</td><td class="description"> Minor part of Build number</td></tr><tr><td class="term">bits 16-31</td><td class="description"> Build part of Build number</td></tr><tr><td class="term">bits 0-15</td><td class="description"> Revision part of Build number (LSB indicates a release/CI build see remarks section for details)</td></tr></tbody></table>
 
 <div class="IMPORTANT"><h5>important</h5><p>
-The role of the LSB for the Revision field is INTENTIONALLY inverted from the behavior found in official
-CSemVer v1.0.0-rc.1. This is to maintain the expressed intent that a File Version Quad is treated as a UInt64 and
-maintains sort order comparisons. In particular a CI build version ALWAYS has a lower sort order than a release
-build. (Thus the LSB bit indicates a RELEASE build (1; ODD Revision values) or a CI Build (0; EVEN revision values)
+The role of the LSB for the Revision field is confusing as it indicates a CI build or not which itself is confusing. A CI
+build occurs AFTER a release! CI builds are ordered AFTER a release (or for a pre-release based on time only [0.0.0]). That is,
+a CI build ***always*** has a Patch+1 of a released build or [Major.Minor.Patch] == [0.0.0].
 </p></div>
 <p>A file version cast as a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a> is <i><b>NOT</b></i> the same as an Ordered version number.
 The file version includes a "bit" for the status as a CI Build. Thus, a "file version" as a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a> is the
@@ -187,7 +186,7 @@ ordered version shifted left by one bit and the LSB indicates if it is a Release
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.0-rc.1/src/Ubiquity.NET.Versioning/FileVersionQuad.cs/#L48" class="edit-link">Edit this page</a>
+          <a href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.2-alpha/src/Ubiquity.NET.Versioning/FileVersionQuad.cs/#L47" class="edit-link">Edit this page</a>
         </div>
 
 

@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Method ToVersion | Ubiquity.NET </title>
+      <title>Method ToVersion | Ubiquity.NET.Versioning </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Method ToVersion | Ubiquity.NET ">
+      <meta name="title" content="Method ToVersion | Ubiquity.NET.Versioning ">
       
       
       <link rel="icon" href="../../favicon.ico">
@@ -86,7 +86,7 @@
 
 
 <h1 id="Ubiquity_NET_Versioning_FileVersionQuad_ToVersion_" data-uid="Ubiquity.NET.Versioning.FileVersionQuad.ToVersion*" class="text-break">
-Method ToVersion  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.0-rc.1/src/Ubiquity.NET.Versioning/FileVersionQuad.cs/#L118"><i class="bi bi-code-slash"></i></a>
+Method ToVersion  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.2-alpha/src/Ubiquity.NET.Versioning/FileVersionQuad.cs/#L118"><i class="bi bi-code-slash"></i></a>
 </h1>
 
 <div class="facts text-secondary">
@@ -116,7 +116,7 @@ Method ToVersion  <a class="header-action link-secondary" title="View source" hr
 
 <h3 id="Ubiquity_NET_Versioning_FileVersionQuad_ToVersion" data-uid="Ubiquity.NET.Versioning.FileVersionQuad.ToVersion">
   ToVersion()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.0-rc.1/src/Ubiquity.NET.Versioning/FileVersionQuad.cs/#L118"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.2-alpha/src/Ubiquity.NET.Versioning/FileVersionQuad.cs/#L118"><i class="bi bi-code-slash"></i></a>
 </h3>
 
 <div class="markdown level1 summary"><p>Converts this instance to a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.version">Version</a></p>
@@ -143,11 +143,12 @@ Method ToVersion  <a class="header-action link-secondary" title="View source" hr
 
 <h4 class="section" id="Ubiquity_NET_Versioning_FileVersionQuad_ToVersion_remarks">Remarks</h4>
 <div class="markdown level1 remarks"><div class="IMPORTANT"><h5>important</h5><p>
-This conversion INCLUDES the CI build information bit and thus ordering
-of the result is NOT correct. (In File version Quads an ODD revision
-indicates a CI build, but any such build has an ordering that is LESS
-then any without it and therefore does NOT match the numeric ordering)
-</p></div>
+<p>This conversion INCLUDES the CI build information bit and thus ordering
+of the result remains correct. (In File version Quads an ODD revision
+indicates a CI build which is ordered AFTER the build it depends on!)</p>
+<p>Keep in mind that a CI build is a POST release build numbering and does
+not reflect what release the build may ever become.</p>
+</div>
 </div>
 
 
@@ -156,7 +157,7 @@ then any without it and therefore does NOT match the numeric ordering)
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.0-rc.1/src/Ubiquity.NET.Versioning/FileVersionQuad.cs/#L118" class="edit-link">Edit this page</a>
+          <a href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.2-alpha/src/Ubiquity.NET.Versioning/FileVersionQuad.cs/#L118" class="edit-link">Edit this page</a>
         </div>
 
 

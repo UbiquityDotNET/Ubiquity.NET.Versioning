@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Property IsCIBuild | Ubiquity.NET </title>
+      <title>Operator implicit operator | Ubiquity.NET.Versioning </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Property IsCIBuild | Ubiquity.NET ">
+      <meta name="title" content="Operator implicit operator | Ubiquity.NET.Versioning ">
       
       
       <link rel="icon" href="../../favicon.ico">
@@ -16,7 +16,7 @@
       
       
       
-      <meta name="docfx:docurl" content="https://github.com/UbiquityDotNET/CSemVer.GitBuild/new/develop/apiSpec/new?filename=Ubiquity_NET_Versioning_CSemVer_IsCIBuild_.md&amp;value=---%0Auid%3A%20Ubiquity.NET.Versioning.CSemVer.IsCIBuild*%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/UbiquityDotNET/CSemVer.GitBuild/new/develop/apiSpec/new?filename=Ubiquity_NET_Versioning_CSemVerCI_op_Implicit_.md&amp;value=---%0Auid%3A%20Ubiquity.NET.Versioning.CSemVerCI.op_Implicit*%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -79,14 +79,14 @@
 
         </div>
 
-        <article data-uid="Ubiquity.NET.Versioning.CSemVer.IsCIBuild*">
+        <article data-uid="Ubiquity.NET.Versioning.CSemVerCI.op_Implicit*">
 
 
 
 
 
-<h1 id="Ubiquity_NET_Versioning_CSemVer_IsCIBuild_" data-uid="Ubiquity.NET.Versioning.CSemVer.IsCIBuild*" class="text-break">
-Property IsCIBuild  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.0-rc.1/src/Ubiquity.NET.Versioning/CSemVer.cs/#L109"><i class="bi bi-code-slash"></i></a>
+<h1 id="Ubiquity_NET_Versioning_CSemVerCI_op_Implicit_" data-uid="Ubiquity.NET.Versioning.CSemVerCI.op_Implicit*" class="text-break">
+Operator implicit operator  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.2-alpha/src/Ubiquity.NET.Versioning/CSemVerCI.cs/#L173"><i class="bi bi-code-slash"></i></a>
 </h1>
 
 <div class="facts text-secondary">
@@ -112,41 +112,45 @@ Property IsCIBuild  <a class="header-action link-secondary" title="View source" 
 
 
 
-<a id="Ubiquity_NET_Versioning_CSemVer_IsCIBuild_" data-uid="Ubiquity.NET.Versioning.CSemVer.IsCIBuild*"></a>
+<a id="Ubiquity_NET_Versioning_CSemVerCI_op_Implicit_" data-uid="Ubiquity.NET.Versioning.CSemVerCI.op_Implicit*"></a>
 
-<h3 id="Ubiquity_NET_Versioning_CSemVer_IsCIBuild" data-uid="Ubiquity.NET.Versioning.CSemVer.IsCIBuild">
-  IsCIBuild
-  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.0-rc.1/src/Ubiquity.NET.Versioning/CSemVer.cs/#L109"><i class="bi bi-code-slash"></i></a>
+<h3 id="Ubiquity_NET_Versioning_CSemVerCI_op_Implicit_Ubiquity_NET_Versioning_CSemVerCI__Ubiquity_NET_Versioning_SemVer" data-uid="Ubiquity.NET.Versioning.CSemVerCI.op_Implicit(Ubiquity.NET.Versioning.CSemVerCI)~Ubiquity.NET.Versioning.SemVer">
+  implicit operator SemVer(CSemVerCI)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.2-alpha/src/Ubiquity.NET.Versioning/CSemVerCI.cs/#L173"><i class="bi bi-code-slash"></i></a>
 </h3>
 
-<div class="markdown level1 summary"><p>Gets a value indicating whether this version represents a CI build</p>
+<div class="markdown level1 summary"><p>Converts this instance to a <a class="xref" href="Ubiquity.NET.Versioning.SemVer.html">SemVer</a> instance</p>
 </div>
 <div class="markdown level1 conceptual"></div>
 
 <div class="codewrapper">
-  <pre><code class="lang-csharp hljs">public bool IsCIBuild { get; }</code></pre>
+  <pre><code class="lang-csharp hljs">public static implicit operator SemVer(CSemVerCI val)</code></pre>
 </div>
 
-
-
-
-
-<h4 class="section">Property Value</h4>
+<h4 class="section">Parameters</h4>
 <dl class="parameters">
-  <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-  <dd></dd>
+  <dt><code>val</code> <a class="xref" href="Ubiquity.NET.Versioning.CSemVerCI.html">CSemVerCI</a></dt>
+  <dd><p>Value to convert</p>
+</dd>
+</dl>
+
+<h4 class="section">Returns</h4>
+<dl class="parameters">
+  <dt><a class="xref" href="Ubiquity.NET.Versioning.SemVer.html">SemVer</a></dt>
+  <dd><p>Converted value</p>
+</dd>
 </dl>
 
 
 
 
-<h4 class="section" id="Ubiquity_NET_Versioning_CSemVer_IsCIBuild_remarks">Remarks</h4>
-<div class="markdown level1 remarks"><p>Information regarding CI Builds are not included in the numeric representation (except a File Version "quad").
-This is used to indicate if a build represents a CI build or not.</p>
-<p>The CI build information is contained in the optional <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.CiBuildInfo.html#Ubiquity_NET_Versioning_CSemVer_CiBuildInfo">CiBuildInfo</a> property. However, if this
-instance was produced from a purely numeric value then such information is lost though it is possible to indicate
-a CI build using the low bit of the revision part of a <a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.html">FileVersionQuad</a>. Thus, it is possible for this
-to return <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> even if <a class="xref" href="Ubiquity.NET.Versioning.CiBuildInfo.IsValid.html#Ubiquity_NET_Versioning_CiBuildInfo_IsValid">IsValid</a> returns <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a></p>
+
+
+
+<h4 class="section" id="Ubiquity_NET_Versioning_CSemVerCI_op_Implicit_Ubiquity_NET_Versioning_CSemVerCI__Ubiquity_NET_Versioning_SemVer_remarks">Remarks</h4>
+<div class="markdown level1 remarks"><p>Since this version came from a <a class="xref" href="Ubiquity.NET.Versioning.CSemVerCI.html">CSemVerCI</a> the ONLY valid ordering
+is a case insensitive one. The specifications are explicit on the use of case insensitive
+comparisons, while the spec for SemVer is silent on the point, which leads to ambiguities.</p>
 </div>
 
 
@@ -155,7 +159,7 @@ to return <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.0-rc.1/src/Ubiquity.NET.Versioning/CSemVer.cs/#L109" class="edit-link">Edit this page</a>
+          <a href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.2-alpha/src/Ubiquity.NET.Versioning/CSemVerCI.cs/#L173" class="edit-link">Edit this page</a>
         </div>
 
 

@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Method FromOrderedVersion | Ubiquity.NET </title>
+      <title>Method FromOrderedVersion | Ubiquity.NET.Versioning </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Method FromOrderedVersion | Ubiquity.NET ">
+      <meta name="title" content="Method FromOrderedVersion | Ubiquity.NET.Versioning ">
       
       
       <link rel="icon" href="../../favicon.ico">
@@ -86,7 +86,7 @@
 
 
 <h1 id="Ubiquity_NET_Versioning_CSemVer_FromOrderedVersion_" data-uid="Ubiquity.NET.Versioning.CSemVer.FromOrderedVersion*" class="text-break">
-Method FromOrderedVersion  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.0-rc.1/src/Ubiquity.NET.Versioning/CSemVer.cs/#L264"><i class="bi bi-code-slash"></i></a>
+Method FromOrderedVersion  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.2-alpha/src/Ubiquity.NET.Versioning/CSemVer.cs/#L275"><i class="bi bi-code-slash"></i></a>
 </h1>
 
 <div class="facts text-secondary">
@@ -114,9 +114,9 @@ Method FromOrderedVersion  <a class="header-action link-secondary" title="View s
 
 <a id="Ubiquity_NET_Versioning_CSemVer_FromOrderedVersion_" data-uid="Ubiquity.NET.Versioning.CSemVer.FromOrderedVersion*"></a>
 
-<h3 id="Ubiquity_NET_Versioning_CSemVer_FromOrderedVersion_System_UInt64_System_Boolean_System_String_" data-uid="Ubiquity.NET.Versioning.CSemVer.FromOrderedVersion(System.UInt64,System.Boolean,System.String)">
-  FromOrderedVersion(ulong, bool, string?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.0-rc.1/src/Ubiquity.NET.Versioning/CSemVer.cs/#L264"><i class="bi bi-code-slash"></i></a>
+<h3 id="Ubiquity_NET_Versioning_CSemVer_FromOrderedVersion_System_UInt64_System_Collections_Generic_IReadOnlyCollection_System_String__" data-uid="Ubiquity.NET.Versioning.CSemVer.FromOrderedVersion(System.UInt64,System.Collections.Generic.IReadOnlyCollection{System.String})">
+  FromOrderedVersion(ulong, IReadOnlyCollection&lt;string&gt;?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.2-alpha/src/Ubiquity.NET.Versioning/CSemVer.cs/#L275"><i class="bi bi-code-slash"></i></a>
 </h3>
 
 <div class="markdown level1 summary"><p>Converts a CSemVer ordered version integral value (UInt64) into a full <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a></p>
@@ -124,7 +124,7 @@ Method FromOrderedVersion  <a class="header-action link-secondary" title="View s
 <div class="markdown level1 conceptual"></div>
 
 <div class="codewrapper">
-  <pre><code class="lang-csharp hljs">public static CSemVer FromOrderedVersion(ulong orderedVersion, bool isCIBuild = false, string? buildMetaData = null)</code></pre>
+  <pre><code class="lang-csharp hljs">public static CSemVer FromOrderedVersion(ulong orderedVersion, IReadOnlyCollection&lt;string&gt;? buildMetaData = null)</code></pre>
 </div>
 
 <h4 class="section">Parameters</h4>
@@ -132,10 +132,7 @@ Method FromOrderedVersion  <a class="header-action link-secondary" title="View s
   <dt><code>orderedVersion</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a></dt>
   <dd><p>The ordered version value</p>
 </dd>
-  <dt><code>isCIBuild</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-  <dd><p>Flag to indicate whether this is a CI build or not [default: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a></p>
-</dd>
-  <dt><code>buildMetaData</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+  <dt><code>buildMetaData</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlycollection-1">IReadOnlyCollection</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
   <dd><p>Optional build meta data value for the version</p>
 </dd>
 </dl>
@@ -143,7 +140,7 @@ Method FromOrderedVersion  <a class="header-action link-secondary" title="View s
 <h4 class="section">Returns</h4>
 <dl class="parameters">
   <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a></dt>
-  <dd><p><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a> corresponding to the ordered version number provided</p>
+  <dd><p>Version corresponding to the ordered version number provided</p>
 </dd>
 </dl>
 
@@ -160,7 +157,7 @@ Method FromOrderedVersion  <a class="header-action link-secondary" title="View s
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.0-rc.1/src/Ubiquity.NET.Versioning/CSemVer.cs/#L264" class="edit-link">Edit this page</a>
+          <a href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.2-alpha/src/Ubiquity.NET.Versioning/CSemVer.cs/#L275" class="edit-link">Edit this page</a>
         </div>
 
 

@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Property FileVersion | Ubiquity.NET </title>
+      <title>Property FileVersion | Ubiquity.NET.Versioning </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Property FileVersion | Ubiquity.NET ">
+      <meta name="title" content="Property FileVersion | Ubiquity.NET.Versioning ">
       
       
       <link rel="icon" href="../../favicon.ico">
@@ -86,7 +86,7 @@
 
 
 <h1 id="Ubiquity_NET_Versioning_CSemVer_FileVersion_" data-uid="Ubiquity.NET.Versioning.CSemVer.FileVersion*" class="text-break">
-Property FileVersion  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.0-rc.1/src/Ubiquity.NET.Versioning/CSemVer.cs/#L67"><i class="bi bi-code-slash"></i></a>
+Property FileVersion  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.2-alpha/src/Ubiquity.NET.Versioning/CSemVer.cs/#L80"><i class="bi bi-code-slash"></i></a>
 </h1>
 
 <div class="facts text-secondary">
@@ -116,7 +116,7 @@ Property FileVersion  <a class="header-action link-secondary" title="View source
 
 <h3 id="Ubiquity_NET_Versioning_CSemVer_FileVersion" data-uid="Ubiquity.NET.Versioning.CSemVer.FileVersion">
   FileVersion
-  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.0-rc.1/src/Ubiquity.NET.Versioning/CSemVer.cs/#L67"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.2-alpha/src/Ubiquity.NET.Versioning/CSemVer.cs/#L80"><i class="bi bi-code-slash"></i></a>
 </h3>
 
 <div class="markdown level1 summary"><p>Gets the <a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.html">FileVersionQuad</a> representation of this <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a></p>
@@ -142,8 +142,10 @@ Property FileVersion  <a class="header-action link-secondary" title="View source
 
 <h4 class="section" id="Ubiquity_NET_Versioning_CSemVer_FileVersion_remarks">Remarks</h4>
 <div class="markdown level1 remarks"><p>Since a <a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.html">FileVersionQuad</a> is entirely numeric the conversion is somewhat &quot;lossy&quot; but does
-NOT lose any relation to other versions converted. That, is the loss does not include any information
-that impacts build version sort ordering. (any data lost is ignored for sort ordering anyway)</p>
+NOT lose any relation to other released versions converted. That, is the loss does not include any CI
+information, only that it was a CI build. Two CI builds with the same base version will produce the
+same value! CI builds are not intended for long term stability and this is not a bug but a design of
+how CSemVer (and CSemVer-CI) work to produce a <a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.html">FileVersionQuad</a>.</p>
 </div>
 
 
@@ -152,7 +154,7 @@ that impacts build version sort ordering. (any data lost is ignored for sort ord
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.0-rc.1/src/Ubiquity.NET.Versioning/CSemVer.cs/#L67" class="edit-link">Edit this page</a>
+          <a href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.2-alpha/src/Ubiquity.NET.Versioning/CSemVer.cs/#L80" class="edit-link">Edit this page</a>
         </div>
 
 

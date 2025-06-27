@@ -42,6 +42,13 @@ Invoke-External git fetch $officialRemoteName
 Write-Information "Switching to release branch [$officialReleaseBranch]"
 Invoke-External git switch '-C' $releasebranch $officialReleaseBranch
 
+$confirmation = Read-Host "Are you Sure You Want To Proceed:"
+if ($confirmation -ne 'y')
+{
+    Write-Host "User canceled operation"
+    return
+}
+
 Write-Information 'Creating tag of this branch as the release'
 Invoke-External git tag $tagName '-m' "Official release: $tagName"
 

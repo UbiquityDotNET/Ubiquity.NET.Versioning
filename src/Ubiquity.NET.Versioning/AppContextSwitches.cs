@@ -49,15 +49,12 @@ namespace Ubiquity.NET.Versioning
         /// <para>The spec is vague on the precise syntax of a CSemVer-CI value and whether a given form can include build meta data.
         /// It is at least explicitly allowed for ZeroTimed base values. But it is unclear if it is supposed to be allowed
         /// for any "latest release" forms. Sadly, .NET builds using SourceLink will automatically add the build meta if not present
-        /// so this implementation choses to assume that is legit. This seems reasonable as the build meta doesn't participate
-        /// in the ordering of version values and is syntactically compatible with both forms of CSemVer-CI. That is the default behavior
+        /// so this implementation chooses to assume that is legit. This seems reasonable as the build meta doesn't participate
+        /// in the ordering of version values and is syntactically compatible with both forms of CSemVer-CI. That is, the default behavior
         /// of allowing it has low risk of causing problems, but the reverse can.</para>
         /// <para>As with all <see cref="AppContext"/> switches the default state of this switch is OFF. Setting it ON, is a manual operation
         /// that may use one of the standard mechanisms supported by <see cref="AppContext"/> using this name. Or, programmatically via the
         /// <see cref="CSemVerCIOnlySupportsBuildMetaOnZeroTimedVersions"/>.</para>
-        /// <para>For `app.config` and other <see cref="AppContext"/> uses, the name is formally documented as
-        /// "Ubiquity.NET.Versioning.AppContextSwitches.CSemVerCIOnlySupportsBuildMetaOnZeroTimedVersions".
-        /// </para>
         /// </remarks>
         public static bool CSemVerCIOnlySupportsBuildMetaOnZeroTimedVersions
         {

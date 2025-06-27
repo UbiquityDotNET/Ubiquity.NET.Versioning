@@ -30,12 +30,7 @@ namespace Ubiquity.NET.Versioning
         /// <param name="minor">Minor version value [0-49999]</param>
         /// <param name="patch">Patch version value [0-9999]</param>
         /// <param name="preRelVersion">Pre-release version information (if a pre-release build)</param>
-        /// <param name="buildMetaData">[Optional]Additional build meta data [default: empty string]</param>
-        /// <remarks>
-        /// This is used internally when converting from a File Version as those only have a single bit
-        /// to indicate if they are a Release/CI build. The rest of the information is lost and therefore
-        /// does not participate in ordering.
-        /// </remarks>
+        /// <param name="buildMetaData">Any additional build meta data [default: empty string]</param>
         public CSemVer( int major
                       , int minor
                       , int patch
@@ -77,8 +72,10 @@ namespace Ubiquity.NET.Versioning
         /// <summary>Gets the <see cref="FileVersionQuad"/> representation of this <see cref="CSemVer"/></summary>
         /// <remarks>
         /// Since a <see cref="FileVersionQuad"/> is entirely numeric the conversion is somewhat "lossy" but does
-        /// NOT lose any relation to other versions converted. That, is the loss does not include any information
-        /// that impacts build version sort ordering. (any data lost is ignored for sort ordering anyway)
+        /// NOT lose any relation to other released versions converted. That, is the loss does not include any CI
+        /// information, only that it was a CI build. Two CI builds with the same base version will produce the
+        /// same value! CI builds are not intended for long term stability and this is not a bug but a design of
+        /// how CSemVer (and CSemVer-CI) work to produce a <see cref="FileVersionQuad"/>.
         /// </remarks>
         public FileVersionQuad FileVersion
         {
@@ -119,7 +116,8 @@ namespace Ubiquity.NET.Versioning
         /// <summary>Gets a value indicating whether this is a zero based version</summary>
         public bool IsZero => Major == 0 && Minor == 0 && Patch == 0;
 
-        /// <inheritdoc/>
+        /// <summary>Converts the internal representation of this version to a valid CSemVer formatted string</summary>
+        /// <returns>CSemVer formatted string</returns>
         public override string ToString( )
         {
             return ConstrainedVersion?.ToString() ?? string.Empty;
@@ -183,9 +181,9 @@ namespace Ubiquity.NET.Versioning
         /// <returns><see langword="true"/> if the conversion is performed or <see langword="false"/> if not (<paramref name="reason"/> will hold reason it is not successful)</returns>
         /// <remarks>
         /// While EVERY <see cref="CSemVer"/> conforms to valid <see cref="SemVer"/> the reverse is not always true.
-        /// This method attempts to make a conversion using the classic try pattern with the inclusion of a string
+        /// This method attempts to make a conversion using the classic try pattern with the inclusion of an exception
         /// that explains the reason for any failures. This is useful in debugging or for creating wrappers that will
-        /// throw an exception.
+        /// throw the exception.
         /// </remarks>
         public static bool TryFrom(
             SemVer ver,
@@ -273,7 +271,7 @@ namespace Ubiquity.NET.Versioning
         /// <summary>Converts a CSemVer ordered version integral value (UInt64) into a full <see cref="CSemVer"/></summary>
         /// <param name="orderedVersion">The ordered version value</param>
         /// <param name="buildMetaData">Optional build meta data value for the version</param>
-        /// <returns><see cref="CSemVer"/> corresponding to the ordered version number provided</returns>
+        /// <returns>Version corresponding to the ordered version number provided</returns>
         public static CSemVer FromOrderedVersion( UInt64 orderedVersion, IReadOnlyCollection<string>? buildMetaData = null )
         {
             buildMetaData ??= [];
@@ -314,7 +312,7 @@ namespace Ubiquity.NET.Versioning
         /// <summary>Factory method to create a <see cref="CSemVer"/> from information available as part of a build</summary>
         /// <param name="buildVersionXmlPath">Path to the BuildVersion XML data for the repository</param>
         /// <param name="buildMeta">Additional Build meta data for the build</param>
-        /// <returns><see cref="CSemVer"/></returns>
+        /// <returns>Version information parsed from the build XML</returns>
         public static CSemVer From( string buildVersionXmlPath, IReadOnlyCollection<string>? buildMeta )
         {
             var parsedBuildVersionXml = ParsedBuildVersionXml.ParseFile( buildVersionXmlPath );
@@ -343,6 +341,9 @@ namespace Ubiquity.NET.Versioning
         }
 
         /// <inheritdoc/>
+        /// <remarks>
+        /// <paramref name="provider"/> is ALWAYS ignored by this implementation. The format is defined by the spec and independent of culture.
+        /// </remarks>
         public static bool TryParse( [NotNullWhen( true )] string? s, IFormatProvider? provider, [MaybeNullWhen( false )] out CSemVer result )
         {
             return TryParse(s, out result, out _);

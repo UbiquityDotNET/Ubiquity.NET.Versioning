@@ -46,7 +46,7 @@ namespace Ubiquity.NET.Versioning.Build.Tasks.UT
             Assert.IsTrue(buildResults.Success);
 
             // v20.1.4-alpha => 5.44854.3875.59946 [see: https://csemver.org/playground/site/#/]
-            // NOTE: Release build is +1 (FileVersionRevision)!
+            // NOTE: CI build is +1 (FileVersionRevision)!
             //
             // NOTE: Since build index is based on time which is captured during build it
             // is not possible to know 'a priori' what the value will be..., additionally, the
@@ -54,7 +54,7 @@ namespace Ubiquity.NET.Versioning.Build.Tasks.UT
             // those with an explicit setting...
             string expectedFullBuildNumber = $"20.1.4-alpha.ci.{props.CiBuildIndex}.{props.CiBuildName}";
             string expectedShortNumber = $"20.1.4-a.ci.{props.CiBuildIndex}.{props.CiBuildName}";
-            string expectedFileVersion = "5.44854.3875.59946";
+            string expectedFileVersion = "5.44854.3875.59947"; // CI build
 
             Assert.IsNotNull(props.BuildMajor, "should have a value set for 'BuildMajor'");
             Assert.AreEqual(20u, props.BuildMajor.Value);
@@ -91,7 +91,7 @@ namespace Ubiquity.NET.Versioning.Build.Tasks.UT
             Assert.AreEqual(3875, props.FileVersionBuild.Value);
 
             Assert.IsNotNull(props.FileVersionRevision);
-            Assert.AreEqual(59946, props.FileVersionRevision.Value);
+            Assert.AreEqual(59947, props.FileVersionRevision.Value);
 
             Assert.AreEqual(expectedFileVersion, props.FileVersion);
             Assert.AreEqual(expectedFileVersion, props.AssemblyVersion);
@@ -121,10 +121,10 @@ namespace Ubiquity.NET.Versioning.Build.Tasks.UT
             Assert.IsTrue(buildResults.Success);
 
             // v20.1.5 => 5.44854.3880.52268 [see: https://csemver.org/playground/site/#/]
-            // NOTE: Release build is +1 (FileVersionRevision)!
+            // NOTE: CI build is +1 (FileVersionRevision)!
             string expectedFullBuildNumber = $"20.1.5--ci.ABCDEF12.ZZZ";
             string expectedShortNumber = $"20.1.5--ci.ABCDEF12.ZZZ";
-            string expectedFileVersion = "5.44854.3880.52268";
+            string expectedFileVersion = "5.44854.3880.52269";
 
             Assert.IsNotNull(props.BuildMajor);
             Assert.AreEqual(20u, props.BuildMajor.Value);
@@ -162,7 +162,7 @@ namespace Ubiquity.NET.Versioning.Build.Tasks.UT
             Assert.AreEqual(3880, props.FileVersionBuild.Value);
 
             Assert.IsNotNull(props.FileVersionRevision);
-            Assert.AreEqual(52268, props.FileVersionRevision.Value);
+            Assert.AreEqual(52269, props.FileVersionRevision.Value);
 
             Assert.AreEqual(expectedFileVersion, props.FileVersion);
             Assert.AreEqual(expectedFileVersion, props.AssemblyVersion);
@@ -200,7 +200,7 @@ namespace Ubiquity.NET.Versioning.Build.Tasks.UT
             Assert.IsTrue(buildResults.Success);
 
             // v20.1.5-delta.0.1 => 5.44854.3878.63342 [see: https://csemver.org/playground/site/#/]
-            // NOTE: Release build is +1 (FileVersionRevision)!
+            // NOTE: CI build is +1 (FileVersionRevision)!
             //
             // NOTE: Since build index is based on time which is captured during build it
             // is not possible to know 'a priori' what the value will be..., additionally, the
@@ -208,7 +208,7 @@ namespace Ubiquity.NET.Versioning.Build.Tasks.UT
             // those with an explicit setting...
             string expectedFullBuildNumber = $"20.1.5-delta.0.1.ci.{expectedIndex}.QRP";
             string expectedShortNumber = $"20.1.5-d.0.1.ci.{expectedIndex}.QRP";
-            string expectedFileVersion = "5.44854.3878.63342"; // CI Build (+0)
+            string expectedFileVersion = "5.44854.3878.63343"; // CI Build (+1)
 
             Assert.IsNotNull(props.BuildMajor, "should have a value set for 'BuildMajor'");
             Assert.AreEqual(20u, props.BuildMajor.Value);
@@ -246,7 +246,7 @@ namespace Ubiquity.NET.Versioning.Build.Tasks.UT
             Assert.AreEqual(3878, props.FileVersionBuild.Value);
 
             Assert.IsNotNull(props.FileVersionRevision);
-            Assert.AreEqual(63342, props.FileVersionRevision.Value);
+            Assert.AreEqual(63343, props.FileVersionRevision.Value);
 
             Assert.AreEqual(expectedFileVersion, props.FileVersion);
             Assert.AreEqual(expectedFileVersion, props.AssemblyVersion);
@@ -284,7 +284,7 @@ namespace Ubiquity.NET.Versioning.Build.Tasks.UT
             Assert.IsTrue(buildResults.Success);
 
             // v20.1.5-delta.1 => 5.44854.3878.63540 [see: https://csemver.org/playground/site/#/]
-            // NOTE: Release build is +1 (FileVersionRevision)!
+            // NOTE: CI build is +1 (FileVersionRevision)!
             //
             // NOTE: Since build index is based on time which is captured during build it
             // is not possible to know 'a priori' what the value will be..., additionally, the
@@ -292,7 +292,7 @@ namespace Ubiquity.NET.Versioning.Build.Tasks.UT
             // those with an explicit setting...
             string expectedFullBuildNumber = $"20.1.5-delta.1.ci.{expectedIndex}.QRP";
             string expectedShortNumber = $"20.1.5-d01.ci.{expectedIndex}.QRP";
-            string expectedFileVersion = "5.44854.3878.63540"; // CI Build (+0)
+            string expectedFileVersion = "5.44854.3878.63541"; // CI Build (+1)
 
             Assert.IsNotNull(props.BuildMajor, "should have a value set for 'BuildMajor'");
             Assert.AreEqual(20u, props.BuildMajor.Value);
@@ -330,7 +330,7 @@ namespace Ubiquity.NET.Versioning.Build.Tasks.UT
             Assert.AreEqual(3878, props.FileVersionBuild.Value);
 
             Assert.IsNotNull(props.FileVersionRevision);
-            Assert.AreEqual(63540, props.FileVersionRevision.Value);
+            Assert.AreEqual(63541, props.FileVersionRevision.Value);
 
             Assert.AreEqual(expectedFileVersion, props.FileVersion);
             Assert.AreEqual(expectedFileVersion, props.AssemblyVersion);
@@ -423,6 +423,8 @@ namespace Ubiquity.NET.Versioning.Build.Tasks.UT
                 Assert.AreEqual("QRP", props.CiBuildName);
             }
 
+            Assert.AreEqual(isCiBuild ? 1 : 0, props.FileVersionRevision & 1, "CI builds should have ODD numbered revision");
+
             if (includeMeta)
             {
                 Assert.AreEqual("MyMeta", props.BuildMeta);
@@ -453,13 +455,13 @@ namespace Ubiquity.NET.Versioning.Build.Tasks.UT
             //
             // v20.1.4-delta.1 => 5.44854.3876.34610 [see: https://csemver.org/playground/site/#/]
             // v20.1.4 => 5.44854.3878.23338 [see: https://csemver.org/playground/site/#/]
-            // NOTE: Release build is +1 (FileVersionRevision)!
+            // NOTE: CI build is +1 (FileVersionRevision)!
             static FileVersionQuad ExpectedFileVersion( bool isPreRelease, bool isCiBuild )
             {
                 FileVersionQuad retVal = isPreRelease ? new(5, 44854, 3876, 34610) : new(5, 44854, 3878, 23338);
 
                 // NOTE: ODD numbered revisions are for CI builds.
-                return !isCiBuild ? retVal with { Revision = (ushort)(retVal.Revision + 1u) } : retVal;
+                return isCiBuild ? retVal with { Revision = (ushort)(retVal.Revision + 1u) } : retVal;
             }
         }
     }

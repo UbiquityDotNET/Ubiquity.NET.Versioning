@@ -201,8 +201,8 @@ class CSemVer
 
         $this.OrderedVersion = [CSemVer]::GetOrderedVersion($this.Major, $this.Minor, $this.Patch, $this.PreReleaseVersion)
         $fileVer64 = $this.OrderedVersion -shl 1
-        # If this is a release build include that in the file version
-        if(!$this.CiBuildIndex -and !$this.CiBuildName)
+        # If this is a CI build include that in the file version
+        if($this.CiBuildIndex -and $this.CiBuildName)
         {
             $fileVer64 += 1;
         }

@@ -170,7 +170,9 @@ namespace Ubiquity.NET.Versioning.Build.Tasks
             Log.LogMessage(MessageImportance.Low, "orderedVersion={0}", orderedVersion);
 
             bool isReleaseBuild = string.IsNullOrWhiteSpace(CiBuildIndex) && string.IsNullOrWhiteSpace(CiBuildName);
-            UInt64 fileVersion64 = (orderedVersion << 1) + (isReleaseBuild ? 1ul : 0ul);
+
+            // CI Builds are POST release numbers so they are always ODD
+            UInt64 fileVersion64 = (orderedVersion << 1) + (isReleaseBuild ? 0ul : 1ul);
             FileVersionRevision = (UInt16)(fileVersion64 % 65536);
 
             UInt64 rem = (fileVersion64 - FileVersionRevision.Value) / 65536;

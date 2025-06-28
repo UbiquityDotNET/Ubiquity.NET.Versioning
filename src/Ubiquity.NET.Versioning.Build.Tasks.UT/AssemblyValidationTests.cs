@@ -121,6 +121,7 @@ namespace Ubiquity.NET.Versioning.Build.Tasks.UT
                     if(!string.IsNullOrWhiteSpace(ciBuildIndex))
                     {
                         Assert.AreEqual( ciBuildIndex, props.CiBuildIndex, "BuildIndex computed in scripts should match computed value from task");
+                        Assert.AreEqual( 1, props.FileVersionRevision & 1, "CI builds should have an ODD numbered revision!");
                     }
 
                     // Test that AssemblyFileVersion on the task assembly matches expected value

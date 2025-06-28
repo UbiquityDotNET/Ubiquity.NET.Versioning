@@ -31,7 +31,7 @@ $forkRemoteName = Get-GitRemoteName $buildInfo fork
 $releaseBranch = "release/$tagName"
 $officialReleaseBranch = "$officialRemoteName/$releaseBranch"
 
-$mainBranchName = "master"
+$mainBranchName = "main"
 $officialMainBranch = "$officialRemoteName/$mainBranchName"
 
 $mergeBackBranchName = "merge-back-$tagName"

@@ -58,6 +58,7 @@ depersist
 dllimport
 docfx
 docfxconsole
+dodgy
 dotnet
 endianess
 endianness
@@ -123,6 +124,7 @@ refactor
 refcount
 repl
 repo
+repos
 RMW
 runtimes
 RValue

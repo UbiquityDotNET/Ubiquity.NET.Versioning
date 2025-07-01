@@ -6,14 +6,3 @@ Import-Module $PSScriptRoot\RepoBuild.psd1 -Force -Verbose
 # this eliminates most of the error prone tedious nature of manual updates.
 RepoBuild\Get-FunctionsToExport
 
-# This is private and should not be exported - Should generate an error
-$buildInfo = @{
-    BuildOutputPath = 'foo/bar'
-    LlvmRoot = 'foo/bar/llvm-project/llvm'
-}
-
-$config = New-LLvmCmakeConfig "x64-Release" ARM "release" $buildInfo
-if(!$config -or $config -isnot [hashtable])
-{
-    throw "Null or wrong type returned!"
-}

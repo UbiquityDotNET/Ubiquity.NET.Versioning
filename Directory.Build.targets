@@ -40,7 +40,15 @@
         -->
         <Error Condition="'$(ImplicitUsings)'!='disable'" Code="REPO001" Text="$(MSBuildProjectFile) - Projects in this repository MUST NOT have ImplicitUsings enabled!"/>
 
-        <!--Verify that GeneratedVersion.props exists; and produce a, hopefully, informative message on how to create it if it doesn't -->
-        <Error Condition="!Exists('$(GeneratedVersionProps)')" Code="REPO002" Text="$(GeneratedVersionProps) file does not exist, it must be created by `New-GeneratedBersionProps.ps1` BEFORE building in the IDE for consistent results"/>
+        <!--
+        Until issue https://github.com/DotNetAnalyzers/StyleCopAnalyzers/issues/3902 is resolved this directly test for the missing stylecop.json file.
+        Given that was opened nearly a year ago and that it went 2 months to even get a comment about the cause, it seems unlikely that will receive a
+        fix any time soon...
+        -->
+        <Error Code="REPO002" Condition="!Exists('$(MSBuildThisFileDirectory)stylecop.json')" Text="Missing StyleCop.Json file!"/>
+
+        <!--
+        Additional Repo specific checks go here...
+        -->
     </Target>
 </Project>

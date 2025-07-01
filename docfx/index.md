@@ -8,7 +8,6 @@ while conforming to the syntax of CSemVer and CSemVer-CI
 | Library | Description |
 |---------|-------------|
 | [Ubiquity.NET.Versioning](versioning-lib/index.md) | This library contains support for use of CSemVer at runtime |
-| [Ubiquity.NET.Versioning.Build.Tasks](build-tasks/index.md) | This library contains support for automated versioning at BUILD time |
 
 >[!IMPORTANT]
 > There is confusion on the ordering of a CI build with relation to a release build with

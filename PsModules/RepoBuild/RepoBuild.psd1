@@ -18,7 +18,7 @@ CompanyName = 'Ubquity.NET'
 Copyright = '(c) 2020-2025 Ubiquity.NET Contributors. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'Repository build support functions for Ubiquity.NET.LlvmLibs'
+Description = 'Repository build support functions for Ubiquity.NET.Versioning library'
 
 # Minimum version of the Windows PowerShell engine required by this module
 PowerShellVersion = '7.0'

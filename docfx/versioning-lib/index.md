@@ -18,7 +18,6 @@ if (actual < expectedMinimum)
 }
 
 // Good to go...
-
 ```
 
 ## Formatting
@@ -30,9 +29,17 @@ The library contains support for parsing of strings based on the rules of a
 SemVer, CSemVer, and CSemVer-CI
 
 ## Ordering
-The types all support `IComparable<T>`<sup>[1](#footnote_1)</sup> and properly handle
-correct sort ordering of the versions according to the rules of SemVer (Which, CSemVer
-and CSemVer-CI follow)
+The types all support `IComparable<T>` and properly handle correct sort ordering of the
+versions according to the rules of SemVer (Which, CSemVer and CSemVer-CI follow)
+
+>[!WARNING]
+> The [SemVer spec](https://semver.org) does not explicitly mention case sensitivity for
+> comparing the pre-release components (AlphaNumeric Identifiers) in a version. It does
+> state that they are compared lexicographically, which would imply they are case
+> sensitive. However, major repository implementations have chosen different approaches
+> to how the strings are compared and thus the ambiguities of reality win out over any
+> specified implicit behavior. Thus consumers, MUST specify the expected ordering for
+> a SemVer when creating it.
 
 >[!WARNING]
 > The formal 'spec' for [CSemVer](https://csemver.org) remains mostly silent on the point
@@ -40,16 +47,4 @@ and CSemVer-CI follow)
 > Since, the existence of that form was to support NuGet V2, which is now obsolete, this
 > library does not support the short form at all. (This choice keeps documentation
 > clarity [NOT SUPPORTED] and implementation simplicity)
-
-------
-<sup><a id="footnote_1">1</a></sup> The `SemVer` class does NOT support [`IComparable<T>`](xref:System.IComparable`1)
-as the spec is not explicit<sup>[2](#footnote_2)</sup> on case sensitive comparison of AlphaNumeric Identifiers.
-
-<sup><a id="footnote_2">2</a></sup>Technically the spec says that pre-release identifiers
-are compared lexicographically, which would mean they are case sensitive. Unfortunately,
-that was not made explicit and major repositories using SemVer have chosen to use
-different rules of comparison and ordering. Thus, a consumer is required to know a-priori
-if the version is compared insensitive or not. [`IComparer<SemVer>`](xref:System.Collections.Generic.IComparer{Ubiquity.NET.Versioning.SemVer})
-instances are available for both cases via the static class [SemVerComparer](xref:Ubiquity.NET.Versioning.SemVerComparer)
-and [CSmeVerComparer.CaseSensitive](xref:Ubiquity.NET.Versioning.SemVerComparer.CaseSensitive).
 

@@ -5,11 +5,10 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Numerics;
+using System.Runtime.CompilerServices;
 
 using Sprache;
 
@@ -26,174 +25,103 @@ namespace Ubiquity.NET.Versioning
     /// product exists to base it on.
     /// </remarks>
     /// <seealso href="https://csemver.org"/>
-    public readonly struct CSemVerCI
-        : IParsable<CSemVerCI>
-        , IComparable<CSemVerCI>
-        , IComparisonOperators<CSemVerCI, CSemVerCI, bool>
-        , IEquatable<CSemVerCI>
+    public sealed class CSemVerCI
+        : SemVer
+        , IParsable<CSemVerCI>
     {
-        /// <summary>Initializes a new instance of the <see cref="CSemVerCI"/> struct as a "CSemVer-CI ZeroTimed' value</summary>
+        /// <summary>Initializes a new instance of the <see cref="CSemVerCI"/> class as a "CSemVer-CI ZeroTimed' value</summary>
         /// <param name="index">Index of this CI build</param>
         /// <param name="name">Name of this CI build</param>
         /// <param name="buildMeta">Optional Build meta</param>
         /// <seealso href="https://csemver.org">CSemVer-CI §2-5</seealso>
-        public CSemVerCI( string index, string name, IEnumerable<string>? buildMeta = null )
+        public CSemVerCI( string index, string name, ImmutableArray<string> buildMeta = default )
             : this( new CSemVer(0, 0, 0, null, buildMeta), index, name)
         {
         }
 
-        /// <summary>Initializes a new instance of the <see cref="CSemVerCI"/> struct.</summary>
+        /// <summary>Initializes a new instance of the <see cref="CSemVerCI"/> class.</summary>
         /// <param name="baseBuild">Base build version this CI version is based on</param>
         /// <param name="index">Index for this CI build</param>
         /// <param name="name">Name for this CI build</param>
         /// <remarks>
         /// The <paramref name="baseBuild"/> is assumed a lower sort order than any CI build and
-        /// therefore should be at least Revision+1 of an actual release. This constructor does not
+        /// therefore should be at least Patch+1 of an actual release. This constructor does not
         /// (and cannot) VERIFY such a thing.
         /// </remarks>
         /// <seealso href="https://csemver.org">CSemVer-CI §2-6</seealso>
         public CSemVerCI( CSemVer baseBuild, string index, string name )
+            : this(baseBuild, GetCiSequence(baseBuild, index, name))
         {
-            ArgumentException.ThrowIfNullOrWhiteSpace(index);
-            ArgumentException.ThrowIfNullOrWhiteSpace(name);
-
-            string[] ciSequence = [baseBuild.IsPrerelease ? "ci" : "-ci", index, name ];
-
-            // CSemVer-CI §2; Only zero timed gets build meta... [Go Figure!]
-            // [Though the spec is rather ambiguous on the point.]
-            // This seems pointless, so the default is to allow it, but switch can enforce strict compliance
-            if (AppContextSwitches.CSemVerCIOnlySupportsBuildMetaOnZeroTimedVersions && !baseBuild.IsZero && !baseBuild.BuildMeta.IsDefaultOrEmpty)
-            {
-                throw new ArgumentException("non-zero timed base build contains meta data", nameof(baseBuild));
-            }
-
-            ConstrainedVersion = new SemVer(
-                baseBuild.Major,
-                baseBuild.Minor,
-                baseBuild.Patch,
-                baseBuild.PrereleaseVersion?.FormatElements().Concat( ciSequence ) ?? ciSequence,
-                baseBuild.BuildMeta
-                );
-
-            // CSemVer-CI §2
-            if(baseBuild.IsZero && baseBuild.IsPrerelease)
-            {
-                throw new ArgumentException(Resources.csemver_ci_zerotimed_versions_cannot_use_a_pre_release_as_the_base_build, nameof(baseBuild));
-            }
-
-            PrereleaseVersion = baseBuild.PrereleaseVersion;
             Index = index.ThrowIfNotMatch( SemVerGrammar.IdentifierChars.End() );
             Name = name.ThrowIfNotMatch( SemVerGrammar.IdentifierChars.End() );
         }
 
-        /// <summary>Gets the Major portion of the core version</summary>
-        public int Major => unchecked((int)ConstrainedVersion.Major); // explicitly unchecked as constructor guarantees success
-
-        /// <summary>Gets the Minor portion of the core version</summary>
-        public int Minor => unchecked((int)ConstrainedVersion.Minor);
-
-        /// <summary>Gets the Patch portion of the core version</summary>
-        public int Patch => unchecked((int)ConstrainedVersion.Patch);
-
-        /// <summary>Gets the pre-release components of the version</summary>
-        /// <remarks>
-        /// Each component is either an alphanumeric identifier or a numeric identifier.
-        /// This collection contains only the identifiers (no prefix or delimiters).
-        /// </remarks>
-        public ImmutableArray<string> PreRelease => ConstrainedVersion.PreRelease;
-
-        /// <summary>Gets the build components of the version</summary>
-        /// <remarks>
-        /// Each component is either an alphanumeric identifier or a sequence of digits
-        /// (including leading or all '0'). This collection contains only the identifiers
-        /// (no prefix or delimiters).
-        /// </remarks>
-        public ImmutableArray<string> BuildMeta => ConstrainedVersion.BuildMeta;
-
         /// <summary>Gets the Build Index for this instance</summary>
+        /// <remarks>
+        /// This string may be empty if this instance was created from a <see cref="FileVersionQuad"/> as
+        /// those do not include the index or name.
+        /// </remarks>
         public string Index { get; }
 
         /// <summary>Gets the Build name of this instance</summary>
+        /// <remarks>
+        /// This string may be empty if this instance was created from a <see cref="FileVersionQuad"/> as
+        /// those do not include the index or name.
+        /// </remarks>
         public string Name { get; }
 
         /// <summary>Gets the <see cref="PrereleaseVersion"/> information for the build this is based on (if any)</summary>
         public PrereleaseVersion? PrereleaseVersion { get; }
 
-        /// <inheritdoc/>
-        public override string ToString( )
+        /// <summary>Converts a <see cref="FileVersionQuad"/> to a <see cref="CSemVerCI"/></summary>
+        /// <param name="quad">File version to convert</param>
+        /// <returns>Converted version</returns>
+        public static CSemVerCI From(FileVersionQuad quad)
         {
-            return ConstrainedVersion.ToString();
+            return TryFrom(quad, out CSemVerCI? retVal, out Exception? ex) ? retVal : throw ex;
         }
 
-        /// <inheritdoc/>
-        /// <remarks>
-        /// <see cref="CSemVerCI"/> follows ALL of the rules of SemVer ordering EXCEPT
-        /// that it is EXPLICITLY using case insensitive comparison for the AlphaNumeric
-        /// identifiers in a pre-release list.
-        /// </remarks>
-        public int CompareTo( CSemVerCI other )
+        /// <summary>Tries to convert a <see cref="FileVersionQuad"/> into a <see cref="CSemVerCI"/></summary>
+        /// <param name="quad">File version to build from</param>
+        /// <param name="result">Resulting version</param>
+        /// <param name="reason">Reason for failure to convert or <see langword="null"/> if not</param>
+        /// <param name="exp">Expression for the <paramref name="quad"/> value [default: normally provided by compiler]</param>
+        /// <returns>
+        /// <see langword="true"/> if conversion is successful and <paramref name="result"/> contains a valid value.
+        /// <see langword="false"/> if conversion is not successful and <paramref name="reason"/> contains the reason.
+        /// </returns>
+        public static bool TryFrom(
+            FileVersionQuad quad,
+            [MaybeNullWhen( false )] out CSemVerCI result,
+            [MaybeNullWhen( true )] out Exception reason,
+            [CallerArgumentExpression(nameof(quad))] string? exp = null
+            )
         {
-            // CSemVerCI always uses case insensitive comparisons, but otherwise follows the
-            // ordering rules of SemVer.
-            return SemVerComparer.SemVer.Compare(ConstrainedVersion, other.ConstrainedVersion);
+            result = default;
+            reason = default;
+            if(!quad.IsCiBuild)
+            {
+                reason = new ArgumentException("FileVersionQuad indicates it is not for a CI build!", exp);
+            }
+
+            // base build is always patch+1 so that it is ordered AFTER the release it is based on
+            // Note: if patch is already 9999 then this rolls over to next minor, etc... until it's
+            // just too big.
+            Int64 baseBuildOrderedVersion = quad.ToOrderedVersion() + (Int64)CSemVer.MulPatch;
+
+            // While components of a FileVersion QUAD are constrained to the values defined in a CSemVer
+            // it is possible to have a patch+1 version that is >= to the max value already, so no CI build
+            // is plausible that can use it as the base.
+            if(baseBuildOrderedVersion >= CSemVer.MaxOrderedVersion)
+            {
+                reason = new ArgumentOutOfRangeException(nameof(quad), "Base build version number exceeds the maximum allowed");
+                return false;
+            }
+
+            var baseBuild = CSemVer.FromOrderedVersion(baseBuildOrderedVersion);
+            result = new(baseBuild, baseBuild.PrereleaseVersion?.FormatElements().ToImmutableArray() ?? default);
+            return true;
         }
-
-        /// <inheritdoc/>
-        public bool Equals( CSemVerCI other )
-        {
-            return CompareTo(other) == 0;
-        }
-
-        /// <inheritdoc/>
-        public override bool Equals( object? obj )
-        {
-            return obj is CSemVerCI v && Equals(v);
-        }
-
-        /// <inheritdoc/>
-        public override int GetHashCode( )
-        {
-            return ConstrainedVersion.GetHashCode();
-        }
-
-        /// <summary>Converts this instance to a <see cref="SemVer"/> instance</summary>
-        /// <returns>Converted value</returns>
-        /// <remarks>
-        /// Since this version came from a <see cref="CSemVerCI"/> the ONLY valid ordering
-        /// is a case insensitive one. The specifications are explicit on the use of case insensitive
-        /// comparisons, while the spec for SemVer is silent on the point, which leads to ambiguities.
-        /// </remarks>
-        public SemVer ToSemVer()
-        {
-            return ConstrainedVersion;
-        }
-
-        /// <inheritdoc cref="ToSemVer"/>
-        /// <param name="val">Value to convert</param>
-        public static implicit operator SemVer(CSemVerCI val)
-        {
-            return val.ToSemVer();
-        }
-
-        /// <inheritdoc/>
-        public static bool operator >( CSemVerCI left, CSemVerCI right ) => left.CompareTo(right) > 0;
-
-        /// <inheritdoc/>
-        public static bool operator >=( CSemVerCI left, CSemVerCI right ) => left.CompareTo(right) >= 0;
-
-        /// <inheritdoc/>
-        public static bool operator <( CSemVerCI left, CSemVerCI right ) => left.CompareTo(right) < 0;
-
-        /// <inheritdoc/>
-        public static bool operator <=( CSemVerCI left, CSemVerCI right ) => left.CompareTo(right) <= 0;
-
-        /// <inheritdoc/>
-        public static bool operator ==( CSemVerCI left, CSemVerCI right ) => Equals(left, right);
-
-        /// <inheritdoc/>
-        public static bool operator !=( CSemVerCI left, CSemVerCI right ) => !Equals(left, right);
-
-        private readonly SemVer ConstrainedVersion;
 
         /// <summary>Tries to convert a <see cref="SemVer"/> to a <see cref="CSemVerCI"/></summary>
         /// <param name="ver">Version to convert</param>
@@ -217,14 +145,14 @@ namespace Ubiquity.NET.Versioning
                 reason = new FormatException("SemVer does not contain 'ci' pre-release in expected location");
             }
 
-            IEnumerable<string> nonCiPreRel = [];
+            ImmutableArray<string> nonCiPreRel = [];
             if( ver.PreRelease.Length == 6)
             {
-                nonCiPreRel = ver.PreRelease.Take(3);
+                nonCiPreRel = ver.PreRelease[ ..3 ];
             }
 
-            var nonCiVer = new SemVer(ver.Major, ver.Minor, ver.Patch, nonCiPreRel, ver.BuildMeta);
-            if(!CSemVer.TryFrom(nonCiVer, out CSemVer baseBuild, out reason))
+            var nonCiVer = new SemVer(ver.Major, ver.Minor, ver.Patch, AlphaNumericOrdering.CaseInsensitive, nonCiPreRel, ver.BuildMeta);
+            if(!CSemVer.TryFrom(nonCiVer, out CSemVer? baseBuild, out reason))
             {
                 return false;
             }
@@ -247,14 +175,16 @@ namespace Ubiquity.NET.Versioning
         }
 
         /// <inheritdoc/>
-        public static CSemVerCI Parse( string s, IFormatProvider? provider )
+        public static new CSemVerCI Parse( string s, IFormatProvider? provider )
         {
-            return TryParse(s, out CSemVerCI retVal, out Exception? ex) ? retVal : throw ex;
+            provider.ThrowIfCaseSensitive();
+            return TryParse(s, out CSemVerCI? retVal, out Exception? ex) ? retVal : throw ex;
         }
 
         /// <inheritdoc/>
         public static bool TryParse( [NotNullWhen( true )] string? s, IFormatProvider? provider, [MaybeNullWhen( false )] out CSemVerCI result )
         {
+            provider.ThrowIfCaseSensitive();
             return TryParse(s, out result, out _);
         }
 
@@ -263,6 +193,7 @@ namespace Ubiquity.NET.Versioning
         /// <param name="result">Resulting version or default if parse is successful</param>
         /// <param name="reason">Reason for failure to parse (as an <see cref="Exception"/>)</param>
         /// <returns><see langword="true"/> if parse is successful or <see langword="false"/> if not</returns>
+        [SuppressMessage( "Style", "IDE0002:Simplify Member Access", Justification = "More explicit this way" )]
         public static bool TryParse(
             [NotNullWhen( true )] string? s,
             [MaybeNullWhen( false )] out CSemVerCI result,
@@ -276,7 +207,7 @@ namespace Ubiquity.NET.Versioning
                 return false;
             }
 
-            if(!SemVer.TryParse( s, out SemVer? semVer, out reason))
+            if(!SemVer.TryParse( s, SemVerFormatProvider.CaseInsensitive, out SemVer? semVer, out reason))
             {
                 result = default;
                 return false;
@@ -284,6 +215,38 @@ namespace Ubiquity.NET.Versioning
 
             // OK as a SemVer, so try and see if that conforms to a constrained form.
             return TryFrom(semVer, out result, out reason);
+        }
+
+        // Private constructor to create from a base build without index/name
+        // This is used in the static conversion from a FileVersionQuad AND
+        // from the constructor supporting a name/index
+        private CSemVerCI( CSemVer baseBuild, ImmutableArray<string> preRel)
+            : base(
+                baseBuild.ThrowIfNull().Major,
+                baseBuild.Minor,
+                baseBuild.Patch,
+                AlphaNumericOrdering.CaseInsensitive,
+                preRel,
+                baseBuild.BuildMeta
+            )
+        {
+            // CSemVer-CI §2; Only zero timed gets build meta... [Go Figure!]
+            // [Though the spec is rather ambiguous on the point.]
+            // This seems pointless, so the default is to allow it, but switch can enforce strict compliance
+            if (AppContextSwitches.CSemVerCIOnlySupportsBuildMetaOnZeroTimedVersions && !baseBuild.IsZero && !baseBuild.BuildMeta.IsDefaultOrEmpty)
+            {
+                throw new ArgumentException("non-zero timed base build contains meta data", nameof(baseBuild));
+            }
+
+            // CSemVer-CI §2
+            if(baseBuild.IsZero && baseBuild.IsPrerelease)
+            {
+                throw new ArgumentException(Resources.csemver_ci_zerotimed_versions_cannot_use_a_pre_release_as_the_base_build, nameof(baseBuild));
+            }
+
+            PrereleaseVersion = baseBuild.PrereleaseVersion;
+            Index = string.Empty;
+            Name = string.Empty;
         }
 
         /// <summary>Static method to test a set of release parts of a <see cref="SemVer"/> to determine if it represents a <see cref="CSemVerCI"/></summary>
@@ -299,6 +262,24 @@ namespace Ubiquity.NET.Versioning
         {
             return (ver.PreRelease.Length == 3 && ver.PreRelease[ 0 ] == "-ci")
                 || (ver.PreRelease.Length == 6 && ver.PreRelease[ 3 ] == "ci");
+        }
+
+        private static ImmutableArray<string> GetCiSequence(
+            CSemVer baseBuild,
+            [NotNull] string index,
+            [NotNull] string name,
+            [CallerArgumentExpression(nameof(baseBuild))] string? baseBuildExp = null,
+            [CallerArgumentExpression(nameof(index))] string? indexExp = null,
+            [CallerArgumentExpression(nameof(name))] string? nameExp = null
+            )
+        {
+            ArgumentNullException.ThrowIfNull(baseBuild, baseBuildExp);
+            ArgumentException.ThrowIfNullOrWhiteSpace(index, indexExp);
+            ArgumentException.ThrowIfNullOrWhiteSpace(name, nameExp);
+
+            string[] ciSequence = [baseBuild.IsPrerelease ? "ci" : "-ci", index, name ];
+            var seq = baseBuild.PrereleaseVersion?.FormatElements().Concat( ciSequence ) ?? ciSequence;
+            return [ .. seq ];
         }
     }
 }

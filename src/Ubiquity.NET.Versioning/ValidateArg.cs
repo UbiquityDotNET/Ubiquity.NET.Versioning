@@ -52,6 +52,14 @@ namespace Ubiquity.NET.Versioning
                 : self;
         }
 
+        public static T ThrowIfGreaterThan<T>( [NotNull] this T? self, T other, [CallerArgumentExpression( nameof( self ) )] string? exp = null )
+            where T : IComparable<T>
+        {
+            self.ThrowIfNull( exp );
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(self, other, exp);
+            return self;
+        }
+
         public static T ThrowIfNull<T>( [NotNull] this T? self, [CallerArgumentExpression( nameof( self ) )] string? exp = null )
         {
             return self is not null ? self : throw new ArgumentNullException( exp );

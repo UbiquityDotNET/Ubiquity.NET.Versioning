@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -28,7 +29,7 @@ namespace Ubiquity.NET.Versioning.UT
             Assert.AreEqual( 0, ver.BuildMeta.Length);
 
             var preRelInfo = new PrereleaseVersion(1, 2, 3);
-            string[] expectedMeta = ["buildMeta"];
+            ImmutableArray<string> expectedMeta = ["buildMeta"];
             ver = new CSemVer( 4, 5, 6, preRelInfo, expectedMeta );
             Assert.AreEqual( 4, ver.Major );
             Assert.AreEqual( 5, ver.Minor );
@@ -41,7 +42,7 @@ namespace Ubiquity.NET.Versioning.UT
         [TestMethod]
         public void DefaultConstructorTests( )
         {
-            var ver = default( CSemVer );
+            var ver = new CSemVer( );
             Assert.AreEqual( 0, ver.Major );
             Assert.AreEqual( 0, ver.Minor );
             Assert.AreEqual( 0, ver.Patch );
@@ -107,27 +108,27 @@ namespace Ubiquity.NET.Versioning.UT
         [TestMethod]
         public void FromTest( )
         {
-            const UInt64 v0_0_0_Alpha = 1;
+            const Int64 v0_0_0_Alpha = 1;
             VerifyOrderedVersion(v0_0_0_Alpha, 0, 0, 0, 0, 0, 0);
 
-            const UInt64 v0_0_0_Alpha_0_1 = 2;
+            const Int64 v0_0_0_Alpha_0_1 = 2;
             VerifyOrderedVersion(v0_0_0_Alpha_0_1, 0, 0, 0, 0, 0, 1);
 
-            const UInt64 v0_0_0_Beta = 10001;
+            const Int64 v0_0_0_Beta = 10001;
             VerifyOrderedVersion(v0_0_0_Beta, 0, 0, 0, 1, 0, 0);
 
-            const UInt64 v20_1_4_Beta = 800010800340005ul;
+            const Int64 v20_1_4_Beta = 800010800340005L;
             VerifyOrderedVersion(v20_1_4_Beta, 20, 1, 4, 1, 0, 0);
 
-            const UInt64 v20_1_4 = 800010800410005ul;
+            const Int64 v20_1_4 = 800010800410005L;
             VerifyOrderedVersion(v20_1_4, 20, 1, 4);
 
-            const UInt64 v20_1_5_Alpha = 800010800410006ul;
+            const Int64 v20_1_5_Alpha = 800010800410006L;
             VerifyOrderedVersion(v20_1_5_Alpha, 20, 1, 5, 0, 0, 0);
         }
 
         public static void VerifyOrderedVersion(
-            UInt64 orderedVersion,
+            Int64 orderedVersion,
             int major,
             int minor,
             int patch,
@@ -153,7 +154,7 @@ namespace Ubiquity.NET.Versioning.UT
         }
 
         public static void VerifyOrderedVersion(
-            UInt64 orderedVersion,
+            Int64 orderedVersion,
             int major,
             int minor,
             int patch,

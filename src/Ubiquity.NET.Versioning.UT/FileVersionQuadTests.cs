@@ -68,7 +68,7 @@ namespace Ubiquity.NET.Versioning.Tests
         [TestMethod]
         public void FromTest( )
         {
-            var x = FileVersionQuad.From(0x123456789ABCDEF0ul);
+            var x = new FileVersionQuad(0x123456789ABCDEF0ul);
             Assert.AreEqual((UInt16)0x1234u, x.Major);
             Assert.AreEqual((UInt16)0x5678u, x.Minor);
             Assert.AreEqual((UInt16)0x9ABCu, x.Build);

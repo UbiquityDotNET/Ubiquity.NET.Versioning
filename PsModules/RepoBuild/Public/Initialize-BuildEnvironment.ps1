@@ -47,24 +47,10 @@ function Initialize-BuildEnvironment
     {
         # use common repo-neutral function to perform most of the initialization
         $buildInfo = Initialize-CommonBuildEnvironment $repoRoot -FullInit:$FullInit
-        if($IsWindows -and !(Find-OnPath MSBuild))
-        {
-            Write-Information "Adding MSBUILD to PATH"
-            $env:PATH += ";$(vswhere -find MSBuild\Current\Bin\MSBuild.exe | split-path -parent)"
-        }
-
-        if(!(Find-OnPath MSBuild))
-        {
-            throw "MSBuild not found - currently required for LIBLLVM builds"
-        }
-
-        # Add repo specific values
-        $buildInfo['PackagesRoot'] = Join-Path $buildInfo['BuildOutputPath'] 'packages'
-        $buildInfo['OfficialGitRemoteUrl'] = 'https://github.com/UbiquityDotNET/CSemVer.GitBuild.git'
+        $buildInfo['OfficialGitRemoteUrl'] = 'https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning.git'
 
         # make sure directories required (but not created by build tools) exist
         New-Item -ItemType Directory -Path $buildInfo['BuildOutputPath'] -ErrorAction SilentlyContinue | Out-Null
-        New-Item -ItemType Directory -Path $buildInfo['PackagesRoot'] -ErrorAction SilentlyContinue | Out-Null
         New-Item -ItemType Directory $buildInfo['NuGetOutputPath'] -ErrorAction SilentlyContinue | Out-Null
 
         return $buildInfo

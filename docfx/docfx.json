@@ -38,13 +38,6 @@
                     "**/namespaces/**.md",
                     "**/*-xref.yml"
                 ]
-            },
-            {
-                // Build tasks project additional content
-                // There is no API generated for this, it's just consumable for the build tasks.
-                "files": [
-                    "build-tasks/**.{md,yml}"
-                ]
             }
         ],
         "resource": [
@@ -80,7 +73,7 @@
             "_disableBreadcrumb": true,
             "_enableNewTab": true,
             "_gitContribute": {
-                "repo": "https://github.com/UbiquityDotNET/CSemVer.GitBuild",
+                "repo": "https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning",
                 "branch": "develop"
             },
             "_gitUrlPattern": "github"

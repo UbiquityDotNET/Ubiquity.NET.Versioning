@@ -21,7 +21,6 @@
     </PropertyGroup>
     <ItemGroup>
       <PackageReference Include="Sprache" />
-      <PackageReference Include="System.Text.RegularExpressions" />
     </ItemGroup>
     <ItemGroup>
       <Compile Update="Properties\Resources.Designer.cs">

@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Collections.Immutable;
 using System.Linq;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -48,32 +49,41 @@ namespace Ubiquity.NET.Versioning.UT
         {
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             // VALIDATING behavior of API is the point of this test.
-            var argnex = Assert.ThrowsExactly<ArgumentNullException>(()=>_=new CSemVerCI(null, "c-name", null));
+            var argnex = Assert.ThrowsExactly<ArgumentNullException>(()=>_=new CSemVerCI(null, "c-index", null));
+            Assert.AreEqual("baseBuild", argnex.ParamName, "null parameter should throw"); // sadly there is no refactoring safe nameof() expression for a parameter at the call site...
+
+            argnex = Assert.ThrowsExactly<ArgumentNullException>(()=>_=new CSemVerCI(null, "c-index", "c-name"));
+            Assert.AreEqual("baseBuild", argnex.ParamName, "null parameter should throw"); // sadly there is no refactoring safe nameof() expression for a parameter at the call site...
+
+            argnex = Assert.ThrowsExactly<ArgumentNullException>(()=>_=new CSemVerCI(new CSemVer(), "c-index", null));
+            Assert.AreEqual("name", argnex.ParamName, "null parameter should throw"); // sadly there is no refactoring safe nameof() expression for a parameter at the call site...
+
+            argnex = Assert.ThrowsExactly<ArgumentNullException>(()=>_=new CSemVerCI(new CSemVer(), null, "c-name"));
             Assert.AreEqual("index", argnex.ParamName, "null parameter should throw"); // sadly there is no refactoring safe nameof() expression for a parameter at the call site...
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
-            var argex = Assert.ThrowsExactly<ArgumentException>(()=>_=new CSemVerCI(string.Empty, "c-name", null));
+            var argex = Assert.ThrowsExactly<ArgumentException>(()=>_=new CSemVerCI(string.Empty, "c-name", default));
             Assert.AreEqual("index", argex.ParamName, "empty string should throw");
 
-            argex = Assert.ThrowsExactly<ArgumentException>(()=>_=new CSemVerCI(" \r\n\t", "c-name", null));
+            argex = Assert.ThrowsExactly<ArgumentException>(()=>_=new CSemVerCI(" \r\n\t", "c-name", default));
             Assert.AreEqual("index", argex.ParamName, "all whitespace string should throw");
 
-            argex = Assert.ThrowsExactly<ArgumentException>(()=>_=new CSemVerCI("invalid#id","c-name", null));
+            argex = Assert.ThrowsExactly<ArgumentException>(()=>_=new CSemVerCI("invalid#id","c-name", default));
             Assert.AreEqual("index", argex.ParamName, "invalid index pattern should throw");
 
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             // VALIDATING behavior of API is the point of this test.
-            argnex = Assert.ThrowsExactly<ArgumentNullException>(()=>_=new CSemVerCI("c-index", null, null));
+            argnex = Assert.ThrowsExactly<ArgumentNullException>(()=>_=new CSemVerCI("c-index", null, default));
             Assert.AreEqual("name", argnex.ParamName, "null parameter should throw"); // sadly there is no refactoring safe nameof() expression for a parameter at the call site...
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
-            argex = Assert.ThrowsExactly<ArgumentException>(()=>_=new CSemVerCI("c-index", string.Empty, null));
+            argex = Assert.ThrowsExactly<ArgumentException>(()=>_=new CSemVerCI("c-index", string.Empty, default));
             Assert.AreEqual("name", argex.ParamName, "empty string should throw");
 
-            argex = Assert.ThrowsExactly<ArgumentException>(()=>_=new CSemVerCI("c-index", " \r\n\t", null));
+            argex = Assert.ThrowsExactly<ArgumentException>(()=>_=new CSemVerCI("c-index", " \r\n\t", default));
             Assert.AreEqual("name", argex.ParamName, "all whitespace string should throw");
 
-            argex = Assert.ThrowsExactly<ArgumentException>(()=>_=new CSemVerCI("c-index", "invalid#id", null));
+            argex = Assert.ThrowsExactly<ArgumentException>(()=>_=new CSemVerCI("c-index", "invalid#id", default));
             Assert.AreEqual("name", argex.ParamName, "invalid name pattern should throw");
         }
 
@@ -82,7 +92,7 @@ namespace Ubiquity.NET.Versioning.UT
         public void CSemVerCITest1( )
         {
             // ZeroTime based constructor
-            string[] expectedBuildMeta = ["meta-man"];
+            ImmutableArray<string> expectedBuildMeta = ["meta-man"];
             var ver = new CSemVerCI( "c-index", "c-name", expectedBuildMeta);
 
             string[] expctedPreReleaseSeq = ["-ci", "c-index", "c-name"];

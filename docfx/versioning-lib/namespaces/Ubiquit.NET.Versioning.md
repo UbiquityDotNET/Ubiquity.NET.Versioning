@@ -48,17 +48,12 @@ classDiagram
         + UInt16 Revision
     }
 
-    <<struct>> FileVersionQuad
-    <<struct>> PreReleaseVersion
-    CSemVer *-- FileVersionQuad:FileVersion
+    SemVer <-- CSemVer
+    SemVer <-- CSemVerCI
+    CSemVer "1" *-- FileVersionQuad:FileVersion
     CSemVer "0..1" *-- PreReleaseVersion:PreReleaseVersion
     CSemVerCI "1" *-- CSemVer:BaseVersion
 ```
->[!IMPORTANT]
-> There is no inheritance between a `SemVer`, `CSemVer`, and `CSemVerCI`. While
-> conversion is possible in many cases they are not completely compatible due the
-> constraints on ranges and rules of ALWAYS comparing case insensitive for `CSemVer`
-> and `CSemVerCI`
 
 The primary differences between a generic SemVer, a CSemVer and CSemVerCI is in how the
 sequence of pre-release versioning components is handled and the constraints placed on
@@ -78,12 +73,12 @@ the Major, Minor and Patch version numbers.
 > AlphaNumeric Identifiers in the version. Sadly, the SemVer spec is not explicit on the
 > point of case sensitivity and various major implementations for popular frameworks have
 > chosen different approaches. Thus a consumer of a pure SemVer needs to know which kind
-> of comparison to use in order to get correct results.
+> of comparison to realize correct beavior with respect to ordering of version values.
 >
 > Due to the ambiguity of case sensitivity in ordering, it is recommended that all uses
 > of SemVer in the real world use ALL the same case (All *UPPER* or all *lower*). This
 > avoids the confusion and produces correct ordering no matter what variant of comparison
-> a consumer uses. Problems come when the version uses a *Mixed* case format.
+> a consumer uses. Problems happen ONLY when the version uses a *Mixed* case format.
 
 ### CSemVer Constraints on the integral components
 In particular the values are constrained

@@ -10,9 +10,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Numerics;
 
-namespace Ubiquity.NET.Versioning
+namespace Ubiquity.NET.Versioning.Comparison
 {
-    /// <summary>Static class to host comparison logic for various parts of a <see cref="SemVer"/></summary>
+    /// <summary>Case-sensitive comparison of AlphaNumeric IDs</summary>
     /// <remarks>
     /// <para>Sadly, the SemVer specs are silent on the point of case sensitivity. Various implementations
     /// have taken different approaches to doing that. Generally, those choices were along OS platform
@@ -20,42 +20,46 @@ namespace Ubiquity.NET.Versioning
     /// the issue and how it impacts ordering can have VERY surprising results. Thus, this library requires
     /// explicit selection of the behavior for comparisons.</para>
     /// <note type="important">
-    /// There is NO support for mixed comparisons (Comparisons where one of the versions uses case-sensitivity
-    /// but the other does not). Such comparisons are undefined. There is no way to know what the ordering is
-    /// supposed to be for each. An application MUST ensure it is ordering versions in a consistent fashion
-    /// and DOCUMENT what that is.
+    /// This is used directly for mixed comparisons (Comparisons where one of the versions declares case-sensitivity
+    /// but the other does not and vice versa). Explicit use of the comparer is required for mixed expectations.
+    /// That is, these comparisons will <b><em>ignore</em></b> the value of the <see cref="SemVer.AlphaNumericOrdering"/>
+    /// property for both sides and compare based on their explicit behavior. <b><em>Direct use of these comparisons requires
+    /// care to ensure the comparison will result in the expected ordering.</em></b>
     /// </note>
     /// </remarks>
-    public static class SemVerComparer
+    [SuppressMessage( "StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "File name reflects purpose of these classes" )]
+    [SuppressMessage( "StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Tightly coupled types share file scoped implementations" )]
+    public static class CaseSensitive
     {
-        /// <summary>Case-sensitive comparison of AlphaNumeric IDs</summary>
-        [SuppressMessage( "Design", "CA1034:Nested types should not be visible", Justification = "Simpler to read, use and maintain this way" )]
-        public static class CaseSensitive
-        {
-            /// <summary>Gets a comparer that compares the values of pre-release identifier</summary>
-            /// <remarks>
-            /// This comparison takes account of the rules for AlphaNumeric vs Numeric values and the
-            /// combinations of them according to the rules of the SemVer spec §11.4. (case-sensitive)
-            /// </remarks>
-            private static IComparer<string> PrereleaseIdentifier { get; }
-                = new PrereleaseIdentifierComparer( caseSensitive: true );
+        /// <summary>Gets a comparer that compares the values of pre-release identifier</summary>
+        /// <remarks>
+        /// This comparison takes account of the rules for AlphaNumeric vs Numeric values and the
+        /// combinations of them according to the rules of the SemVer spec §11.4. (case-sensitive)
+        /// </remarks>
+        private static IComparer<string> PrereleaseIdentifier { get; }
+            = new PrereleaseIdentifierComparer( AlphaNumericOrdering.CaseSensitive );
 
-            /// <summary>Gets a comparer that compares the values of a pre-release list (case-sensitive)</summary>
-            private static IComparer<IReadOnlyList<string>> PrereleaseIdentifierList { get; }
-                = new PrereleaseIdentifierListComparer( PrereleaseIdentifier );
+        /// <summary>Gets a comparer that compares the values of a pre-release list (case-sensitive)</summary>
+        private static IComparer<IReadOnlyList<string>> PrereleaseIdentifierList { get; }
+            = new PrereleaseIdentifierListComparer( PrereleaseIdentifier );
 
-            /// <summary>Gets a comparer that compares two <see cref="Ubiquity.NET.Versioning.SemVer"/> instances using case sensitive comparison for AlphaNumeric Identifiers</summary>
-            public static IComparer<SemVer> SemVer { get; }
-                = new SemanticVersionComparer(PrereleaseIdentifierList);
-        }
+        /// <summary>Gets a comparer that compares two <see cref="Ubiquity.NET.Versioning.SemVer"/> instances using case sensitive comparison for AlphaNumeric Identifiers</summary>
+        public static IComparer<SemVer> SemVer { get; }
+            = new SemanticVersionComparer(PrereleaseIdentifierList);
+    }
 
+    /// <summary>Static class to host comparison logic for various parts of a <see cref="SemVer"/>as case insensitive</summary>
+    /// <inheritdoc cref="CaseSensitive" path="/remarks"/>
+    [SuppressMessage( "StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Tightly coupled types share file scoped implementations" )]
+    public static class CaseInsensitive
+    {
         /// <summary>Gets a comparer that compares the values of pre-release identifier</summary>
         /// <remarks>
         /// This comparison takes account of the rules for AlphaNumeric vs Numeric values and the
         /// combinations of them according to the rules of the SemVer spec §11.4. (case-insensitive)
         /// </remarks>
         private static IComparer<string> PrereleaseIdentifier { get; }
-            = new PrereleaseIdentifierComparer();
+            = new PrereleaseIdentifierComparer(AlphaNumericOrdering.CaseInsensitive);
 
         /// <summary>Gets a comparer that compares the values of a pre-release list (case-insensitive)</summary>
         private static IComparer<IReadOnlyList<string>> PrereleaseIdentifierList { get; }
@@ -164,9 +168,9 @@ namespace Ubiquity.NET.Versioning
     file class PrereleaseIdentifierComparer
         : IComparer<string>
     {
-        public PrereleaseIdentifierComparer( bool caseSensitive = false )
+        public PrereleaseIdentifierComparer( AlphaNumericOrdering ordering )
         {
-            CaseSensitive = caseSensitive;
+            Ordering = ordering;
         }
 
         public int Compare( string? x, string? y )
@@ -203,10 +207,11 @@ namespace Ubiquity.NET.Versioning
             }
 
             // SemVer §11.4.2; CSemVer requires case insensitive; SemVer is non-specific
-            return string.Compare( x, y, CaseSensitive ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase );
+            var stringComparison = Ordering == AlphaNumericOrdering.CaseSensitive ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
+            return string.Compare( x, y, stringComparison );
         }
 
-        private readonly bool CaseSensitive;
+        private readonly AlphaNumericOrdering Ordering;
     }
 
     [SuppressMessage( "StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "DUH! It's file scoped" )]

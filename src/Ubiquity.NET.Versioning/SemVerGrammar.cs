@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
@@ -107,11 +108,13 @@ namespace Ubiquity.NET.Versioning
                from patch in IntegralValue.Named("<patch>")
                select new SemVer( major, minor, patch );
 
-        internal static Parser<SemVer> SemanticVersion
+        // NOTE: ordering does not impact the parsing, but it does alter the behavior of the parsed result
+        //       and therefore MUST be provided to construct the result.
+        internal static Parser<SemVer> SemanticVersion(AlphaNumericOrdering ordering)
             => ( from vc in VersionCore.Named("<version core>")
                  from preRel in PreReleaseData.Named("<pre-release>").XOptional()
                  from build in BuildMetaData.Named("<build>").XOptional()
-                 select new SemVer(vc.Major, vc.Minor, vc.Patch, preRel.GetOrElse([]), build.GetOrElse([]))
+                 select new SemVer(vc.Major, vc.Minor, vc.Patch, ordering, [ .. preRel.GetOrElse([]) ], [ .. build.GetOrElse([]) ] )
                ).End();
     }
 }

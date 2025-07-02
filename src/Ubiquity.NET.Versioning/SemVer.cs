@@ -26,57 +26,62 @@ namespace Ubiquity.NET.Versioning
     /// <para>In practical terms any such component will likely "down convert" to an integer. If a
     /// version component in the real world exceeds the size of an integer, then there is probably
     /// something wrong with how the versioning is maintained.</para>
-    /// <note type="important">
-    /// <para>This type is ***intentionally*** NOT a value type or `record struct` etc... as the ONLY
-    /// valid comparison that is always correct is reference equality. Any other comparison/ordering
-    /// requires a specific comparer that not only understands the rules of a Semantic Version, but
-    /// also deals with case sensitivity of those comparisons. Sadly, the SemVer spec is silent on
+    /// <para>The comparison/ordering of this type is based on the rules for Semantic Versioning with
+    /// the extension of <see cref="AlphaNumericOrdering"/>. Sadly, the SemVer spec is silent on
     /// the point of case comparisons and different major component repositories have chosen different
     /// interpretations of the spec as a result. Thus any consumer must explicitly decide which comparison
-    /// to use.</para>
-    /// <para>Technically, the SemVer spec states that alphanumeric Identifiers are ordered lexicographically,
-    /// which would make them case sensitive. However, since MAJOR framework repositories have chosen
-    /// to use each approach the real world of ambiguity, sadly, wins.</para>
-    /// </note>
+    /// a version expects and that is part of the version.</para>
+    /// <note type="note">Technically, the SemVer spec states that alphanumeric Identifiers are ordered
+    /// lexicographically, which would make them case sensitive. However, since MAJOR framework repositories
+    /// have chosen to use each approach the real world of ambiguity, sadly, wins.</note>
     /// </remarks>
     /// <seealso href="https://semver.org/"/>
-    public sealed class SemVer
+    public class SemVer
         : IParsable<SemVer>
+        , IComparable<SemVer>
+        , IEquatable<SemVer>
+        , IComparisonOperators<SemVer?, SemVer?, bool>
     {
-        /// <inheritdoc cref="SemVer.SemVer(BigInteger, BigInteger, BigInteger, IEnumerable{string}, IEnumerable{string})"/>
-        public SemVer( BigInteger major, BigInteger minor, BigInteger patch )
-            : this(major, minor, patch, null, null)
-        {
-        }
-
-        /// <inheritdoc cref="SemVer.SemVer(BigInteger, BigInteger, BigInteger, IEnumerable{string}, IEnumerable{string})"/>
-        public SemVer( BigInteger major, BigInteger minor, BigInteger patch, IEnumerable<string>? preRel )
-            : this(major, minor, patch, preRel, null)
-        {
-        }
-
         /// <summary>Initializes a new instance of the <see cref="SemVer"/> class.</summary>
         /// <param name="major">Major portion of the core version</param>
         /// <param name="minor">Minor portion of the core version</param>
         /// <param name="patch">Patch portion of the core version</param>
+        /// <param name="sortOrdering">Sort ordering to use for any ordering comparisons</param>
         /// <param name="preRel">PreRelease components</param>
         /// <param name="build">Build meta components</param>
-        public SemVer( BigInteger major, BigInteger minor, BigInteger patch, IEnumerable<string>? preRel, IEnumerable<string>? build )
+        public SemVer(
+            BigInteger major,
+            BigInteger minor,
+            BigInteger patch,
+            AlphaNumericOrdering sortOrdering = AlphaNumericOrdering.CaseSensitive,
+            ImmutableArray<string> preRel = default,
+            ImmutableArray<string> build = default
+            )
         {
             Major = major;
             Minor = minor;
             Patch = patch;
 
-            if(preRel is not null)
+            if(!preRel.IsDefaultOrEmpty)
             {
                 PreRelease = ValidateElementsWithParser(preRel, SemVerGrammar.PreReleaseIdentifier);
             }
 
-            if(build is not null)
+            if(!build.IsDefaultOrEmpty)
             {
                 BuildMeta = ValidateElementsWithParser(build, SemVerGrammar.BuildIdentifier);
             }
+
+            if( sortOrdering == AlphaNumericOrdering.None)
+            {
+                throw new ArgumentException("Sort ordering of 'None' is an invalid value", nameof(sortOrdering));
+            }
+
+            AlphaNumericOrdering = sortOrdering;
         }
+
+        /// <summary>Gets the sort ordering applied to this version</summary>
+        public AlphaNumericOrdering AlphaNumericOrdering { get; } = AlphaNumericOrdering.CaseSensitive;
 
         /// <summary>Gets the Major portion of the core version</summary>
         public BigInteger Major { get; } = 0;
@@ -122,33 +127,139 @@ namespace Ubiquity.NET.Versioning
             return bldr.ToString();
         }
 
-        #region Parsing
+        /// <inheritdoc/>
+        /// <exception cref="InvalidOperationException">The <see cref="AlphaNumericOrdering"/> for both sides does not match</exception>
+        /// <remarks>
+        /// The <see cref="AlphaNumericOrdering"/> of <paramref name="other"/> must match the value of this instance for direct comparison.
+        /// If they do not match an <see cref="InvalidOperationException"/> is thrown. To override this callers can use the explicit
+        /// comparisons provided in <see cref="Comparison.CaseSensitive"/> or <see cref="Comparison.CaseInsensitive"/>. Those comparisons
+        /// will ignore the value of the <see cref="AlphaNumericOrdering"/> property for either side and use their own ordering.
+        /// </remarks>
+        [SuppressMessage( "Style", "IDE0046:Convert to conditional expression", Justification = "Nested conditionals are NOT simpler" )]
+        public int CompareTo( SemVer? other )
+        {
+            if(other is null)
+            {
+                // By definition null is ordered before any non-null value
+                return 1;
+            }
+
+            if (AlphaNumericOrdering != other.AlphaNumericOrdering)
+            {
+                throw new InvalidOperationException("SemVer values have different AlphaNumericOrdering, direct comparison is not supported.");
+            }
+
+            return AlphaNumericOrdering == AlphaNumericOrdering.CaseSensitive
+                 ? Comparison.CaseSensitive.SemVer.Compare(this, other)
+                 : Comparison.CaseInsensitive.SemVer.Compare(this, other);
+        }
+
+        #region Relational operators
 
         /// <inheritdoc/>
-        public static SemVer Parse( string s, IFormatProvider? provider )
+        public override bool Equals( object? obj )
         {
-            return TryParse( s, out SemVer? retVal, out Exception? ex ) ? retVal : throw ex;
+            return obj is SemVer v && Equals(v);
         }
 
         /// <inheritdoc/>
+        public override int GetHashCode( )
+        {
+            // NOTE: Build meta does not contribute to ordering and therefore does not contribute to the hash
+            return HashCode.Combine(AlphaNumericOrdering, Major, Minor, Patch, PreRelease);
+        }
+
+        /// <inheritdoc/>
+        public bool Equals( SemVer? other )
+        {
+            return CompareTo(other) == 0;
+        }
+
+        /// <inheritdoc/>
+        public static bool operator ==( SemVer? left, SemVer? right )
+        {
+            return left is null ? right is null : left.Equals( right );
+        }
+
+        /// <inheritdoc/>
+        public static bool operator !=( SemVer? left, SemVer? right )
+        {
+            return !(left == right);
+        }
+
+        /// <inheritdoc/>
+        public static bool operator <( SemVer? left, SemVer? right )
+        {
+            return left is null ? right is not null : left.CompareTo( right ) < 0;
+        }
+
+        /// <inheritdoc/>
+        public static bool operator <=( SemVer? left, SemVer? right )
+        {
+            return left is null || left.CompareTo( right ) <= 0;
+        }
+
+        /// <inheritdoc/>
+        public static bool operator >( SemVer? left, SemVer? right )
+        {
+            return left is not null && left.CompareTo( right ) > 0;
+        }
+
+        /// <inheritdoc/>
+        public static bool operator >=( SemVer? left, SemVer? right )
+        {
+            return left is null ? right is null : left.CompareTo( right ) >= 0;
+        }
+        #endregion
+
+        #region Parsing
+
+        /// <summary>Parses a string into a <see cref="SemVer"/></summary>
+        /// <param name="s">Input string to parse</param>
+        /// <param name="provider">Provider to use for parsing (see remarks)</param>
+        /// <returns>Parsed <see cref="SemVer"/> value</returns>
+        /// <remarks>
+        /// The <paramref name="provider"/> is used to specify the sort ordering of
+        /// Alphanumeric IDs for the version. The default used if <see langword="null"/>
+        /// is provided is <see cref="SemVerFormatProvider.CaseSensitive"/> which provides
+        /// case sensitive comparison versions. If the source of the string requires
+        /// insensitive comparison, then callers should use <see cref="SemVerFormatProvider.CaseInsensitive"/>.
+        /// That is, unless explicitly provided the <see cref="AlphaNumericOrdering"/>
+        /// value of all parsed versions is <see cref="AlphaNumericOrdering.CaseSensitive"/>
+        /// </remarks>
+        public static SemVer Parse( string s, IFormatProvider? provider )
+        {
+            return TryParse( s, provider, out SemVer? retVal, out Exception? ex ) ? retVal : throw ex;
+        }
+
+        /// <summary>Tries to parse a string into a <see cref="SemVer"/></summary>
+        /// <param name="s">Input string to parse</param>
+        /// <param name="provider">Provider to use for parsing (see remarks)</param>
+        /// <param name="result">Resulting version if parsed successfully</param>
+        /// <returns><see langword="true"/> if the version is parsed and false if it is not</returns>
+        /// <inheritdoc cref="Parse(string, IFormatProvider?)" path="/remarks"/>
         public static bool TryParse( [NotNullWhen( true )] string? s, IFormatProvider? provider, [MaybeNullWhen( false )] out SemVer result )
         {
-            return TryParse( s, out result, out _ );
+            return TryParse( s, provider, out result, out _ );
         }
 
         /// <summary>Tries to parse a string into a semantic version providing details of any failures</summary>
         /// <param name="s">Input string to parse</param>
+        /// <param name="provider">Formatting provider to use</param>
         /// <param name="result">Resulting <see cref="SemVer"/> if parse succeeds</param>
         /// <param name="ex">Exception data for any errors or <see langword="null"/> if parse succeeded</param>
         /// <returns><see langword="true"/> if string successfully parsed or <see langword="false"/> if not</returns>
         internal static bool TryParse(
             [NotNull] string? s,
+            IFormatProvider? provider,
             [MaybeNullWhen( false )] out SemVer result,
             [MaybeNullWhen( true )] out Exception ex
             )
         {
             ArgumentNullException.ThrowIfNull( s );
-            IResult<SemVer> parseResult = SemVerGrammar.SemanticVersion.TryParse(s);
+
+            provider ??= SemVerFormatProvider.CaseSensitive;
+            IResult<SemVer> parseResult = SemVerGrammar.SemanticVersion(GetOrdering(provider)).TryParse(s);
             if(parseResult.Failed(out ex))
             {
                 result = default;
@@ -191,6 +302,11 @@ namespace Ubiquity.NET.Versioning
             }
 
             return value.Value;
+        }
+
+        private static AlphaNumericOrdering GetOrdering(IFormatProvider? provider)
+        {
+            return (AlphaNumericOrdering?)provider?.GetFormat(typeof(AlphaNumericOrdering)) ?? AlphaNumericOrdering.None;
         }
     }
 }

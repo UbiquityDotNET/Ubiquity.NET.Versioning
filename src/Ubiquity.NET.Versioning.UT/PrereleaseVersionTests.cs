@@ -9,7 +9,7 @@ using System.Linq;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Ubiquity.NET.Versioning.Tests
+namespace Ubiquity.NET.Versioning.UT
 {
     [TestClass]
     public class PrereleaseVersionTests

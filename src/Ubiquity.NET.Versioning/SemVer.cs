@@ -259,7 +259,7 @@ namespace Ubiquity.NET.Versioning
             ArgumentNullException.ThrowIfNull( s );
 
             provider ??= SemVerFormatProvider.CaseSensitive;
-            IResult<SemVer> parseResult = SemVerGrammar.SemanticVersion(GetOrdering(provider)).TryParse(s);
+            IResult<SemVer> parseResult = SemVerGrammar.SemanticVersion(provider.GetOrdering()).TryParse(s);
             if(parseResult.Failed(out ex))
             {
                 result = default;
@@ -302,11 +302,6 @@ namespace Ubiquity.NET.Versioning
             }
 
             return value.Value;
-        }
-
-        private static AlphaNumericOrdering GetOrdering(IFormatProvider? provider)
-        {
-            return (AlphaNumericOrdering?)provider?.GetFormat(typeof(AlphaNumericOrdering)) ?? AlphaNumericOrdering.None;
         }
     }
 }

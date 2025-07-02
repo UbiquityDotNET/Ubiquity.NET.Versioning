@@ -22,5 +22,12 @@ namespace Ubiquity.NET.Versioning
                 }
             }
         }
+
+        public static AlphaNumericOrdering GetOrdering(this IFormatProvider provider)
+        {
+            ArgumentNullException.ThrowIfNull(provider);
+
+            return (AlphaNumericOrdering?)provider.GetFormat(typeof(AlphaNumericOrdering)) ?? AlphaNumericOrdering.None;
+        }
     }
 }

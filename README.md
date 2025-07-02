@@ -11,9 +11,9 @@ This repo includes support for versioning numbers. This support includes:
           build numbering. It is NOT a CSemVer but IS a SemVer.
 
 ## Status
-![NuGet](https://img.shields.io/nuget/dt/CSemVer.Build.Tasks.svg)
-![PR/CI Work Flow Status](https://img.shields.io/github/actions/workflow/status/UbiquityDotNET/CSemVer.GitBuild/pr-build.yml?label=PR%2FCI%20Build%20Status)
-![Release Work Flow Status](https://img.shields.io/github/actions/workflow/status/UbiquityDotNET/CSemVer.GitBuild/release-build.yml?label=Release%20Build%20Status)
+![NuGet](https://img.shields.io/nuget/dt/Ubiquity.NET.Versioning.svg)
+![PR/CI Work Flow Status](https://img.shields.io/github/actions/workflow/status/UbiquityDotNET/Ubiquity.NET.Versioning/pr-build.yml?label=PR%2FCI%20Build%20Status)
+![Release Work Flow Status](https://img.shields.io/github/actions/workflow/status/UbiquityDotNET/Ubiquity.NET.Versioning/release-build.yml?label=Release%20Build%20Status)
 
 ## Overview
 Officially, NuGet Packages use a SemVer 2.0 (see http://semver.org).
@@ -55,10 +55,10 @@ of the last one released publicly.
 > (NuGet v3 can handle the full name just fine!). Thus, the lack of support in this library.
 
 ## End User Documentation
-Full documentation on the tasks is available in the project's [docs site](https://ubiquitydotnet.github.io/CSemVer.GitBuild/)
+Full documentation on the tasks is available in the project's [docs site](https://ubiquitydotnet.github.io/Ubiquity.NET.Versioning/)
 
 ## Building the tasks
-Documentation on building and general maintenance of this repo are provided in the [Wiki](https://github.com/UbiquityDotNET/CSemVer.GitBuild/wiki).
+Documentation on building and general maintenance of this repo are provided in the [Wiki](https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/wiki).
 
 ----
 <sup><a id="footnote_1">1</a></sup>See: [This issue](https://github.com/CK-Build/csemver.org/issues/2) which was reported upon

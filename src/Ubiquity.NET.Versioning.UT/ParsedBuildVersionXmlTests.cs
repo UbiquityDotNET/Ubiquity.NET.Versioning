@@ -10,7 +10,7 @@ using System.Xml.Linq;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Ubiquity.NET.Versioning.Tests
+namespace Ubiquity.NET.Versioning.UT
 {
     [TestClass]
     public class ParsedBuildVersionXmlTests
@@ -25,6 +25,18 @@ namespace Ubiquity.NET.Versioning.Tests
             Assert.AreEqual("beta", parsedData.PreReleaseName);
             Assert.AreEqual(4, parsedData.PreReleaseNumber);
             Assert.AreEqual(5, parsedData.PreReleaseFix);
+        }
+
+        [TestMethod]
+        public void Parse_from_release_produces_non_prerelease( )
+        {
+            var parsedData = ParsedBuildVersionXml.Parse(Xml_5_0_4);
+            Assert.AreEqual(5, parsedData.BuildMajor);
+            Assert.AreEqual(0, parsedData.BuildMinor);
+            Assert.AreEqual(4, parsedData.BuildPatch);
+            Assert.AreEqual(string.Empty, parsedData.PreReleaseName);
+            Assert.AreEqual(0, parsedData.PreReleaseNumber);
+            Assert.AreEqual(0, parsedData.PreReleaseFix);
         }
 
         [TestMethod]
@@ -68,6 +80,14 @@ namespace Ubiquity.NET.Versioning.Tests
                        new XAttribute("PreReleaseNumber", "4"),
                        new XAttribute("PreReleaseFix", "5"),
                        new XAttribute("foo", "bar")
+                    )
+                 );
+
+        private static readonly XDocument Xml_5_0_4
+            = new( new XElement("BuildVersionData",
+                       new XAttribute("BuildMajor", "5"),
+                       new XAttribute("BuildMinor", "0"),
+                       new XAttribute("BuildPatch", "4")
                     )
                  );
 

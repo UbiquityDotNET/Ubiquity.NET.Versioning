@@ -16,11 +16,17 @@ while conforming to the syntax of CSemVer and CSemVer-CI
 > is [Major.Minor.Patch+1]. That is, a CI build is ordered ***BEFORE*** all release builds,
 > or it is ordered ***AFTER*** the ***specific*** release it is based on! In particular a
 > CI build version does ***NOT*** indicate what it will become when it is finally released,
-> but what release it was based on (If any). To simplify that, for clarity, a CI build
-> contains everything in the release it was based on and additional changes (that might
-> remove things). CI builds are, by definition NOT stable and consumers cannot rely on
-> them for predictions of future stability. A given CI build may even represent an
-> abandoned approach that never becomes a release!
+> but what release it was based on (If any).
+>
+> To simplify that, for clarity, a CI build contains everything in the release it was based
+> on and additional changes (that might remove things). CI builds are, by definition, ***NOT
+> stable<sup>[1](#footnote_1)</sup>*** and consumers cannot rely on them for predictions of future stability. A given CI
+> build may even represent an abandoned approach that never becomes a release!
 
 ---
 [Attributions](Attributions.md)
+
+<sup><a id="footnote_1">1</a></sup> Stability, in this context, refers ONLY to consistency of
+the ***specified*** behavior and the APIs used to access it in relation to that of previous
+releases. The term, as used here, has NO relation to the concept of the ***quality*** of the
+implementation.

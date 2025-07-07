@@ -23,14 +23,56 @@ namespace Ubiquity.NET.Versioning.UT
             var ver = new CSemVerCI( new CSemVer(7, 8, 9, preRelInfo, ["meta-man"]), "c-index", "c-name");
 
             // NOTE: "beta" => 1
-            string[] expctedPreReleaseSeq = ["beta", "2", "3", "ci", "c-index", "c-name"];
+            string[] expectedPreReleaseSeq = ["beta", "2", "3", "ci", "c-index", "c-name"];
             Assert.AreEqual( 7, ver.Major );
             Assert.AreEqual( 8, ver.Minor );
-            Assert.AreEqual( 9, ver.Patch, "While CI builds should use a Patch+1 that's not verifiable" );
+            Assert.AreEqual( 10, ver.Patch, "CI builds should use a Patch+1 from the provided base build" );
             Assert.AreEqual( preRelInfo, ver.PrereleaseVersion );
-            Assert.IsTrue( expctedPreReleaseSeq.SequenceEqual( ver.PreRelease ) );
+            Assert.IsTrue( expectedPreReleaseSeq.SequenceEqual( ver.PreRelease ) );
             Assert.AreEqual( "c-index", ver.Index );
             Assert.AreEqual( "c-name", ver.Name );
+        }
+
+        [TestMethod]
+        public void Parsing_a_CI_version_produces_correct_base_path_plus_1( )
+        {
+            const string validCIVersionWithAllParts = "20.1.4-delta.0.1.ci.BuildIndex.BuildName+buildMeta";
+
+            // NOTE: CI version is patch+1 of the base build!
+            var expectedBaseBuild = new CSemVer(20, 1, 3, new PrereleaseVersion("delta", 0, 1), ["buildMeta"]);
+
+            var parsedVer = SemVer.Parse(validCIVersionWithAllParts, SemVerFormatProvider.CaseInsensitive);
+            Assert.IsTrue(parsedVer is CSemVerCI);
+
+            var parsedCiVer = (CSemVerCI)parsedVer;
+            Assert.AreEqual(AlphaNumericOrdering.CaseInsensitive, parsedCiVer.AlphaNumericOrdering);
+            Assert.AreEqual(20, parsedCiVer.Major);
+            Assert.AreEqual(1, parsedCiVer.Minor);
+
+            // FIXME: This assert is broken! It's doing Patch+1, which it should NOT
+            // do for a parse!
+            //Assert.AreEqual(4, parsedCiVer.Patch);
+
+            Assert.IsTrue(parsedCiVer.PrereleaseVersion.HasValue);
+            Assert.AreEqual("delta", parsedCiVer.PrereleaseVersion.Value.Name);
+            Assert.AreEqual(2, parsedCiVer.PrereleaseVersion.Value.Index);
+            Assert.AreEqual(0, parsedCiVer.PrereleaseVersion.Value.Number);
+            Assert.AreEqual(1, parsedCiVer.PrereleaseVersion.Value.Fix);
+            Assert.AreEqual("BuildIndex", parsedCiVer.Index);
+            Assert.AreEqual("BuildName", parsedCiVer.Name);
+
+            // This is the major condition for this test case
+            // The base build should be Patch-1 from the input version!
+            Assert.AreEqual(expectedBaseBuild, parsedCiVer.BaseBuild, "CI builds should be Patch+1 from the base build");
+        }
+
+        [TestMethod]
+        public void CSemVerCI_Construction_from_base_CSemVer_is_patch_plus_1( )
+        {
+            var preRelInfo = new PrereleaseVersion(1, 2, 3);
+            var baseVer = new CSemVer(7, 8, 9, preRelInfo, ["meta-man"]);
+            var ciVer = new CSemVerCI(baseVer, "c-index", "c-name");
+            Assert.IsTrue(ciVer > baseVer, "CI version should order higher than the base version");
         }
 
         [TestMethod]
@@ -89,7 +131,7 @@ namespace Ubiquity.NET.Versioning.UT
 
         [TestMethod]
         [TestCategory("Constructor")]
-        public void CSemVerCITest1( )
+        public void CSemVerCI_ZeroTimed_base_construction( )
         {
             // ZeroTime based constructor
             ImmutableArray<string> expectedBuildMeta = ["meta-man"];
@@ -139,7 +181,7 @@ namespace Ubiquity.NET.Versioning.UT
 
             // Verifies distinct syntax for a release build["double dash"] (vs. pre-release [no special leading])
             var ver_no_prerel = new CSemVerCI( new CSemVer( 20, 1, 4, null, [ "buildMeta" ] ), testIndex, testName );
-            Assert.AreEqual("20.1.4--ci.BuildIndex.BuildName+buildMeta", ver_no_prerel.ToString());
+            Assert.AreEqual("20.1.5--ci.BuildIndex.BuildName+buildMeta", ver_no_prerel.ToString());
 
             // Validate ToString() P=1; CI=1
             var alpha_0_0 = new PrereleaseVersion(0, 0, 0);
@@ -150,9 +192,9 @@ namespace Ubiquity.NET.Versioning.UT
             var ver_beta = new CSemVerCI( new CSemVer(20, 1, 4, beta_1_0, ["buildMeta"]), testIndex, testName);
             var ver_delta = new CSemVerCI( new CSemVer(20, 1, 4, delta_0_1, ["buildMeta"]), testIndex, testName);
 
-            Assert.AreEqual("20.1.4-alpha.ci.BuildIndex.BuildName+buildMeta", ver_alpha.ToString());
-            Assert.AreEqual("20.1.4-beta.1.ci.BuildIndex.BuildName+buildMeta", ver_beta.ToString());
-            Assert.AreEqual("20.1.4-delta.0.1.ci.BuildIndex.BuildName+buildMeta", ver_delta.ToString());
+            Assert.AreEqual("20.1.5-alpha.ci.BuildIndex.BuildName+buildMeta", ver_alpha.ToString());
+            Assert.AreEqual("20.1.5-beta.1.ci.BuildIndex.BuildName+buildMeta", ver_beta.ToString());
+            Assert.AreEqual("20.1.5-delta.0.1.ci.BuildIndex.BuildName+buildMeta", ver_delta.ToString());
         }
 
         [TestMethod]

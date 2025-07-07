@@ -10,28 +10,37 @@ versioning at runtime.)
 
 ## Example
 ``` C#
-var epectedMinimum = new CSemVer(20, 1, 5, "alpha");
-var actual = CSemVer.From(SomeAPIToRetrieveAVersionAsUInt64());
-if (actual < expectedMinimum)
+var quad = new FileVersionQuad(SomeAPiThatRetrievesAFileVersionAsUInt64());
+// ...
+// NOTE: Since all that is available is a QUAD, which has only 1 bit for CI information,
+// there is no way to translate that to a formal CSemVer-CI. Just test ordering of the quad.
+if(quad > MinimumVer.FileVersion)
 {
-    // Uh-OH! "older" version!
+    // Good to go!
+    if( quad.IsCiBuild )
+    {
+        // and it's a CI build!
+    }
 }
 
-// Good to go...
-
+// ...
+static readonly CSemVer MinimumVer = new(1,2,3/*, ...*/);
 ```
 
 ## Formatting
 The library contains support for proper formatting of strings based on the rules
-of a SemVer, CSemVer, and CSemVer-CI
+of a SemVer, CSemVer, and CSemVer-CI. The formatting is done case preserving when
+possible (Some cases of CSemVer will use string substitution such that `PreRelease` would
+simply become `pre`).
 
 ## Parsing
 The library contains support for parsing of strings based on the rules of a
 SemVer, CSemVer, and CSemVer-CI
 
 ## Ordering
-The types all support `IComparable<T>`<sup>[1](#footnote_1)</sup> and properly handle correct sort ordering of the
-versions according to the rules of SemVer (Which, CSemVer and CSemVer-CI follow)
+The types all support `IComparable<T>`<sup>[1](#footnote_1)</sup> and properly handle correct
+sort ordering of the versions according to the rules of SemVer (Which, CSemVer and CSemVer-CI
+follow with the exception of explicit case insensitivity for AphaNumeric IDs)
 
 >[!WARNING]
 > The formal 'spec' for [CSemVer](https://csemver.org) remains mostly silent on the point of
@@ -41,9 +50,8 @@ versions according to the rules of SemVer (Which, CSemVer and CSemVer-CI follow)
 > [NOT SUPPORTED] and implementation simplicity)
 
 ------
-<sup><a id="footnote_1">1</a></sup> `SemVer` does NOT support `IComparable<T>` as the spec is
-not explicit on case sensitive comparison of AlphaNumeric Identifiers. Unfortunately, major
-repositories using SemVer have chosen to use different comparisons. Thus, a consumer is required
-to know a-priori if the version is compared insensitive or not. `IComparer<SemVer>` instances
-are available for both cases via the static class `SemVerComparer`.
+<sup><a id="footnote_1">1</a></sup> `SemVer` contains constructors accepting an
+`AlhpanumericOrdering` enumeration to identify the ordering expected for a given instance.
+Unfortunately, major repositories using SemVer have chosen to use different comparisons. Thus,
+a consumer is required to specify if the version is compared insensitive or not.
 

@@ -73,29 +73,16 @@ namespace Ubiquity.NET.Versioning
         /// except that it does NOT include any information about whether it is a CI build
         /// or not.
         /// </remarks>
-        public Int64 OrderedVersion
-        {
-            get
-            {
-                UInt64 retVal = ((UInt64)Major * MulMajor) + ((UInt64)Minor * MulMinor) + (((UInt64)Patch + 1) * MulPatch);
-
-                if(PrereleaseVersion.HasValue)
-                {
-                    retVal -= MulPatch - 1; // Remove the fix+1 multiplier
-                    retVal += PrereleaseVersion.Value.Index * MulName;
-                    retVal += PrereleaseVersion.Value.Number * MulNum;
-                    retVal += PrereleaseVersion.Value.Fix;
-                }
-
-                return checked((Int64)retVal);
-            }
-        }
+        public Int64 OrderedVersion => MakeOrderedVersion((UInt64)Major, (UInt64)Minor, (UInt64)Patch, PrereleaseVersion);
 
         /// <summary>Gets a value indicating whether this is a pre-release version</summary>
         public bool IsPrerelease => PrereleaseVersion.HasValue;
 
         /// <summary>Gets a value indicating whether this is a zero based version</summary>
         public bool IsZero => Major == 0 && Minor == 0 && Patch == 0;
+
+        /// <summary>Gets a Zero value for a <see cref="CSemVer"/></summary>
+        public static CSemVer Zero => new(0,0,0);
 
         /// <summary>Tries to parse a <see cref="SemVer"/> as a <see cref="CSemVer"/></summary>
         /// <param name="ver">Version to convert</param>
@@ -146,15 +133,19 @@ namespace Ubiquity.NET.Versioning
                 return false;
             }
 
-            IResult<PrereleaseVersion> preRel = Versioning.PrereleaseVersion.TryParseFrom( ver.PreRelease );
-            if(preRel.Failed( out reason ))
+            IResult<PrereleaseVersion>? preRel = null;
+            if( !ver.PreRelease.IsDefaultOrEmpty )
             {
-                return false;
+                preRel = Versioning.PrereleaseVersion.TryParseFrom( ver.PreRelease );
+                if(preRel.Failed( out reason ))
+                {
+                    return false;
+                }
             }
 
             try
             {
-                result = new CSemVer( (int)ver.Major, (int)ver.Minor, (int)ver.Patch, preRel.Value );
+                result = new CSemVer( (int)ver.Major, (int)ver.Minor, (int)ver.Patch, preRel?.Value, ver.BuildMeta );
                 return true;
             }
             catch(ArgumentException ex)
@@ -241,7 +232,17 @@ namespace Ubiquity.NET.Versioning
         {
             var parsedBuildVersionXml = ParsedBuildVersionXml.ParseFile( buildVersionXmlPath );
 
-            PrereleaseVersion preReleaseVersion = default;
+            return From( parsedBuildVersionXml, buildMeta );
+        }
+
+        /// <summary>Factory method to create a <see cref="CSemVer"/> from information available as part of a build</summary>
+        /// <param name="parsedBuildVersionXml">Parsed BuildVersion XML data for the repository</param>
+        /// <param name="buildMeta">Additional Build meta data for the build</param>
+        /// <returns>Version information parsed from the build XML</returns>
+        /// <remarks>This does NOT construct a CI version as the XML does not contain that information</remarks>
+        public static CSemVer From( ParsedBuildVersionXml parsedBuildVersionXml, ImmutableArray<string> buildMeta )
+        {
+            PrereleaseVersion? preReleaseVersion = default;
             if(!string.IsNullOrWhiteSpace( parsedBuildVersionXml.PreReleaseName ))
             {
                 preReleaseVersion = new PrereleaseVersion( parsedBuildVersionXml.PreReleaseName
@@ -310,6 +311,21 @@ namespace Ubiquity.NET.Versioning
         /// this value is possible. Thus, no CI build is based on this version either.
         /// </remarks>
         public const Int64 MaxOrderedVersion = 4000050000000000000L;
+
+        internal static Int64 MakeOrderedVersion(UInt64 major, UInt64 minor, UInt64 patch, PrereleaseVersion? PrereleaseVersion)
+        {
+            UInt64 retVal = (major * MulMajor) + (minor * MulMinor) + ((patch + 1) * MulPatch);
+
+            if(PrereleaseVersion.HasValue)
+            {
+                retVal -= MulPatch - 1; // Remove the fix+1 multiplier
+                retVal += PrereleaseVersion.Value.Index * MulName;
+                retVal += PrereleaseVersion.Value.Number * MulNum;
+                retVal += PrereleaseVersion.Value.Fix;
+            }
+
+            return checked((Int64)retVal);
+        }
 
         // v5.0.4 => 200002500400005;
         // v5.0.5 => 200002500480006;  (previous + MulPatch!)

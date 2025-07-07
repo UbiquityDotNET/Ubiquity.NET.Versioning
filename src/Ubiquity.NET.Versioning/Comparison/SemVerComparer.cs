@@ -19,17 +19,10 @@ namespace Ubiquity.NET.Versioning.Comparison
     /// lines. With multiple cross platform runtimes and support that becomes a real nightmare as ignoring
     /// the issue and how it impacts ordering can have VERY surprising results. Thus, this library requires
     /// explicit selection of the behavior for comparisons.</para>
-    /// <note type="important">
-    /// This is used directly for mixed comparisons (Comparisons where one of the versions declares case-sensitivity
-    /// but the other does not and vice versa). Explicit use of the comparer is required for mixed expectations.
-    /// That is, these comparisons will <b><em>ignore</em></b> the value of the <see cref="SemVer.AlphaNumericOrdering"/>
-    /// property for both sides and compare based on their explicit behavior. <b><em>Direct use of these comparisons requires
-    /// care to ensure the comparison will result in the expected ordering.</em></b>
-    /// </note>
     /// </remarks>
     [SuppressMessage( "StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "File name reflects purpose of these classes" )]
     [SuppressMessage( "StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Tightly coupled types share file scoped implementations" )]
-    public static class CaseSensitive
+    internal static class CaseSensitive
     {
         /// <summary>Gets a comparer that compares the values of pre-release identifier</summary>
         /// <remarks>

@@ -31,6 +31,15 @@ namespace Ubiquity.NET.Versioning
     /// the point of case comparisons and different major component repositories have chosen different
     /// interpretations of the spec as a result. Thus any consumer must explicitly decide which comparison
     /// a version expects and that is part of the version.</para>
+    /// <note type="important">
+    /// Due to all the confusion and ambiguity surrounding the use of case sensitivity in ordering of
+    /// semantic versions it is <b><em>STRONGLY</em></b> recommended that ALL use of [C]SemVer[-CI]
+    /// value strings <b><em>always</em></b> uses a single case form. (That is 'ALL UPPERCASE`, or
+    /// 'all lower case' so that the versions are ordered consistently no matter what a particular
+    /// repository uses. This is especially true of CSemVer[-CI] variants when used in a repository
+    /// that supports case sensitive SemVer as the spec for CSemVer[-CI] explicitly calls out a case
+    /// insensitive comparison.
+    /// </note>
     /// <note type="note">Technically, the SemVer spec states that alphanumeric Identifiers are ordered
     /// lexicographically, which would make them case sensitive. However, since MAJOR framework repositories
     /// have chosen to use each approach the real world of ambiguity, sadly, wins.</note>
@@ -220,19 +229,25 @@ namespace Ubiquity.NET.Versioning
         /// <returns>Parsed <see cref="SemVer"/> value</returns>
         /// <remarks>
         /// The <paramref name="provider"/> is used to specify the sort ordering of
-        /// Alphanumeric IDs for the version. The default used if <see langword="null"/>
-        /// is provided is <see cref="SemVerFormatProvider.CaseSensitive"/> which provides
-        /// case sensitive comparison versions. If the source of the string requires
-        /// insensitive comparison, then callers should use <see cref="SemVerFormatProvider.CaseInsensitive"/>.
-        /// That is, unless explicitly provided the <see cref="AlphaNumericOrdering"/>
-        /// value of all parsed versions is <see cref="AlphaNumericOrdering.CaseSensitive"/>
+        /// Alphanumeric IDs for the version. The default used if <paramref name="provider"/> is
+        /// <see langword="null"/> is <see cref="SemVerFormatProvider.CaseSensitive"/> <see cref="SemVer"/>
+        /// values. However, an input MAY be a valid CSemVer, and if <paramref name="provider"/> is
+        /// <see langword="null"/> the result is a <see cref="CSemVer"/> which REQUIRES <see cref="AlphaNumericOrdering.CaseInsensitive"/>.
+        /// If the source of the string requires case sensitive comparison, then callers should explicitly provide
+        /// <see cref="SemVerFormatProvider.CaseSensitive"/> to exclude the CSemVer and CSemVer-CI variants from
+        /// consideration (They both include constraints that they use case insensitive comparisons). That is, unless
+        /// explicitly provided the <see cref="AlphaNumericOrdering"/> value of all parsed versions depends on the type
+        /// that is parsed. A <see cref="SemVer"/> is parsed first, then if possible a <see cref="CSemVer"/>
+        /// or <see cref="CSemVerCI"/> is created from that. If <paramref name="provider"/> requires
+        /// <see cref="AlphaNumericOrdering.CaseSensitive"/> then ONLY the <see cref="SemVer"/> is considered
+        /// as both <see cref="CSemVer"/> and <see cref="CSemVerCI"/> REQUIRE case insensitive comparisons.
         /// </remarks>
         public static SemVer Parse( string s, IFormatProvider? provider )
         {
-            return TryParse( s, provider, out SemVer? retVal, out Exception? ex ) ? retVal : throw ex;
+            return TryParseIncludeDerived( s, provider, out SemVer? retVal, out Exception? ex ) ? retVal : throw ex;
         }
 
-        /// <summary>Tries to parse a string into a <see cref="SemVer"/></summary>
+        /// <summary>Tries to parse a string into a <see cref="SemVer"/> or derived type</summary>
         /// <param name="s">Input string to parse</param>
         /// <param name="provider">Provider to use for parsing (see remarks)</param>
         /// <param name="result">Resulting version if parsed successfully</param>
@@ -240,7 +255,7 @@ namespace Ubiquity.NET.Versioning
         /// <inheritdoc cref="Parse(string, IFormatProvider?)" path="/remarks"/>
         public static bool TryParse( [NotNullWhen( true )] string? s, IFormatProvider? provider, [MaybeNullWhen( false )] out SemVer result )
         {
-            return TryParse( s, provider, out result, out _ );
+            return TryParseIncludeDerived(s, provider, out result, out _);
         }
 
         /// <summary>Tries to parse a string into a semantic version providing details of any failures</summary>
@@ -249,6 +264,10 @@ namespace Ubiquity.NET.Versioning
         /// <param name="result">Resulting <see cref="SemVer"/> if parse succeeds</param>
         /// <param name="ex">Exception data for any errors or <see langword="null"/> if parse succeeded</param>
         /// <returns><see langword="true"/> if string successfully parsed or <see langword="false"/> if not</returns>
+        /// <remarks>
+        /// This does NOT consider derived types. It is used by the general parsing as well as parsing of derived types
+        /// themselves.
+        /// </remarks>
         internal static bool TryParse(
             [NotNull] string? s,
             IFormatProvider? provider,
@@ -270,6 +289,48 @@ namespace Ubiquity.NET.Versioning
             result = parseResult.Value;
             return true;
         }
+
+        private static bool TryParseIncludeDerived(
+            [NotNullWhen( true )] string? s,
+            IFormatProvider? provider,
+            [MaybeNullWhen( false )] out SemVer result,
+            [MaybeNullWhen( true )] out Exception ex
+            )
+        {
+            result = default;
+            ex = default;
+
+            if(TryParse(s, provider, out SemVer? baseVer, out ex))
+            {
+                // if caller expects case sensitivity then CSmeVer[-CI] are off the table.
+                // Those are explicitly case insensitive.
+                if( provider.IsCaseSensitive())
+                {
+                    result = baseVer;
+                    return true;
+                }
+
+                // expect case insensitive so consider CSemVer/CSemVerCI
+
+                if(CSemVer.TryFrom(baseVer, out CSemVer? ver, out ex))
+                {
+                    result = ver;
+                    return true;
+                }
+
+                if(CSemVerCI.TryFrom(baseVer, out CSemVerCI? ciVer, out ex))
+                {
+                    result = ciVer;
+                    return true;
+                }
+
+                result = baseVer;
+                return true;
+            }
+
+            return false;
+        }
+
         #endregion
 
         private static ImmutableArray<string> ValidateElementsWithParser(

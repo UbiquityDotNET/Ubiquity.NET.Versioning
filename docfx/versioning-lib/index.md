@@ -10,14 +10,21 @@ dependencies or versioning at runtime.)
 
 ## Example
 ``` C#
-var epectedMinimum = new CSemVer(20, 1, 5, "alpha");
-var actual = CSemVer.From(SomeAPIToRetrieveAVersionAsUInt64());
-if (actual < expectedMinimum)
+var quad = new FileVersionQuad(SomeAPiThatRetrievesAFileVersionAsUInt64());
+// ...
+// NOTE: Since all that is available is a QUAD, which has only 1 bit for CI information,
+// there is no way to translate that to a formal CSemVer-CI. Just test ordering of the quad.
+if(quad > MinimumVer.FileVersion)
 {
-    // Uh-OH! "older" version!
+    // Good to go!
+    if( quad.IsCiBuild )
+    {
+        // and it's a CI build!
+    }
 }
 
-// Good to go...
+// ...
+static readonly CSemVer MinimumVer = new(1,2,3/*, ...*/);
 ```
 
 ## Formatting
@@ -38,8 +45,8 @@ versions according to the rules of SemVer (Which, CSemVer and CSemVer-CI follow)
 > state that they are compared lexicographically, which would imply they are case
 > sensitive. However, major repository implementations have chosen different approaches
 > to how the strings are compared and thus the ambiguities of reality win out over any
-> specified implicit behavior. Thus consumers, MUST specify the expected ordering for
-> a SemVer when creating it.
+> specified implicit behavior. Thus, consumers, ***MUST*** specify the expected ordering
+> for a SemVer when creating it.
 
 >[!WARNING]
 > The formal 'spec' for [CSemVer](https://csemver.org) remains mostly silent on the point

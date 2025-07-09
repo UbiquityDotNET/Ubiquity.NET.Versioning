@@ -41,7 +41,7 @@
         <Error Condition="'$(ImplicitUsings)'!='disable'" Code="REPO001" Text="$(MSBuildProjectFile) - Projects in this repository MUST NOT have ImplicitUsings enabled!"/>
 
         <!--
-        Until issue https://github.com/DotNetAnalyzers/StyleCopAnalyzers/issues/3902 is resolved this directly test for the missing stylecop.json file.
+        Until issue https://github.com/DotNetAnalyzers/StyleCopAnalyzers/issues/3902 is resolved, this directly tests for the missing stylecop.json file.
         Given that was opened nearly a year ago and that it went 2 months to even get a comment about the cause, it seems unlikely that will receive a
         fix any time soon...
         -->

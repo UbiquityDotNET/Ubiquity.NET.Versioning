@@ -78,15 +78,15 @@ namespace Ubiquity.NET.Versioning
         /// <seealso cref="SemVer.PreRelease"/>
         /// <seealso cref="CSemVer"/>
         /// <seealso cref="CSemVerCI"/>
-        public IEnumerable<string> FormatElements(bool alawaysIncludeZero = false)
+        public IEnumerable<string> FormatElements( bool alawaysIncludeZero = false )
         {
             yield return Name;
             if(Number > 0 || Fix > 0 || alawaysIncludeZero)
             {
-                yield return Number.ToString(CultureInfo.InvariantCulture);
+                yield return Number.ToString( CultureInfo.InvariantCulture );
                 if(Fix >= 1 || alawaysIncludeZero)
                 {
-                    yield return Fix.ToString(CultureInfo.InvariantCulture);
+                    yield return Fix.ToString( CultureInfo.InvariantCulture );
                 }
             }
         }
@@ -96,9 +96,9 @@ namespace Ubiquity.NET.Versioning
         /// This assumes the Full format of the pre-release information
         /// </remarks>
         /// <returns>The formatted version information</returns>
-        public override string ToString()
+        public override string ToString( )
         {
-            return string.Join('.', FormatElements());
+            return string.Join( '.', FormatElements() );
         }
 
         /// <summary>Tries to parse a <see cref="PrereleaseVersion"/> from a set of pre release parts from a version string</summary>
@@ -110,10 +110,16 @@ namespace Ubiquity.NET.Versioning
         /// number and fix values. If present, the number and fix values must parse to an integer in the range 0-99 using the
         /// <see cref="CultureInfo.InvariantCulture"/>.
         /// </remarks>
-        public static IResult<PrereleaseVersion> TryParseFrom(IReadOnlyList<string> preRelParts)
+        public static IResult<PrereleaseVersion> TryParseFrom( IReadOnlyList<string> preRelParts )
         {
-            string elements = string.Join(string.Empty, preRelParts);
-            return CSemVerPrereleaseGrammar.Prerelease.TryParse(elements);
+            // While it might seem like this is inefficient/redundant, the jury is still out on that.
+            // This does incur the overhead of the allocation for and combination of the input string
+            // it avoids the complexity of rolling it all out by hand, which triggers multiple heap
+            // allocations and conversions of result types etc... so the advantages of eliminating
+            // the overhead of the join are somewhat murky and come at the cost of significantly
+            // increased code complexity/maintenance costs - deemed not worth it at this point.
+            string elements = string.Join('.', preRelParts);
+            return CSemVerPrereleaseGrammar.Prerelease.End().TryParse(elements);
         }
 
         private static byte IndexFromName( [NotNull] string preRelName, [CallerArgumentExpression( nameof( preRelName ) )] string? exp = null )
@@ -122,6 +128,11 @@ namespace Ubiquity.NET.Versioning
             return CSemVerPrereleaseGrammar.TryGetIndexFromName( preRelName, out byte retVal )
                    ? retVal
                    : throw new ArgumentException( "Invalid pre-release name", exp );
+        }
+
+        private static IResult<Tto> Convert<Tto, Tfrom>(IResult<Tfrom> from)
+        {
+            return Result.Failure<Tto>(from.Remainder, from.Message, from.Expectations);
         }
     }
 }

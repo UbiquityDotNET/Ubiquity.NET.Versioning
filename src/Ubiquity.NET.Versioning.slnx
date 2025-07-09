@@ -13,13 +13,10 @@
     <File Path="../global.json" />
     <File Path="../IgnoredWords.dic" />
     <File Path="../Invoke-Tests.ps1" />
-    <File Path="../New-GeneratedVersionProps.ps1" />
     <File Path="../Nuget.Config" />
-    <File Path="../Push-Nuget.ps1" />
     <File Path="../README.md" />
     <File Path="../Show-Docs.ps1" />
     <File Path="../stylecop.json" />
-    <File Path="../Ubiquity.NET.ruleset" />
     <File Path=".runsettings" />
   </Folder>
   <Folder Name="/Solution Items/GitHub/" Id="831fc56c-5192-4533-bdd4-7bc366efe570" />

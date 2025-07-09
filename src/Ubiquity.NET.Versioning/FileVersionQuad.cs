@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Numerics;
 
 namespace Ubiquity.NET.Versioning
@@ -32,18 +33,42 @@ namespace Ubiquity.NET.Versioning
     /// </list>
     /// </para>
     /// <note type="important">
-    /// The role of the LSB for the Revision field is confusing as it indicates a CI build or not which itself is confusing. A CI
+    /// <para>The role of the LSB for the Revision field is confusing as it indicates a CI build or not which itself is confusing. A CI
     /// build occurs AFTER a release! CI builds are ordered AFTER a release (or for a pre-release based on time only [0.0.0]). That is,
-    /// a CI build ***always*** has a Patch+1 of a released build or [Major.Minor.Patch] == [0.0.0].
+    /// a CI build ***always*** has a Patch+1 of a previously released build or [Major.Minor.Patch] == [0.0.0].</para>
+    /// <para>Additionally, it is NOT possible to convert from a <see cref="FileVersionQuad"/> into a <see cref="CSemVerCI"/>
+    /// as there is no defined means to represent a CSemVer-CI build without the 'BuildIndex' and 'BuildName' portions. Thus,
+    /// conversion from <see cref="CSemVerCI"/> to <see cref="FileVersionQuad"/>is always "lossy".</para>
     /// </note>
     /// <para>A file version cast as a <see cref="UInt64"/> is <i><b>NOT</b></i> the same as an Ordered version number.
     /// The file version includes a "bit" for the status as a CI Build. Thus, a "file version" as a <see cref="UInt64"/> is the
     /// ordered version shifted left by one bit and the LSB indicates if it is a Release/CI build</para>
+    /// <example>
+    /// This shows general usage of a <see cref="FileVersionQuad"/>
+    /// <code><![CDATA[
+    /// var quad = new FileVersionQuad(SomeAPiThatRetrievesAFileVersionAsUInt64());
+    /// // ...
+    /// // NOTE: Since all that is available is a QUAD, which has only 1 bit for CI information,
+    /// // there is no way to translate that to a formal CSemVer-CI. Just test ordering of the quad.
+    /// if(quad > MinimumVer.FileVersion)
+    /// {
+    ///     // Good to go!
+    ///     if( quad.IsCiBuild )
+    ///     {
+    ///         // and it's a CI build!
+    ///     }
+    /// }
+    ///
+    /// // ...
+    /// static readonly CSemVer MinimumVer = new(1,2,3/*, ...*/);
+    /// ]]></code>
+    /// </example>
     /// </remarks>
     /// <seealso href="https://csemver.org/"/>
     public readonly record struct FileVersionQuad
         : IComparable<FileVersionQuad>
         , IComparisonOperators<FileVersionQuad, FileVersionQuad, bool>
+        , IParsable<FileVersionQuad>
     {
         /// <summary>Initializes a new instance of the <see cref="FileVersionQuad"/> struct.</summary>
         /// <param name="major">Major component of the version Quad</param>
@@ -180,38 +205,76 @@ namespace Ubiquity.NET.Versioning
 
         /// <summary>Converts this instance to a <see cref="SemVer"/> derived constrained type</summary>
         /// <returns>Constrained version type</returns>
-        /// <remarks>The result is either a <see cref="CSemVerCI"/> or <see cref="CSemVer"/> depending
-        /// on the state of the <see cref="IsCiBuild"/> property. This is used in consuming code when
-        /// it gets only the file version as a 64bit value or a <see cref="FileVersionQuad"/> to produce
-        /// a correct version. Usually a consumer won't care and is only concerned with ordering but
-        /// if needed simple "is" testing is available.
+        /// <remarks>The result is either a valid <see cref="CSemVer"/> or <see langword="null"/> if
+        /// <see cref="FileVersionQuad.IsCiBuild"/> is <see langword="true"/>. This is used in consuming
+        /// code when it gets only the file version as a 64bit value or a <see cref="FileVersionQuad"/>
+        /// to produce a full version. Usually a consumer won't care if it is CI or not and is only
+        /// concerned with ordering but if a CSemVer is needed, this is used to convert IFF it is NOT
+        /// a CI build (There is NO Way to produce a <see cref="CSemVerCI"/> as those <b><em>require</em></b>
+        /// 'BuildIndex' and 'BuildName' components that are not present in the <see cref="FileVersionQuad"/>.)
         /// </remarks>
-        /// <example>
-        /// <code><![CDATA[
-        /// FileVersionQuad quad;
-        /// // ...
-        /// SemVer ver = quad.ToSemVer();
-        /// if(ver > MinimumVer)
-        /// {
-        ///     // Good to go!
-        ///     if( ver is CSmeVerCI)
-        ///     {
-        ///         // and it's a CI build!
-        ///     }
-        /// }
-        ///
-        /// // ...
-        /// static readonly CSemVer MinimumVer = new(1,2,3);
-        /// ]]></code>
-        /// </example>
-        public SemVer ToSemVer()
+        public CSemVer? ToSemVer( )
         {
-            return IsCiBuild ? CSemVerCI.From(this) : CSemVer.From(this);
+            return IsCiBuild ? CSemVer.From( this ) : null;
         }
 
         /// <summary>Converts this instance to a dotted string form</summary>
         /// <returns>Formatted string</returns>
         public override string ToString( ) => $"{Major}.{Minor}.{Build}.{Revision}";
+
+        /// <inheritdoc/>
+        public static FileVersionQuad Parse( string s, IFormatProvider? provider )
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(s);
+            provider ??= CultureInfo.InvariantCulture;
+
+            string[] stringParts = s.Split('.');
+            if(stringParts.Length != 4)
+            {
+                throw new FormatException("Input does not contain four '.' delimited values");
+            }
+
+            UInt16[] intParts = new UInt16[4];
+            for(int i = 0; i< 4; ++i)
+            {
+                if(!UInt16.TryParse(stringParts[i], provider, out intParts[i]))
+                {
+                    throw new FormatException($"'{stringParts[i]}' is not parsable as a UInt16");
+                }
+            }
+
+            return new FileVersionQuad(intParts[0], intParts[1], intParts[2], intParts[3]);
+        }
+
+        /// <inheritdoc/>
+        public static bool TryParse( [NotNullWhen( true )] string? s, IFormatProvider? provider, [MaybeNullWhen( false )] out FileVersionQuad result )
+        {
+            result = default;
+            provider ??= CultureInfo.InvariantCulture;
+
+            if(string.IsNullOrWhiteSpace( s ))
+            {
+                return false;
+            }
+
+            string[] stringParts = s.Split('.');
+            if(stringParts.Length != 4)
+            {
+                return false;
+            }
+
+            UInt16[] intParts = new UInt16[4];
+            for(int i = 0; i< 4; ++i)
+            {
+                if(!UInt16.TryParse(stringParts[i], provider, out intParts[i]))
+                {
+                    return false;
+                }
+            }
+
+            result = new FileVersionQuad(intParts[0], intParts[1], intParts[2], intParts[3]);
+            return true;
+        }
 
         private readonly UInt64 FileVersion64;
 

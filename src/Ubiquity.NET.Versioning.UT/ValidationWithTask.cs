@@ -6,7 +6,6 @@
 
 using System;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -93,15 +92,14 @@ namespace Ubiquity.NET.Versioning.UT
                 // generally ignores the Patch+1 requirement.
                 Assert.AreEqual( expectedVersion.Major, actualCI.Major );
                 Assert.AreEqual( expectedVersion.Minor, actualCI.Minor );
-                Assert.AreEqual( expectedVersion.Patch, actualCI.Patch ); // Until the task is fixed this is expected to fail
-
-                Assert.AreEqual( expectedVersion.Name, actualCI.Name);
+                Assert.AreEqual( expectedVersion.Patch, actualCI.Patch );
 
                 // NOTE: BuildTime is an env var that is set by the build scripts. It has no value in an
                 // IDE build and isn't present for test runs either. This test isn't concerned with the exact
-                // CI build index/name only that it is a CI build AND the base version is legit
-                // as those are the most confusing and easiest to get wrong.
+                // CI build index only that it is a CI build AND the base version is legit as those are the
+                // most confusing and easiest to get wrong.
                 // Assert.AreEqual( expectedVersion.Index, actualCI.Index);
+                Assert.AreEqual( expectedVersion.Name, actualCI.Name);
 
                 Assert.AreEqual( expectedVersion.PreRelease.Length, actualCI.PreRelease.Length, "prerelease sequence should have matching element count" );
             }

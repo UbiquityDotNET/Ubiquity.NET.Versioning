@@ -11,7 +11,8 @@ This repo includes support for versioning numbers. This support includes:
           build numbering. It is NOT a CSemVer but IS a SemVer.
 
 ## Status
-[![NuGet Version](https://img.shields.io/nuget/v/Ubiquity.NET.Versioning)](https://www.nuget.org/packages/Ubiquity.NET.Versioning)![NuGet](https://img.shields.io/nuget/dt/Ubiquity.NET.Versioning.svg)  
+[![NuGet Version](https://img.shields.io/nuget/vpre/Ubiquity.NET.Versioning)](https://www.nuget.org/packages/Ubiquity.NET.Versioning)
+![NuGet](https://img.shields.io/nuget/dt/Ubiquity.NET.Versioning.svg)  
 ![PR/CI Work Flow Status](https://img.shields.io/github/actions/workflow/status/UbiquityDotNET/Ubiquity.NET.Versioning/pr-build.yml?label=PR%2FCI%20Build%20Status)
 ![Release Work Flow Status](https://img.shields.io/github/actions/workflow/status/UbiquityDotNET/Ubiquity.NET.Versioning/release-build.yml?label=Release%20Build%20Status)
 

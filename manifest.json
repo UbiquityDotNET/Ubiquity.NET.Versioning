@@ -116,125 +116,41 @@
       "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.OrderedVersion.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.CSemVer.OrderedVersion",
-      "Summary": null
+      "Title": "Ubiquity.NET.Versioning.CSemVer",
+      "Summary": "<p sourcefile=\"versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.yml\" sourcestartlinenumber=\"1\">Holds a Constrained Semantic Version (CSemVer) value</p>\n"
     },
     {
       "type": "ManagedReference",
       "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.-ctor.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.MaxOrderedVersion.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.CSemVer.CSemVer",
-      "Summary": null
+      "Title": "Ubiquity.NET.Versioning.CSemVer.MaxOrderedVersion",
+      "Summary": "<p sourcefile=\"versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.yml\" sourcestartlinenumber=\"1\">Maximum value of an ordered version number</p>\n"
     },
     {
       "type": "ManagedReference",
       "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.PrereleaseVersion.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.TryParse.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.CSemVer.PrereleaseVersion",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.FileVersion.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.CSemVer.FileVersion",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.IsPrerelease.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.CSemVer.IsPrerelease",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.Zero.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.CSemVer.Zero",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.TryFrom.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.CSemVer.TryFrom",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.From.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.CSemVer.From",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.FromOrderedVersion.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.CSemVer.FromOrderedVersion",
+      "Title": "Ubiquity.NET.Versioning.CSemVer.TryParse",
       "Summary": null
     },
     {
@@ -256,13 +172,13 @@
       "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.TryParse.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.From.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.CSemVer.TryParse",
+      "Title": "Ubiquity.NET.Versioning.CSemVer.From",
       "Summary": null
     },
     {
@@ -270,28 +186,28 @@
       "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.MaxOrderedVersion.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.TryFrom.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.CSemVer.MaxOrderedVersion",
-      "Summary": "<p sourcefile=\"versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.yml\" sourcestartlinenumber=\"1\">Maximum value of an ordered version number</p>\n"
+      "Title": "Ubiquity.NET.Versioning.CSemVer.TryFrom",
+      "Summary": null
     },
     {
       "type": "ManagedReference",
       "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.Zero.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.CSemVer",
-      "Summary": "<p sourcefile=\"versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.yml\" sourcestartlinenumber=\"1\">Holds a Constrained Semantic Version (CSemVer) value</p>\n"
+      "Title": "Ubiquity.NET.Versioning.CSemVer.Zero",
+      "Summary": null
     },
     {
       "type": "ManagedReference",
@@ -309,142 +225,86 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.yml",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.Index.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.IsPrerelease.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.CSemVerCI.Index",
+      "Title": "Ubiquity.NET.Versioning.CSemVer.IsPrerelease",
       "Summary": null
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.yml",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.-ctor.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.OrderedVersion.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.CSemVerCI.CSemVerCI",
+      "Title": "Ubiquity.NET.Versioning.CSemVer.OrderedVersion",
       "Summary": null
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.yml",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.Name.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.FileVersion.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.CSemVerCI.Name",
+      "Title": "Ubiquity.NET.Versioning.CSemVer.FileVersion",
       "Summary": null
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.yml",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.BaseBuild.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.PrereleaseVersion.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.CSemVerCI.BaseBuild",
+      "Title": "Ubiquity.NET.Versioning.CSemVer.PrereleaseVersion",
       "Summary": null
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.yml",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.FileVersion.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.-ctor.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.CSemVerCI.FileVersion",
+      "Title": "Ubiquity.NET.Versioning.CSemVer.CSemVer",
       "Summary": null
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.yml",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.PrereleaseVersion.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVer.FromOrderedVersion.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.CSemVerCI.PrereleaseVersion",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.OrderedVersion.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.CSemVerCI.OrderedVersion",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.From.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.CSemVerCI.From",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.TryFrom.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.CSemVerCI.TryFrom",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.Parse.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.CSemVerCI.Parse",
+      "Title": "Ubiquity.NET.Versioning.CSemVer.FromOrderedVersion",
       "Summary": null
     },
     {
@@ -474,6 +334,146 @@
       "IsMRef": true,
       "Title": "Ubiquity.NET.Versioning.CSemVerCI",
       "Summary": "<p sourcefile=\"versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.yml\" sourcestartlinenumber=\"1\">Represents a CSemVer-CI value</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.Parse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.CSemVerCI.Parse",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.TryFrom.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.CSemVerCI.TryFrom",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.From.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.CSemVerCI.From",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.-ctor.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.CSemVerCI.CSemVerCI",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.BaseBuild.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.CSemVerCI.BaseBuild",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.Index.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.CSemVerCI.Index",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.Name.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.CSemVerCI.Name",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.PrereleaseVersion.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.CSemVerCI.PrereleaseVersion",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.FileVersion.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.CSemVerCI.FileVersion",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.CSemVerCI.OrderedVersion.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.CSemVerCI.OrderedVersion",
+      "Summary": null
     },
     {
       "type": "ManagedReference",
@@ -522,20 +522,6 @@
       "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.DateTimeExtensions.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.DateTimeExtensions.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.DateTimeExtensions",
-      "Summary": "<p sourcefile=\"versioning-lib/api/Ubiquity.NET.Versioning.DateTimeExtensions.yml\" sourcestartlinenumber=\"1\">Utility Class for <xref href=\"System.DateTime\" data-throw-if-not-resolved=\"false\"></xref> extensions</p>\n"
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.DateTimeExtensions.yml",
-      "output": {
-        ".html": {
           "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.DateTimeExtensions.ToBuildIndex.html"
         }
       },
@@ -547,59 +533,17 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.DateTimeExtensions.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.DateTimeExtensions.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.FileVersionQuad",
-      "Summary": "<p sourcefile=\"versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml\" sourcestartlinenumber=\"1\">Represents a traditional &quot;File&quot; version QUAD of 16bit values</p>\n"
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.op_Explicit.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.explicit operator",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.TryParse.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.TryParse",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.Parse.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.Parse",
-      "Summary": null
+      "Title": "Ubiquity.NET.Versioning.DateTimeExtensions",
+      "Summary": "<p sourcefile=\"versioning-lib/api/Ubiquity.NET.Versioning.DateTimeExtensions.yml\" sourcestartlinenumber=\"1\">Utility Class for <xref href=\"System.DateTime\" data-throw-if-not-resolved=\"false\"></xref> extensions</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -620,13 +564,153 @@
       "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.ToSemVer.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.-ctor.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.ToSemVer",
+      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.FileVersionQuad",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.IsCiBuild.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.IsCiBuild",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.Major.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.Major",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.Minor.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.Minor",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.Build.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.Build",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.Revision.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.Revision",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.ToUInt64.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.ToUInt64",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.CompareTo.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.CompareTo",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.op_LessThan.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.operator <",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.op_LessThanOrEqual.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.operator <=",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.op_GreaterThan.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.operator >",
       "Summary": null
     },
     {
@@ -662,20 +746,6 @@
       "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.op_GreaterThan.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.operator >",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml",
-      "output": {
-        ".html": {
           "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.ToVersion.html"
         }
       },
@@ -690,13 +760,13 @@
       "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.Revision.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.Parse.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.Revision",
+      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.Parse",
       "Summary": null
     },
     {
@@ -704,13 +774,13 @@
       "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.op_LessThan.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.ToSemVer.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.operator <",
+      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.ToSemVer",
       "Summary": null
     },
     {
@@ -718,13 +788,13 @@
       "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.CompareTo.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.TryParse.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.CompareTo",
+      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.TryParse",
       "Summary": null
     },
     {
@@ -732,13 +802,13 @@
       "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.ToUInt64.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.op_Explicit.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.ToUInt64",
+      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.explicit operator",
       "Summary": null
     },
     {
@@ -746,83 +816,27 @@
       "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.Build.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.Build",
-      "Summary": null
+      "Title": "Ubiquity.NET.Versioning.FileVersionQuad",
+      "Summary": "<p sourcefile=\"versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml\" sourcestartlinenumber=\"1\">Represents a traditional &quot;File&quot; version QUAD of 16bit values</p>\n"
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.ParsedBuildVersionXml.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.Minor.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.ParsedBuildVersionXml.BuildMinor.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.Minor",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.Major.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.Major",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.IsCiBuild.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.IsCiBuild",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.-ctor.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.FileVersionQuad",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.FileVersionQuad.op_LessThanOrEqual.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.FileVersionQuad.operator <=",
+      "Title": "Ubiquity.NET.Versioning.ParsedBuildVersionXml.BuildMinor",
       "Summary": null
     },
     {
@@ -830,13 +844,27 @@
       "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.ParsedBuildVersionXml.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.ParsedBuildVersionXml.Parse.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.ParsedBuildVersionXml.-ctor.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.ParsedBuildVersionXml.Parse",
+      "Title": "Ubiquity.NET.Versioning.ParsedBuildVersionXml.ParsedBuildVersionXml",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.ParsedBuildVersionXml.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.ParsedBuildVersionXml.BuildMajor.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.ParsedBuildVersionXml.BuildMajor",
       "Summary": null
     },
     {
@@ -852,6 +880,34 @@
       "IsMRef": true,
       "Title": "Ubiquity.NET.Versioning.ParsedBuildVersionXml",
       "Summary": "<p sourcefile=\"versioning-lib/api/Ubiquity.NET.Versioning.ParsedBuildVersionXml.yml\" sourcestartlinenumber=\"1\"><a href=\"https://learn.microsoft.com/en-us/dotnet/standard/glossary#poco\">POCO</a>\nversion of information parsed from a Build version XML file</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.ParsedBuildVersionXml.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.ParsedBuildVersionXml.BuildPatch.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.ParsedBuildVersionXml.BuildPatch",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.ParsedBuildVersionXml.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.ParsedBuildVersionXml.PreReleaseName.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.ParsedBuildVersionXml.PreReleaseName",
+      "Summary": null
     },
     {
       "type": "ManagedReference",
@@ -900,69 +956,13 @@
       "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.ParsedBuildVersionXml.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.ParsedBuildVersionXml.BuildPatch.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.ParsedBuildVersionXml.Parse.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.ParsedBuildVersionXml.BuildPatch",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.ParsedBuildVersionXml.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.ParsedBuildVersionXml.PreReleaseName.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.ParsedBuildVersionXml.PreReleaseName",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.ParsedBuildVersionXml.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.ParsedBuildVersionXml.BuildMinor.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.ParsedBuildVersionXml.BuildMinor",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.ParsedBuildVersionXml.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.ParsedBuildVersionXml.BuildMajor.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.ParsedBuildVersionXml.BuildMajor",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.ParsedBuildVersionXml.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.ParsedBuildVersionXml.-ctor.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.ParsedBuildVersionXml.ParsedBuildVersionXml",
+      "Title": "Ubiquity.NET.Versioning.ParsedBuildVersionXml.Parse",
       "Summary": null
     },
     {
@@ -984,48 +984,6 @@
       "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.PrereleaseVersion.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.PrereleaseVersion.ToString.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.PrereleaseVersion.ToString",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.PrereleaseVersion.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.PrereleaseVersion.FormatElements.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.PrereleaseVersion.FormatElements",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.PrereleaseVersion.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.PrereleaseVersion.Name.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.PrereleaseVersion.Name",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.PrereleaseVersion.yml",
-      "output": {
-        ".html": {
           "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.PrereleaseVersion.TryParseFrom.html"
         }
       },
@@ -1033,34 +991,6 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Ubiquity.NET.Versioning.PrereleaseVersion.TryParseFrom",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.PrereleaseVersion.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.PrereleaseVersion.Number.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.PrereleaseVersion.Number",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.PrereleaseVersion.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.PrereleaseVersion.Index.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.PrereleaseVersion.Index",
       "Summary": null
     },
     {
@@ -1082,6 +1012,48 @@
       "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.PrereleaseVersion.yml",
       "output": {
         ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.PrereleaseVersion.FormatElements.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.PrereleaseVersion.FormatElements",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.PrereleaseVersion.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.PrereleaseVersion.ToString.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.PrereleaseVersion.ToString",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.PrereleaseVersion.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.PrereleaseVersion.Number.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.PrereleaseVersion.Number",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.PrereleaseVersion.yml",
+      "output": {
+        ".html": {
           "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.PrereleaseVersion.Fix.html"
         }
       },
@@ -1093,16 +1065,30 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.yml",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.PrereleaseVersion.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.op_LessThanOrEqual.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.PrereleaseVersion.Name.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.SemVer.operator <=",
+      "Title": "Ubiquity.NET.Versioning.PrereleaseVersion.Name",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.PrereleaseVersion.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.PrereleaseVersion.Index.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.PrereleaseVersion.Index",
       "Summary": null
     },
     {
@@ -1110,97 +1096,13 @@
       "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.PreRelease.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.Major.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.SemVer.PreRelease",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.BuildMeta.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.SemVer.BuildMeta",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.ToString.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.SemVer.ToString",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.CompareTo.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.SemVer.CompareTo",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.Equals.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.SemVer.Equals",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.GetHashCode.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.SemVer.GetHashCode",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.yml",
-      "output": {
-        ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.Patch.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.SemVer.Patch",
+      "Title": "Ubiquity.NET.Versioning.SemVer.Major",
       "Summary": null
     },
     {
@@ -1250,6 +1152,20 @@
       "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.yml",
       "output": {
         ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.op_LessThanOrEqual.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.SemVer.operator <=",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.yml",
+      "output": {
+        ".html": {
           "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.op_GreaterThan.html"
         }
       },
@@ -1264,13 +1180,13 @@
       "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.Minor.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.op_GreaterThanOrEqual.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.SemVer.Minor",
+      "Title": "Ubiquity.NET.Versioning.SemVer.operator >=",
       "Summary": null
     },
     {
@@ -1320,13 +1236,27 @@
       "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.AlphaNumericOrdering.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.CompareTo.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.SemVer.AlphaNumericOrdering",
+      "Title": "Ubiquity.NET.Versioning.SemVer.CompareTo",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.ToString.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.SemVer.ToString",
       "Summary": null
     },
     {
@@ -1348,13 +1278,13 @@
       "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.Major.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.BuildMeta.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.SemVer.Major",
+      "Title": "Ubiquity.NET.Versioning.SemVer.BuildMeta",
       "Summary": null
     },
     {
@@ -1362,13 +1292,83 @@
       "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.op_GreaterThanOrEqual.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.PreRelease.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.SemVer.operator >=",
+      "Title": "Ubiquity.NET.Versioning.SemVer.PreRelease",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.Patch.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.SemVer.Patch",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.GetHashCode.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.SemVer.GetHashCode",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.AlphaNumericOrdering.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.SemVer.AlphaNumericOrdering",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.Minor.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.SemVer.Minor",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVer.Equals.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Ubiquity.NET.Versioning.SemVer.Equals",
       "Summary": null
     },
     {
@@ -1376,14 +1376,14 @@
       "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVerFormatProvider.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVerFormatProvider.CaseSensitive.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVerFormatProvider.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.SemVerFormatProvider.CaseSensitive",
-      "Summary": "<p sourcefile=\"versioning-lib/api/Ubiquity.NET.Versioning.SemVerFormatProvider.yml\" sourcestartlinenumber=\"1\">Gets a formatter that supports case sensitive comparisons of parsed <xref href=\"Ubiquity.NET.Versioning.SemVer\" data-throw-if-not-resolved=\"false\"></xref> values</p>\n"
+      "Title": "Ubiquity.NET.Versioning.SemVerFormatProvider",
+      "Summary": "<p sourcefile=\"versioning-lib/api/Ubiquity.NET.Versioning.SemVerFormatProvider.yml\" sourcestartlinenumber=\"1\">Format provider for a Semantic version that determines the ordering for parsing</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -1404,14 +1404,14 @@
       "source_relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVerFormatProvider.yml",
       "output": {
         ".html": {
-          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVerFormatProvider.html"
+          "relative_path": "versioning-lib/api/Ubiquity.NET.Versioning.SemVerFormatProvider.CaseSensitive.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Ubiquity.NET.Versioning.SemVerFormatProvider",
-      "Summary": "<p sourcefile=\"versioning-lib/api/Ubiquity.NET.Versioning.SemVerFormatProvider.yml\" sourcestartlinenumber=\"1\">Format provider for a Semantic version that determines the ordering for parsing</p>\n"
+      "Title": "Ubiquity.NET.Versioning.SemVerFormatProvider.CaseSensitive",
+      "Summary": "<p sourcefile=\"versioning-lib/api/Ubiquity.NET.Versioning.SemVerFormatProvider.yml\" sourcestartlinenumber=\"1\">Gets a formatter that supports case sensitive comparisons of parsed <xref href=\"Ubiquity.NET.Versioning.SemVer\" data-throw-if-not-resolved=\"false\"></xref> values</p>\n"
     },
     {
       "type": "ManagedReference",

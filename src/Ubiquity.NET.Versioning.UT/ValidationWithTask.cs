@@ -40,7 +40,7 @@ namespace Ubiquity.NET.Versioning.UT
             // NOTE: Concept of a CI build used here (and in CSemVer[-CI]) is anything that is NOT
             //       a release build. It does not distinguish between local, PR, or "nightly" etc...
             //       That information is lost in creation of the FileVersionQuad form anyway and
-            //       only a single bit represents a CSemVer or CSemVer-CI.
+            //       only a single bit represents a CI build.
             BuildKind buildKind = GetBuildKind();
             bool isCIBuild = buildKind != BuildKind.ReleaseBuild;
 
@@ -88,8 +88,9 @@ namespace Ubiquity.NET.Versioning.UT
                 // This is where the Patch+1 behavior is validated against the task
                 // Both this library and the generated version for this library (from the task)
                 // should agree on the build and base build. Bug: https://github.com/UbiquityDotNET/CSemVer.GitBuild/issues/64
-                // on the task deals with the incorrect assumption that baseBuild == build and
-                // generally ignores the Patch+1 requirement.
+                // on the task dealt with the previously incorrect assumption that baseBuild == build and
+                // generally ignored the Patch+1 requirement. That has since been fixed but worth keeping in mind
+                // as this point has caused a great deal of confusion.
                 Assert.AreEqual( expectedVersion.Major, actualCI.Major );
                 Assert.AreEqual( expectedVersion.Minor, actualCI.Minor );
                 Assert.AreEqual( expectedVersion.Patch, actualCI.Patch );

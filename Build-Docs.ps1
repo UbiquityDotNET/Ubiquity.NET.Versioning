@@ -70,18 +70,18 @@ try
     # Thus, for now, this uses the docfx build phase.]
     "$([DateTime]::UtcNow.ToString('o'))" | Out-File -Path (Join-Path $docsOutputPath '.nojekyll')
 
-    #TODO: Find a way to leverage the build version information programmatically
-    #      One option used in other repos, is to create a dummy project and use the generated
-    #      Properties to save to a JSON file... That's dodgy at best for something so common as this...
-    #      Perhaps this repo could build a .NET tool that used the versioning library itself and that
-    #      could produce the version numbering for use in docs builds. Such use would require tests to
-    #      validate that the behavior of the versioning library matches that of the build task, but it
-    #      should have such testing anyway.
-    $fullBuildNumber = '<build version unavailable>'
-
     push-location './docfx'
     try
     {
+        Write-Information "Generating Version JSON"
+        Invoke-External dotnet msbuild -restore '-target:GenerateVersionJson' documentation.msbuildproj
+        if(!(Test-Path -PathType Leaf 'CurrentVersionInfo.json'))
+        {
+            throw "CurrentVersionInfo.json - missing/not created!"
+        }
+
+        $versionInfo = Get-Content ./CurrentVersionInfo.json | ConvertFrom-Json -AsHashTable
+        $fullBuildNumber = $versionInfo['FullBuildNumber']
         Write-Information "Building docs [FullBuildNumber=$fullBuildNumber]"
         Invoke-External docfx '-m' _buildVersion=$fullBuildNumber '-o' $docsOutputPath
     }

@@ -4,7 +4,7 @@ permissions:
   pages: write
   packages: write
   actions: read
-  
+
 defaults:
   run:
     shell: pwsh
@@ -67,13 +67,16 @@ jobs:
           directory: .\BuildOutput\docs
           branch: gh-pages
 
-      - name: Publish packages to NuGet.org
-        run: |
-          if( [string]::IsNullOrWhiteSpace('${{secrets.NUGETPUSH_ACCESS_TOKEN}}'))
-          {
-              throw "'NUGETPUSH_ACCESS_TOKEN' does not exist, is empty or all whitespace!"
-          }
-          dotnet nuget push .\BuildOutput\NuGet\*.nupkg --api-key '${{secrets.NUGETPUSH_ACCESS_TOKEN}}' --source 'https://api.nuget.org/v3/index.json' --skip-duplicate
+# no automatic publication of NuGet packages, too much room for mistakes as publication to NuGet
+# cannot be undone. The packages must be manually published AFTER a successful GH release process
+# as a GH release ca be undone!
+#      - name: Publish packages to NuGet.org
+#        run: |
+#          if( [string]::IsNullOrWhiteSpace('${{secrets.NUGETPUSH_ACCESS_TOKEN}}'))
+#          {
+#              throw "'NUGETPUSH_ACCESS_TOKEN' does not exist, is empty or all whitespace!"
+#          }
+#          dotnet nuget push .\BuildOutput\NuGet\*.nupkg --api-key '${{secrets.NUGETPUSH_ACCESS_TOKEN}}' --source 'https://api.nuget.org/v3/index.json' --skip-duplicate
 
       - name: Create Release
         if: (!cancelled())

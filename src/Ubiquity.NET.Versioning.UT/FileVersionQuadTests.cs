@@ -17,17 +17,17 @@ namespace Ubiquity.NET.Versioning.UT
         public void ConstructorTest( )
         {
             var x = new FileVersionQuad(0x1234, 0x5678, 0x9ABC, 0xDEF0 );
-            Assert.AreEqual((UInt16)0x1234u, x.Major);
-            Assert.AreEqual((UInt16)0x5678u, x.Minor);
-            Assert.AreEqual((UInt16)0x9ABCu, x.Build);
-            Assert.AreEqual((UInt16)0xDEF0u, x.Revision);
+            Assert.AreEqual((ushort)0x1234u, x.Major);
+            Assert.AreEqual((ushort)0x5678u, x.Minor);
+            Assert.AreEqual((ushort)0x9ABCu, x.Build);
+            Assert.AreEqual((ushort)0xDEF0u, x.Revision);
         }
 
         [TestMethod]
         public void ToUInt64Test( )
         {
             var x = new FileVersionQuad(0x1234, 0x5678, 0x9ABC, 0xDEF0 );
-            UInt64 y = x.ToUInt64();
+            ulong y = x.ToUInt64();
 
             // NOTE: Major contains the Most significant "16 bits" of the result
             //       Minor the next...
@@ -69,10 +69,10 @@ namespace Ubiquity.NET.Versioning.UT
         public void FromTest( )
         {
             var x = new FileVersionQuad(0x123456789ABCDEF0ul);
-            Assert.AreEqual((UInt16)0x1234u, x.Major);
-            Assert.AreEqual((UInt16)0x5678u, x.Minor);
-            Assert.AreEqual((UInt16)0x9ABCu, x.Build);
-            Assert.AreEqual((UInt16)0xDEF0u, x.Revision);
+            Assert.AreEqual((ushort)0x1234u, x.Major);
+            Assert.AreEqual((ushort)0x5678u, x.Minor);
+            Assert.AreEqual((ushort)0x9ABCu, x.Build);
+            Assert.AreEqual((ushort)0xDEF0u, x.Revision);
         }
     }
 }

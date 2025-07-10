@@ -46,9 +46,8 @@ namespace Ubiquity.NET.Versioning.UT
         }
 
         [TestMethod]
-        public void SortOrderIng_is_CaseSensitive_By_Default( )
+        public void SortOrderIng_is_CaseSensitive_works_as_expected( )
         {
-            // 1.0.0-alpha < 1.0.0-alpha.1 < 1.0.0-alpha.beta < 1.0.0-beta < 1.0.0-beta.2 < 1.0.0-beta.11 < 1.0.0-rc.1 < 1.0.0.
             string[] verStrings = [
                 "1.0.0-alpha",
                 "1.0.0-alpha.1",
@@ -66,7 +65,9 @@ namespace Ubiquity.NET.Versioning.UT
                 "2.1.1",
             ];
 
-            SemVer[] sample = [ .. verStrings.Select(s=>SemVer.Parse(s, null)) ];
+            // Explicitly request caseSensitive ordering to eliminate derived types that require
+            // insensitive comparison from consideration. This forces all parsed values to a SemVer only.
+            SemVer[] sample = [ .. verStrings.Select(s=>SemVer.Parse(s, SemVerFormatProvider.CaseSensitive)) ];
             for(int i = 1; i < verStrings.Length; ++i)
             {
                 var lhs = sample[i-1];
@@ -127,6 +128,10 @@ namespace Ubiquity.NET.Versioning.UT
             foreach(var kvp in ValidSemVerStrings)
             {
                 var result = SemVer.Parse( kvp.Key, null );
+
+                // Null is used as provider so derived types allowed.
+                var expectedOrdering = result is CSemVer or CSemVerCI ? AlphaNumericOrdering.CaseInsensitive : AlphaNumericOrdering.CaseSensitive;
+                Assert.AreEqual(expectedOrdering, result.AlphaNumericOrdering);
                 ValidateEquavalent( kvp.Value, result, kvp.Key );
             }
 

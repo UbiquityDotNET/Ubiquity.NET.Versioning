@@ -14,6 +14,7 @@ on:
       - '**.md'
       - '**.dic'
       - 'BuildVersion.xml'
+      - 'GitHub/workflows/release-build.yml'
 
   pull_request:
     branches:
@@ -23,6 +24,7 @@ on:
       - '**.md'
       - '**.dic'
       - 'BuildVersion.xml'
+      - 'GitHub/workflows/release-build.yml'
 
 jobs:
   # see: https://github.com/EnricoMi/publish-unit-test-result-action?tab=readme-ov-file#support-fork-repositories-and-dependabot-branches

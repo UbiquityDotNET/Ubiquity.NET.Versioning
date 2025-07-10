@@ -25,5 +25,12 @@ namespace Ubiquity.NET.Versioning
                 throw new ArgumentException("Format provider must be <null> or provide a CaseInsensitive comparison", exp);
             }
         }
+
+        public static AlphaNumericOrdering GetOrdering(this IFormatProvider provider)
+        {
+            ArgumentNullException.ThrowIfNull(provider);
+
+            return (AlphaNumericOrdering?)provider.GetFormat(typeof(AlphaNumericOrdering)) ?? AlphaNumericOrdering.None;
+        }
     }
 }

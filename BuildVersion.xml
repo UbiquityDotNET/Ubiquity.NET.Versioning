@@ -3,7 +3,7 @@ This file is updated on a public release to set the build number for a release a
 will be based on
 -->
 <BuildVersionData
-    BuildMajor = "5"
+    BuildMajor = "6"
     BuildMinor = "0"
-    BuildPatch = "4"
+    BuildPatch = "0"
 />

@@ -3,10 +3,13 @@ The Ubiquity.NET.Versioning library provides types to support use of versioning 
 1) [Semantic Versioning](https://semver.org)
 2) [Constrained Semantic Versioning](https://csemver.org)
     - Including Continuous Integration (CI) via CSemVer-CI
+    - Including FileVersion QUAD representation
+    - Including OrderedVersion integral representation.
 
 It is viable as a standalone package to allow validation of or comparisons to versions
 reported at runtime. (Especially from native interop that does not support package
-dependencies or versioning at runtime.)
+dependencies or versioning at runtime.) The [Ubiquity.NET.Versioning.Build.Tasks](https://www.nuget.org/packages/Ubiquity.NET.Versioning.Build.Tasks)
+is a companion project that implements automated build support for CSemVer.
 
 ## Example
 ``` C#

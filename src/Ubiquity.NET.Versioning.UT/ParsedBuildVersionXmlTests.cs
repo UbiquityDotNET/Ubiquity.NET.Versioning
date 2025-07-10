@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Xml.Linq;
 
@@ -83,6 +84,7 @@ namespace Ubiquity.NET.Versioning.UT
                     )
                  );
 
+        [SuppressMessage( "StyleCop.CSharp.NamingRules", "SA1310:Field names should not contain underscore", Justification = "Underscores substitute for otherwise invalid delimiter" )]
         private static readonly XDocument Xml_5_0_4
             = new( new XElement("BuildVersionData",
                        new XAttribute("BuildMajor", "5"),

@@ -11,5 +11,3 @@
   items:
     - name: Ubiquity.NET.Versioning
       href: versioning-lib/index.md
-    - name: Ubiquity.NET.Versioning.Build.Tasks
-      href: build-tasks/index.md

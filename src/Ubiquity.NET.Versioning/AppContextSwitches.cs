@@ -62,6 +62,7 @@ namespace Ubiquity.NET.Versioning
             set => AppContext.SetSwitch(CSemVerCIOnlySupportsBuildMetaOnZeroTimedVersionsName, value);
         }
 
+        // internal utility to read a switch and default to false if not found.
         private static bool GetSwitchValue(string name)
         {
             bool found = AppContext.TryGetSwitch(name, out bool currentVal);

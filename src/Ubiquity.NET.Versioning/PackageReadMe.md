@@ -43,15 +43,18 @@ sort ordering of the versions according to the rules of SemVer (Which, CSemVer a
 follow with the exception of explicit case insensitivity for AphaNumeric IDs)
 
 >[!WARNING]
-> The formal 'spec' for [CSemVer](https://csemver.org) remains mostly silent on the point of
-> the short format. See this [known issue](https://github.com/CK-Build/csemver.org/issues/2).
+> The formal 'spec' for [CSemVer](https://csemver.org) remains mostly silent on the point
+> of the short format. See this [known issue](https://github.com/CK-Build/csemver.org/issues/2).
 > Since, the existence of that form was to support NuGet V2, which is now obsolete, this
 > library does not support the short form at all. (This choice keeps documentation clarity
 > [NOT SUPPORTED] and implementation simplicity)
 
 ------
-<sup><a id="footnote_1">1</a></sup> `SemVer` contains constructors accepting an
-`AlhpanumericOrdering` enumeration to identify the ordering expected for a given instance.
-Unfortunately, major repositories using SemVer have chosen to use different comparisons. Thus,
-a consumer is required to specify if the version is compared insensitive or not.
-
+<sup><a id="footnote_1">1</a></sup>Unfortunately, major repositories using SemVer have
+chosen to use different comparisons. Thus, a consumer is required to know a-priori if the
+version is compared insensitive or not. Thus all constructors accept an enum indicating
+the sort ordering to use. Additional, parsing accepts an IFormatProvider, which should
+provide an `AlphaNumeirvOrdering` value to specify the ordering. If none is provided, the
+default is used. (SemVer uses CaseSensitive comparisons, CSemVer and CSemVerCI ALWAYS use
+case insensitive) `IComparer<SemVer>` instances are available for cases where the versions
+are from mixed sources and the application wishes to order the versions.

@@ -262,6 +262,7 @@ namespace Ubiquity.NET.Versioning
         /// <inheritdoc/>
         public static new CSemVer Parse( string s, IFormatProvider? provider )
         {
+            // Throw if provider isn't one that is ignorable.
             provider.ThrowIfCaseSensitive();
             return TryParse( s, out CSemVer? retVal, out Exception? ex ) ? retVal : throw ex;
         }
@@ -272,6 +273,7 @@ namespace Ubiquity.NET.Versioning
         /// </remarks>
         public static bool TryParse( [NotNullWhen( true )] string? s, IFormatProvider? provider, [MaybeNullWhen( false )] out CSemVer result )
         {
+            // Throw if provider isn't one that is ignorable.
             provider.ThrowIfCaseSensitive();
             return TryParse( s, out result, out _ );
         }

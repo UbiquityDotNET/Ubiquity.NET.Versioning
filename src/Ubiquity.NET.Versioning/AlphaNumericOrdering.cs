@@ -9,7 +9,7 @@ namespace Ubiquity.NET.Versioning
     /// <summary>Identifies the sort ordering expected for a given version</summary>
     public enum AlphaNumericOrdering
     {
-        /// <summary>Indicates no sort ordering</summary>
+        /// <summary>Indicates an invalid sort ordering</summary>
         /// <remarks>
         /// This value is the default for this type and is ALWAYS invalid.
         /// </remarks>

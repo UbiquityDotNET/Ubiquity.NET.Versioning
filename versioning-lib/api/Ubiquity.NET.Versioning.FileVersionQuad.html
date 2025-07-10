@@ -16,7 +16,7 @@
       
       
       
-      <meta name="docfx:docurl" content="https://github.com/UbiquityDotNET/CSemVer.GitBuild/new/develop/apiSpec/new?filename=Ubiquity_NET_Versioning_FileVersionQuad.md&amp;value=---%0Auid%3A%20Ubiquity.NET.Versioning.FileVersionQuad%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/new/develop/apiSpec/new?filename=Ubiquity_NET_Versioning_FileVersionQuad.md&amp;value=---%0Auid%3A%20Ubiquity.NET.Versioning.FileVersionQuad%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -84,7 +84,7 @@
 
 
   <h1 id="Ubiquity_NET_Versioning_FileVersionQuad" data-uid="Ubiquity.NET.Versioning.FileVersionQuad" class="text-break">
-Struct FileVersionQuad  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.4/src/Ubiquity.NET.Versioning/FileVersionQuad.cs/#L47"><i class="bi bi-code-slash"></i></a>
+Struct FileVersionQuad  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/blob/v6.0.0/src/Ubiquity.NET.Versioning/FileVersionQuad.cs/#L68"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,7 +97,7 @@ Struct FileVersionQuad  <a class="header-action link-secondary" title="View sour
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly record struct FileVersionQuad : IComparable&lt;FileVersionQuad&gt;, IComparisonOperators&lt;FileVersionQuad, FileVersionQuad, bool&gt;, IEqualityOperators&lt;FileVersionQuad, FileVersionQuad, bool&gt;, IEquatable&lt;FileVersionQuad&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly record struct FileVersionQuad : IComparable&lt;FileVersionQuad&gt;, IComparisonOperators&lt;FileVersionQuad, FileVersionQuad, bool&gt;, IEqualityOperators&lt;FileVersionQuad, FileVersionQuad, bool&gt;, IParsable&lt;FileVersionQuad&gt;, IEquatable&lt;FileVersionQuad&gt;</code></pre>
   </div>
 
 
@@ -110,6 +110,7 @@ Struct FileVersionQuad  <a class="header-action link-secondary" title="View sour
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.icomparable-1">IComparable</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.html">FileVersionQuad</a>&gt;</div>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.icomparisonoperators-3">IComparisonOperators</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.html">FileVersionQuad</a>, <a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.html">FileVersionQuad</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</div>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.iequalityoperators-3">IEqualityOperators</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.html">FileVersionQuad</a>, <a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.html">FileVersionQuad</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iparsable-1">IParsable</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.html">FileVersionQuad</a>&gt;</div>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.html">FileVersionQuad</a>&gt;</div>
     </dd>
   </dl>
@@ -153,21 +154,57 @@ following pattern:
 <table><thead><tr><th class="term">Field</th><th class="term">Description</th></tr></thead><tbody><tr><td class="term">bits 48-63</td><td class="description"> Major part of Build number</td></tr><tr><td class="term">bits 32-47</td><td class="description"> Minor part of Build number</td></tr><tr><td class="term">bits 16-31</td><td class="description"> Build part of Build number</td></tr><tr><td class="term">bits 0-15</td><td class="description"> Revision part of Build number (LSB indicates a release/CI build see remarks section for details)</td></tr></tbody></table>
 
 <div class="IMPORTANT"><h5>important</h5><p>
-The role of the LSB for the Revision field is confusing as it indicates a CI build or not which itself is confusing. A CI
+<p>The role of the LSB for the Revision field is confusing as it indicates a CI build or not which itself is confusing. A CI
 build occurs AFTER a release! CI builds are ordered AFTER a release (or for a pre-release based on time only [0.0.0]). That is,
-a CI build ***always*** has a Patch+1 of a released build or [Major.Minor.Patch] == [0.0.0].
-</p></div>
+a CI build ***always*** has a Patch+1 of a previously released build or [Major.Minor.Patch] == [0.0.0].</p>
+<p>Additionally, it is NOT possible to convert from a <a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.html">FileVersionQuad</a> into a <a class="xref" href="Ubiquity.NET.Versioning.CSemVerCI.html">CSemVerCI</a>
+as there is no defined means to represent a CSemVer-CI build without the 'BuildIndex' and 'BuildName' portions. Thus,
+conversion from <a class="xref" href="Ubiquity.NET.Versioning.CSemVerCI.html">CSemVerCI</a> to <a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.html">FileVersionQuad</a>is always "lossy".</p>
+</div>
 <p>A file version cast as a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a> is <i><b>NOT</b></i> the same as an Ordered version number.
 The file version includes a "bit" for the status as a CI Build. Thus, a "file version" as a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a> is the
 ordered version shifted left by one bit and the LSB indicates if it is a Release/CI build</p>
+<example>
+This shows general usage of a <a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.html">FileVersionQuad</a>
+<pre><code class="lang-csharp">var quad = new FileVersionQuad(SomeAPiThatRetrievesAFileVersionAsUInt64());
+// ...
+// NOTE: Since all that is available is a QUAD, which has only 1 bit for CI information,
+// there is no way to translate that to a formal CSemVer-CI. Just test ordering of the quad.
+if(quad &gt; MinimumVer.FileVersion)
+{
+    // Good to go!
+    if( quad.IsCiBuild )
+    {
+        // and it's a CI build!
+    }
+}
+
+// ...
+static readonly CSemVer MinimumVer = new(1,2,3/*, ...*/);</code></pre>
+</example>
 </div>
 
   <h2 class="section" id="constructors">Constructors
 </h2>
 
   <dl class="jumplist">
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.-ctor.html#Ubiquity_NET_Versioning_FileVersionQuad__ctor_System_Int64_System_Boolean_">FileVersionQuad(long, bool)</a></dt>
+    <dd><p>Initializes a new instance of the <a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.html">FileVersionQuad</a> struct.</p>
+</dd>
+  </dl>
+  <dl class="jumplist">
     <dt><a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.-ctor.html#Ubiquity_NET_Versioning_FileVersionQuad__ctor_System_UInt16_System_UInt16_System_UInt16_System_UInt16_">FileVersionQuad(ushort, ushort, ushort, ushort)</a></dt>
-    <dd><p>Represents a traditional &quot;File&quot; version QUAD of 16bit values</p>
+    <dd><p>Initializes a new instance of the <a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.html">FileVersionQuad</a> struct.</p>
+</dd>
+  </dl>
+  <dl class="jumplist">
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.-ctor.html#Ubiquity_NET_Versioning_FileVersionQuad__ctor_System_UInt64_">FileVersionQuad(ulong)</a></dt>
+    <dd><p>Initializes a new instance of the <a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.html">FileVersionQuad</a> struct.</p>
+</dd>
+  </dl>
+  <dl class="jumplist">
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.-ctor.html#Ubiquity_NET_Versioning_FileVersionQuad__ctor_System_Version_">FileVersionQuad(Version)</a></dt>
+    <dd><p>Initializes a new instance of the <a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.html">FileVersionQuad</a> struct.</p>
 </dd>
   </dl>
 
@@ -176,7 +213,7 @@ ordered version shifted left by one bit and the LSB indicates if it is a Release
 
   <dl class="jumplist">
     <dt><a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.Build.html#Ubiquity_NET_Versioning_FileVersionQuad_Build">Build</a></dt>
-    <dd><p>Build version number</p>
+    <dd><p>Gets the Major component of the version number</p>
 </dd>
   </dl>
   <dl class="jumplist">
@@ -186,17 +223,17 @@ ordered version shifted left by one bit and the LSB indicates if it is a Release
   </dl>
   <dl class="jumplist">
     <dt><a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.Major.html#Ubiquity_NET_Versioning_FileVersionQuad_Major">Major</a></dt>
-    <dd><p>Major version number</p>
+    <dd><p>Gets the Major component of the version number</p>
 </dd>
   </dl>
   <dl class="jumplist">
     <dt><a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.Minor.html#Ubiquity_NET_Versioning_FileVersionQuad_Minor">Minor</a></dt>
-    <dd><p>Minor version number</p>
+    <dd><p>Gets the Major component of the version number</p>
 </dd>
   </dl>
   <dl class="jumplist">
     <dt><a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.Revision.html#Ubiquity_NET_Versioning_FileVersionQuad_Revision">Revision</a></dt>
-    <dd><p>Revision number</p>
+    <dd><p>Gets the Major component of the version number</p>
 </dd>
   </dl>
 
@@ -209,13 +246,8 @@ ordered version shifted left by one bit and the LSB indicates if it is a Release
 </dd>
   </dl>
   <dl class="jumplist">
-    <dt><a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.From.html#Ubiquity_NET_Versioning_FileVersionQuad_From_System_UInt64_">From(ulong)</a></dt>
-    <dd><p>Converts a version integral value into a <a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.html">FileVersionQuad</a></p>
-</dd>
-  </dl>
-  <dl class="jumplist">
-    <dt><a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.From.html#Ubiquity_NET_Versioning_FileVersionQuad_From_System_Version_">From(Version)</a></dt>
-    <dd><p>Converts a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.version">Version</a> value to a <a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.html">FileVersionQuad</a> if possible</p>
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.Parse.html#Ubiquity_NET_Versioning_FileVersionQuad_Parse_System_String_System_IFormatProvider_">Parse(string, IFormatProvider?)</a></dt>
+    <dd><p>Parses a string into a value.</p>
 </dd>
   </dl>
   <dl class="jumplist">
@@ -226,6 +258,11 @@ ordered version shifted left by one bit and the LSB indicates if it is a Release
   <dl class="jumplist">
     <dt><a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.ToOrderedVersion.html#Ubiquity_NET_Versioning_FileVersionQuad_ToOrderedVersion_System_Boolean__">ToOrderedVersion(out bool)</a></dt>
     <dd><p>Gets the CSemVer defined ordered version number for this FileVersion quad</p>
+</dd>
+  </dl>
+  <dl class="jumplist">
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.ToSemVer.html#Ubiquity_NET_Versioning_FileVersionQuad_ToSemVer">ToSemVer()</a></dt>
+    <dd><p>Converts this instance to a <a class="xref" href="Ubiquity.NET.Versioning.SemVer.html">SemVer</a> derived constrained type</p>
 </dd>
   </dl>
   <dl class="jumplist">
@@ -243,10 +280,30 @@ ordered version shifted left by one bit and the LSB indicates if it is a Release
     <dd><p>Converts this instance to a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.version">Version</a></p>
 </dd>
   </dl>
+  <dl class="jumplist">
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.TryParse.html#Ubiquity_NET_Versioning_FileVersionQuad_TryParse_System_String_System_IFormatProvider_Ubiquity_NET_Versioning_FileVersionQuad__">TryParse(string?, IFormatProvider?, out FileVersionQuad)</a></dt>
+    <dd><p>Tries to parse a string into a value.</p>
+</dd>
+  </dl>
 
   <h2 class="section" id="operators">Operators
 </h2>
 
+  <dl class="jumplist">
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.op_Explicit.html#Ubiquity_NET_Versioning_FileVersionQuad_op_Explicit_System_UInt64__Ubiquity_NET_Versioning_FileVersionQuad">explicit operator FileVersionQuad(ulong)</a></dt>
+    <dd><p>Explicit cast operator from a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a> raw value to a <a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.html">FileVersionQuad</a></p>
+</dd>
+  </dl>
+  <dl class="jumplist">
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.op_Explicit.html#Ubiquity_NET_Versioning_FileVersionQuad_op_Explicit_System_Version__Ubiquity_NET_Versioning_FileVersionQuad">explicit operator FileVersionQuad(Version)</a></dt>
+    <dd><p>Explicit cast operator from a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.version">Version</a> to a <a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.html">FileVersionQuad</a></p>
+</dd>
+  </dl>
+  <dl class="jumplist">
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.op_Explicit.html#Ubiquity_NET_Versioning_FileVersionQuad_op_Explicit_Ubiquity_NET_Versioning_FileVersionQuad__System_Version">explicit operator Version(FileVersionQuad)</a></dt>
+    <dd><p>explicit cast of a <a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.html">FileVersionQuad</a> as a version</p>
+</dd>
+  </dl>
   <dl class="jumplist">
     <dt><a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.op_GreaterThan.html#Ubiquity_NET_Versioning_FileVersionQuad_op_GreaterThan_Ubiquity_NET_Versioning_FileVersionQuad_Ubiquity_NET_Versioning_FileVersionQuad_">operator &gt;(FileVersionQuad, FileVersionQuad)</a></dt>
     <dd><p>Compares two values to determine which is greater.</p>
@@ -277,7 +334,7 @@ ordered version shifted left by one bit and the LSB indicates if it is a Release
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.4/src/Ubiquity.NET.Versioning/FileVersionQuad.cs/#L47" class="edit-link">Edit this page</a>
+          <a href="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/blob/v6.0.0/src/Ubiquity.NET.Versioning/FileVersionQuad.cs/#L68" class="edit-link">Edit this page</a>
         </div>
 
 

@@ -16,7 +16,7 @@
       
       
       
-      <meta name="docfx:docurl" content="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/develop/docfx/versioning-lib/index.md/#L1">
+      <meta name="docfx:docurl" content="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/blob/develop/docfx/versioning-lib/index.md/#L1">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -88,22 +88,31 @@
 <li><a href="https://csemver.org">Constrained Semantic Versioning</a>
 <ul>
 <li>Including Continuous Integration (CI) via CSemVer-CI</li>
+<li>Including FileVersion QUAD representation</li>
+<li>Including OrderedVersion integral representation.</li>
 </ul>
 </li>
 </ol>
 <p>It is viable as a standalone package to allow validation of or comparisons to versions
 reported at runtime. (Especially from native interop that does not support package
-dependencies or versioning at runtime.)</p>
+dependencies or versioning at runtime.) The <a href="https://www.nuget.org/packages/Ubiquity.NET.Versioning.Build.Tasks">Ubiquity.NET.Versioning.Build.Tasks</a>
+is a companion project that implements automated build support for CSemVer.</p>
 <h2 id="example">Example</h2>
-<pre><code class="lang-C#">var epectedMinimum = new CSemVer(20, 1, 5, &quot;alpha&quot;);
-var actual = CSemVer.From(SomeAPIToRetrieveAVersionAsUInt64());
-if (actual &lt; expectedMinimum)
+<pre><code class="lang-C#">var quad = new FileVersionQuad(SomeAPiThatRetrievesAFileVersionAsUInt64());
+// ...
+// NOTE: Since all that is available is a QUAD, which has only 1 bit for CI information,
+// there is no way to translate that to a formal CSemVer-CI. Just test ordering of the quad.
+if(quad &gt; MinimumVer.FileVersion)
 {
-    // Uh-OH! &quot;older&quot; version!
+    // Good to go!
+    if( quad.IsCiBuild )
+    {
+        // and it's a CI build!
+    }
 }
 
-// Good to go...
-
+// ...
+static readonly CSemVer MinimumVer = new(1,2,3/*, ...*/);
 </code></pre>
 <h2 id="formatting">Formatting</h2>
 <p>The library contains support for proper formatting of strings based on the rules
@@ -112,9 +121,18 @@ of a SemVer, CSemVer, and CSemVer-CI</p>
 <p>The library contains support for parsing of strings based on the rules of a
 SemVer, CSemVer, and CSemVer-CI</p>
 <h2 id="ordering">Ordering</h2>
-<p>The types all support <code>IComparable&lt;T&gt;</code><sup><a href="#footnote_1">1</a></sup> and properly handle
-correct sort ordering of the versions according to the rules of SemVer (Which, CSemVer
-and CSemVer-CI follow)</p>
+<p>The types all support <code>IComparable&lt;T&gt;</code> and properly handle correct sort ordering of the
+versions according to the rules of SemVer (Which, CSemVer and CSemVer-CI follow)</p>
+<div class="WARNING">
+<h5>Warning</h5>
+<p>The <a href="https://semver.org">SemVer spec</a> does not explicitly mention case sensitivity for
+comparing the pre-release components (AlphaNumeric Identifiers) in a version. It does
+state that they are compared lexicographically, which would imply they are case
+sensitive. However, major repository implementations have chosen different approaches
+to how the strings are compared and thus the ambiguities of reality win out over any
+specified implicit behavior. Thus, consumers, <em><strong>MUST</strong></em> specify the expected ordering
+for a SemVer when creating it.</p>
+</div>
 <div class="WARNING">
 <h5>Warning</h5>
 <p>The formal 'spec' for <a href="https://csemver.org">CSemVer</a> remains mostly silent on the point
@@ -123,21 +141,11 @@ Since, the existence of that form was to support NuGet V2, which is now obsolete
 library does not support the short form at all. (This choice keeps documentation
 clarity [NOT SUPPORTED] and implementation simplicity)</p>
 </div>
-<hr>
-<p><sup><a id="footnote_1">1</a></sup> The <code>SemVer</code> class does NOT support <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.icomparable-1"><code>IComparable&lt;T&gt;</code></a>
-as the spec is not explicit<sup><a href="#footnote_2">2</a></sup> on case sensitive comparison of AlphaNumeric Identifiers.</p>
-<p><sup><a id="footnote_2">2</a></sup>Technically the spec says that pre-release identifiers
-are compared lexicographically, which would mean they are case sensitive. Unfortunately,
-that was not made explicit and major repositories using SemVer have chosen to use
-different rules of comparison and ordering. Thus, a consumer is required to know a-priori
-if the version is compared insensitive or not. <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.icomparer-1"><code>IComparer&lt;SemVer&gt;</code></a>
-instances are available for both cases via the static class <a class="xref" href="api/Ubiquity.NET.Versioning.SemVerComparer.html">SemVerComparer</a>
-and <a class="xref" href="api/Ubiquity.NET.Versioning.SemVerComparer.CaseSensitive.html">CSmeVerComparer.CaseSensitive</a>.</p>
 
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/develop/docfx/versioning-lib/index.md/#L1" class="edit-link">Edit this page</a>
+          <a href="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/blob/develop/docfx/versioning-lib/index.md/#L1" class="edit-link">Edit this page</a>
         </div>
 
         <div class="next-article d-print-none border-top" id="nextArticle"></div>

@@ -16,7 +16,7 @@
       
       
       
-      <meta name="docfx:docurl" content="https://github.com/UbiquityDotNET/CSemVer.GitBuild/new/develop/apiSpec/new?filename=Ubiquity_NET_Versioning_SemVer__ctor_.md&amp;value=---%0Auid%3A%20Ubiquity.NET.Versioning.SemVer.%23ctor*%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/new/develop/apiSpec/new?filename=Ubiquity_NET_Versioning_SemVer__ctor_.md&amp;value=---%0Auid%3A%20Ubiquity.NET.Versioning.SemVer.%23ctor*%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -86,7 +86,7 @@
 
 
 <h1 id="Ubiquity_NET_Versioning_SemVer__ctor_" data-uid="Ubiquity.NET.Versioning.SemVer.#ctor*" class="text-break">
-Constructor SemVer  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.4/src/Ubiquity.NET.Versioning/SemVer.cs/#L47"><i class="bi bi-code-slash"></i></a>
+Constructor SemVer  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/blob/v6.0.0/src/Ubiquity.NET.Versioning/SemVer.cs/#L61"><i class="bi bi-code-slash"></i></a>
 </h1>
 
 <div class="facts text-secondary">
@@ -114,9 +114,9 @@ Constructor SemVer  <a class="header-action link-secondary" title="View source" 
 
 <a id="Ubiquity_NET_Versioning_SemVer__ctor_" data-uid="Ubiquity.NET.Versioning.SemVer.#ctor*"></a>
 
-<h3 id="Ubiquity_NET_Versioning_SemVer__ctor_System_Numerics_BigInteger_System_Numerics_BigInteger_System_Numerics_BigInteger_" data-uid="Ubiquity.NET.Versioning.SemVer.#ctor(System.Numerics.BigInteger,System.Numerics.BigInteger,System.Numerics.BigInteger)">
-  SemVer(BigInteger, BigInteger, BigInteger)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.4/src/Ubiquity.NET.Versioning/SemVer.cs/#L47"><i class="bi bi-code-slash"></i></a>
+<h3 id="Ubiquity_NET_Versioning_SemVer__ctor_System_Numerics_BigInteger_System_Numerics_BigInteger_System_Numerics_BigInteger_Ubiquity_NET_Versioning_AlphaNumericOrdering_System_Collections_Immutable_ImmutableArray_System_String__System_Collections_Immutable_ImmutableArray_System_String__" data-uid="Ubiquity.NET.Versioning.SemVer.#ctor(System.Numerics.BigInteger,System.Numerics.BigInteger,System.Numerics.BigInteger,Ubiquity.NET.Versioning.AlphaNumericOrdering,System.Collections.Immutable.ImmutableArray{System.String},System.Collections.Immutable.ImmutableArray{System.String})">
+  SemVer(BigInteger, BigInteger, BigInteger, AlphaNumericOrdering, ImmutableArray&lt;string&gt;, ImmutableArray&lt;string&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/blob/v6.0.0/src/Ubiquity.NET.Versioning/SemVer.cs/#L61"><i class="bi bi-code-slash"></i></a>
 </h3>
 
 <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Ubiquity.NET.Versioning.SemVer.html">SemVer</a> class.</p>
@@ -124,7 +124,7 @@ Constructor SemVer  <a class="header-action link-secondary" title="View source" 
 <div class="markdown level1 conceptual"></div>
 
 <div class="codewrapper">
-  <pre><code class="lang-csharp hljs">public SemVer(BigInteger major, BigInteger minor, BigInteger patch)</code></pre>
+  <pre><code class="lang-csharp hljs">public SemVer(BigInteger major, BigInteger minor, BigInteger patch, AlphaNumericOrdering sortOrdering = AlphaNumericOrdering.CaseSensitive, ImmutableArray&lt;string&gt; preRel = default, ImmutableArray&lt;string&gt; build = default)</code></pre>
 </div>
 
 <h4 class="section">Parameters</h4>
@@ -138,91 +138,13 @@ Constructor SemVer  <a class="header-action link-secondary" title="View source" 
   <dt><code>patch</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.biginteger">BigInteger</a></dt>
   <dd><p>Patch portion of the core version</p>
 </dd>
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-<a id="Ubiquity_NET_Versioning_SemVer__ctor_" data-uid="Ubiquity.NET.Versioning.SemVer.#ctor*"></a>
-
-<h3 id="Ubiquity_NET_Versioning_SemVer__ctor_System_Numerics_BigInteger_System_Numerics_BigInteger_System_Numerics_BigInteger_System_Collections_Generic_IEnumerable_System_String__" data-uid="Ubiquity.NET.Versioning.SemVer.#ctor(System.Numerics.BigInteger,System.Numerics.BigInteger,System.Numerics.BigInteger,System.Collections.Generic.IEnumerable{System.String})">
-  SemVer(BigInteger, BigInteger, BigInteger, IEnumerable&lt;string&gt;?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.4/src/Ubiquity.NET.Versioning/SemVer.cs/#L53"><i class="bi bi-code-slash"></i></a>
-</h3>
-
-<div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Ubiquity.NET.Versioning.SemVer.html">SemVer</a> class.</p>
-</div>
-<div class="markdown level1 conceptual"></div>
-
-<div class="codewrapper">
-  <pre><code class="lang-csharp hljs">public SemVer(BigInteger major, BigInteger minor, BigInteger patch, IEnumerable&lt;string&gt;? preRel)</code></pre>
-</div>
-
-<h4 class="section">Parameters</h4>
-<dl class="parameters">
-  <dt><code>major</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.biginteger">BigInteger</a></dt>
-  <dd><p>Major portion of the core version</p>
+  <dt><code>sortOrdering</code> <a class="xref" href="Ubiquity.NET.Versioning.AlphaNumericOrdering.html">AlphaNumericOrdering</a></dt>
+  <dd><p>Sort ordering to use for any ordering comparisons</p>
 </dd>
-  <dt><code>minor</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.biginteger">BigInteger</a></dt>
-  <dd><p>Minor portion of the core version</p>
-</dd>
-  <dt><code>patch</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.biginteger">BigInteger</a></dt>
-  <dd><p>Patch portion of the core version</p>
-</dd>
-  <dt><code>preRel</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+  <dt><code>preRel</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.immutable.immutablearray-1">ImmutableArray</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
   <dd><p>PreRelease components</p>
 </dd>
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-<a id="Ubiquity_NET_Versioning_SemVer__ctor_" data-uid="Ubiquity.NET.Versioning.SemVer.#ctor*"></a>
-
-<h3 id="Ubiquity_NET_Versioning_SemVer__ctor_System_Numerics_BigInteger_System_Numerics_BigInteger_System_Numerics_BigInteger_System_Collections_Generic_IEnumerable_System_String__System_Collections_Generic_IEnumerable_System_String__" data-uid="Ubiquity.NET.Versioning.SemVer.#ctor(System.Numerics.BigInteger,System.Numerics.BigInteger,System.Numerics.BigInteger,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.String})">
-  SemVer(BigInteger, BigInteger, BigInteger, IEnumerable&lt;string&gt;?, IEnumerable&lt;string&gt;?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.4/src/Ubiquity.NET.Versioning/SemVer.cs/#L64"><i class="bi bi-code-slash"></i></a>
-</h3>
-
-<div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Ubiquity.NET.Versioning.SemVer.html">SemVer</a> class.</p>
-</div>
-<div class="markdown level1 conceptual"></div>
-
-<div class="codewrapper">
-  <pre><code class="lang-csharp hljs">public SemVer(BigInteger major, BigInteger minor, BigInteger patch, IEnumerable&lt;string&gt;? preRel, IEnumerable&lt;string&gt;? build)</code></pre>
-</div>
-
-<h4 class="section">Parameters</h4>
-<dl class="parameters">
-  <dt><code>major</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.biginteger">BigInteger</a></dt>
-  <dd><p>Major portion of the core version</p>
-</dd>
-  <dt><code>minor</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.biginteger">BigInteger</a></dt>
-  <dd><p>Minor portion of the core version</p>
-</dd>
-  <dt><code>patch</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.biginteger">BigInteger</a></dt>
-  <dd><p>Patch portion of the core version</p>
-</dd>
-  <dt><code>preRel</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
-  <dd><p>PreRelease components</p>
-</dd>
-  <dt><code>build</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+  <dt><code>build</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.immutable.immutablearray-1">ImmutableArray</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
   <dd><p>Build meta components</p>
 </dd>
 </dl>
@@ -241,7 +163,7 @@ Constructor SemVer  <a class="header-action link-secondary" title="View source" 
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.4/src/Ubiquity.NET.Versioning/SemVer.cs/#L47" class="edit-link">Edit this page</a>
+          <a href="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/blob/v6.0.0/src/Ubiquity.NET.Versioning/SemVer.cs/#L61" class="edit-link">Edit this page</a>
         </div>
 
 

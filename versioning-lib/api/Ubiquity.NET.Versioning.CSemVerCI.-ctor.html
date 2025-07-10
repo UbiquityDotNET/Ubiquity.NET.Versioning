@@ -16,7 +16,7 @@
       
       
       
-      <meta name="docfx:docurl" content="https://github.com/UbiquityDotNET/CSemVer.GitBuild/new/develop/apiSpec/new?filename=Ubiquity_NET_Versioning_CSemVerCI__ctor_.md&amp;value=---%0Auid%3A%20Ubiquity.NET.Versioning.CSemVerCI.%23ctor*%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/new/develop/apiSpec/new?filename=Ubiquity_NET_Versioning_CSemVerCI__ctor_.md&amp;value=---%0Auid%3A%20Ubiquity.NET.Versioning.CSemVerCI.%23ctor*%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -86,7 +86,7 @@
 
 
 <h1 id="Ubiquity_NET_Versioning_CSemVerCI__ctor_" data-uid="Ubiquity.NET.Versioning.CSemVerCI.#ctor*" class="text-break">
-Constructor CSemVerCI  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.4/src/Ubiquity.NET.Versioning/CSemVerCI.cs/#L40"><i class="bi bi-code-slash"></i></a>
+Constructor CSemVerCI  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/blob/v6.0.0/src/Ubiquity.NET.Versioning/CSemVerCI.cs/#L36"><i class="bi bi-code-slash"></i></a>
 </h1>
 
 <div class="facts text-secondary">
@@ -114,17 +114,17 @@ Constructor CSemVerCI  <a class="header-action link-secondary" title="View sourc
 
 <a id="Ubiquity_NET_Versioning_CSemVerCI__ctor_" data-uid="Ubiquity.NET.Versioning.CSemVerCI.#ctor*"></a>
 
-<h3 id="Ubiquity_NET_Versioning_CSemVerCI__ctor_System_String_System_String_System_Collections_Generic_IEnumerable_System_String__" data-uid="Ubiquity.NET.Versioning.CSemVerCI.#ctor(System.String,System.String,System.Collections.Generic.IEnumerable{System.String})">
-  CSemVerCI(string, string, IEnumerable&lt;string&gt;?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.4/src/Ubiquity.NET.Versioning/CSemVerCI.cs/#L40"><i class="bi bi-code-slash"></i></a>
+<h3 id="Ubiquity_NET_Versioning_CSemVerCI__ctor_System_String_System_String_System_Collections_Immutable_ImmutableArray_System_String__" data-uid="Ubiquity.NET.Versioning.CSemVerCI.#ctor(System.String,System.String,System.Collections.Immutable.ImmutableArray{System.String})">
+  CSemVerCI(string, string, ImmutableArray&lt;string&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/blob/v6.0.0/src/Ubiquity.NET.Versioning/CSemVerCI.cs/#L36"><i class="bi bi-code-slash"></i></a>
 </h3>
 
-<div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Ubiquity.NET.Versioning.CSemVerCI.html">CSemVerCI</a> struct as a &quot;CSemVer-CI ZeroTimed' value</p>
+<div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Ubiquity.NET.Versioning.CSemVerCI.html">CSemVerCI</a> class as a &quot;CSemVer-CI ZeroTimed' value</p>
 </div>
 <div class="markdown level1 conceptual"></div>
 
 <div class="codewrapper">
-  <pre><code class="lang-csharp hljs">public CSemVerCI(string index, string name, IEnumerable&lt;string&gt;? buildMeta = null)</code></pre>
+  <pre><code class="lang-csharp hljs">public CSemVerCI(string index, string name, ImmutableArray&lt;string&gt; buildMeta = default)</code></pre>
 </div>
 
 <h4 class="section">Parameters</h4>
@@ -135,7 +135,7 @@ Constructor CSemVerCI  <a class="header-action link-secondary" title="View sourc
   <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
   <dd><p>Name of this CI build</p>
 </dd>
-  <dt><code>buildMeta</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+  <dt><code>buildMeta</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.immutable.immutablearray-1">ImmutableArray</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
   <dd><p>Optional Build meta</p>
 </dd>
 </dl>
@@ -161,10 +161,10 @@ Constructor CSemVerCI  <a class="header-action link-secondary" title="View sourc
 
 <h3 id="Ubiquity_NET_Versioning_CSemVerCI__ctor_Ubiquity_NET_Versioning_CSemVer_System_String_System_String_" data-uid="Ubiquity.NET.Versioning.CSemVerCI.#ctor(Ubiquity.NET.Versioning.CSemVer,System.String,System.String)">
   CSemVerCI(CSemVer, string, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.4/src/Ubiquity.NET.Versioning/CSemVerCI.cs/#L55"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/blob/v6.0.0/src/Ubiquity.NET.Versioning/CSemVerCI.cs/#L46"><i class="bi bi-code-slash"></i></a>
 </h3>
 
-<div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Ubiquity.NET.Versioning.CSemVerCI.html">CSemVerCI</a> struct.</p>
+<div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Ubiquity.NET.Versioning.CSemVerCI.html">CSemVerCI</a> class.</p>
 </div>
 <div class="markdown level1 conceptual"></div>
 
@@ -192,11 +192,6 @@ Constructor CSemVerCI  <a class="header-action link-secondary" title="View sourc
 
 
 
-<h4 class="section" id="Ubiquity_NET_Versioning_CSemVerCI__ctor_Ubiquity_NET_Versioning_CSemVer_System_String_System_String__remarks">Remarks</h4>
-<div class="markdown level1 remarks"><p>The <code class="paramref">baseBuild</code> is assumed a lower sort order than any CI build and
-therefore should be at least Revision+1 of an actual release. This constructor does not
-(and cannot) VERIFY such a thing.</p>
-</div>
 
 
 <dl class="typelist seealso">
@@ -210,7 +205,7 @@ therefore should be at least Revision+1 of an actual release. This constructor d
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.4/src/Ubiquity.NET.Versioning/CSemVerCI.cs/#L40" class="edit-link">Edit this page</a>
+          <a href="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/blob/v6.0.0/src/Ubiquity.NET.Versioning/CSemVerCI.cs/#L36" class="edit-link">Edit this page</a>
         </div>
 
 

@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Struct CSemVer | Ubiquity.NET.Versioning </title>
+      <title>Class CSemVer | Ubiquity.NET.Versioning </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Struct CSemVer | Ubiquity.NET.Versioning ">
+      <meta name="title" content="Class CSemVer | Ubiquity.NET.Versioning ">
       
       <meta name="description" content="Holds a Constrained Semantic Version (CSemVer) value">
       <link rel="icon" href="../../favicon.ico">
@@ -16,7 +16,7 @@
       
       
       
-      <meta name="docfx:docurl" content="https://github.com/UbiquityDotNET/CSemVer.GitBuild/new/develop/apiSpec/new?filename=Ubiquity_NET_Versioning_CSemVer.md&amp;value=---%0Auid%3A%20Ubiquity.NET.Versioning.CSemVer%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/new/develop/apiSpec/new?filename=Ubiquity_NET_Versioning_CSemVer.md&amp;value=---%0Auid%3A%20Ubiquity.NET.Versioning.CSemVer%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -84,7 +84,7 @@
 
 
   <h1 id="Ubiquity_NET_Versioning_CSemVer" data-uid="Ubiquity.NET.Versioning.CSemVer" class="text-break">
-Struct CSemVer  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.4/src/Ubiquity.NET.Versioning/CSemVer.cs/#L22"><i class="bi bi-code-slash"></i></a>
+Class CSemVer  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/blob/v6.0.0/src/Ubiquity.NET.Versioning/CSemVer.cs/#L20"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,21 +97,30 @@ Struct CSemVer  <a class="header-action link-secondary" title="View source" href
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly struct CSemVer : IParsable&lt;CSemVer&gt;, IComparable&lt;CSemVer&gt;, IComparisonOperators&lt;CSemVer, CSemVer, bool&gt;, IEqualityOperators&lt;CSemVer, CSemVer, bool&gt;, IEquatable&lt;CSemVer&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class CSemVer : SemVer, IParsable&lt;SemVer&gt;, IComparable&lt;SemVer&gt;, IEquatable&lt;SemVer&gt;, IComparisonOperators&lt;SemVer?, SemVer?, bool&gt;, IEqualityOperators&lt;SemVer?, SemVer?, bool&gt;, IParsable&lt;CSemVer&gt;</code></pre>
   </div>
 
 
 
 
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="Ubiquity.NET.Versioning.SemVer.html">SemVer</a></div>
+      <div><span class="xref">CSemVer</span></div>
+    </dd>
+  </dl>
 
   <dl class="typelist implements">
     <dt>Implements</dt>
     <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iparsable-1">IParsable</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.SemVer.html">SemVer</a>&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.icomparable-1">IComparable</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.SemVer.html">SemVer</a>&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.SemVer.html">SemVer</a>&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.icomparisonoperators-3">IComparisonOperators</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.SemVer.html">SemVer</a>, <a class="xref" href="Ubiquity.NET.Versioning.SemVer.html">SemVer</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.iequalityoperators-3">IEqualityOperators</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.SemVer.html">SemVer</a>, <a class="xref" href="Ubiquity.NET.Versioning.SemVer.html">SemVer</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</div>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iparsable-1">IParsable</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a>&gt;</div>
-      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.icomparable-1">IComparable</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a>&gt;</div>
-      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.icomparisonoperators-3">IComparisonOperators</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a>, <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</div>
-      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.iequalityoperators-3">IEqualityOperators</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a>, <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</div>
-      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a>&gt;</div>
     </dd>
   </dl>
 
@@ -119,6 +128,42 @@ Struct CSemVer  <a class="header-action link-secondary" title="View source" href
   <dl class="typelist inheritedMembers">
     <dt>Inherited Members</dt>
     <dd>
+    <div>
+      <a class="xref" href="Ubiquity.NET.Versioning.SemVer.AlphaNumericOrdering.html#Ubiquity_NET_Versioning_SemVer_AlphaNumericOrdering">SemVer.AlphaNumericOrdering</a>
+    </div>
+    <div>
+      <a class="xref" href="Ubiquity.NET.Versioning.SemVer.Major.html#Ubiquity_NET_Versioning_SemVer_Major">SemVer.Major</a>
+    </div>
+    <div>
+      <a class="xref" href="Ubiquity.NET.Versioning.SemVer.Minor.html#Ubiquity_NET_Versioning_SemVer_Minor">SemVer.Minor</a>
+    </div>
+    <div>
+      <a class="xref" href="Ubiquity.NET.Versioning.SemVer.Patch.html#Ubiquity_NET_Versioning_SemVer_Patch">SemVer.Patch</a>
+    </div>
+    <div>
+      <a class="xref" href="Ubiquity.NET.Versioning.SemVer.PreRelease.html#Ubiquity_NET_Versioning_SemVer_PreRelease">SemVer.PreRelease</a>
+    </div>
+    <div>
+      <a class="xref" href="Ubiquity.NET.Versioning.SemVer.BuildMeta.html#Ubiquity_NET_Versioning_SemVer_BuildMeta">SemVer.BuildMeta</a>
+    </div>
+    <div>
+      <a class="xref" href="Ubiquity.NET.Versioning.SemVer.ToString.html#Ubiquity_NET_Versioning_SemVer_ToString">SemVer.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="Ubiquity.NET.Versioning.SemVer.CompareTo.html#Ubiquity_NET_Versioning_SemVer_CompareTo_Ubiquity_NET_Versioning_SemVer_">SemVer.CompareTo(SemVer)</a>
+    </div>
+    <div>
+      <a class="xref" href="Ubiquity.NET.Versioning.SemVer.Equals.html#Ubiquity_NET_Versioning_SemVer_Equals_System_Object_">SemVer.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="Ubiquity.NET.Versioning.SemVer.GetHashCode.html#Ubiquity_NET_Versioning_SemVer_GetHashCode">SemVer.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="Ubiquity.NET.Versioning.SemVer.Equals.html#Ubiquity_NET_Versioning_SemVer_Equals_Ubiquity_NET_Versioning_SemVer_">SemVer.Equals(SemVer)</a>
+    </div>
+    <div>
+      <a class="xref" href="Ubiquity.NET.Versioning.SemVer.TryParse.html#Ubiquity_NET_Versioning_SemVer_TryParse_System_String_System_IFormatProvider_Ubiquity_NET_Versioning_SemVer__">SemVer.TryParse(string, IFormatProvider, out SemVer)</a>
+    </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
     </div>
@@ -141,19 +186,28 @@ Struct CSemVer  <a class="header-action link-secondary" title="View source" href
 </h2>
 
   <dl class="jumplist">
-    <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.-ctor.html#Ubiquity_NET_Versioning_CSemVer__ctor_System_Int32_System_Int32_System_Int32_System_Nullable_Ubiquity_NET_Versioning_PrereleaseVersion__System_Collections_Generic_IEnumerable_System_String__">CSemVer(int, int, int, PrereleaseVersion?, IEnumerable&lt;string&gt;?)</a></dt>
-    <dd><p>Initializes a new instance of the <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a> struct.</p>
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.-ctor.html#Ubiquity_NET_Versioning_CSemVer__ctor">CSemVer()</a></dt>
+    <dd><p>Initializes a new instance of the <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a> class.</p>
+</dd>
+  </dl>
+  <dl class="jumplist">
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.-ctor.html#Ubiquity_NET_Versioning_CSemVer__ctor_System_Int32_System_Int32_System_Int32_System_Nullable_Ubiquity_NET_Versioning_PrereleaseVersion__System_Collections_Immutable_ImmutableArray_System_String__">CSemVer(int, int, int, PrereleaseVersion?, ImmutableArray&lt;string&gt;)</a></dt>
+    <dd><p>Initializes a new instance of the <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a> class.</p>
+</dd>
+  </dl>
+
+  <h2 class="section" id="fields">Fields
+</h2>
+
+  <dl class="jumplist">
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.MaxOrderedVersion.html">MaxOrderedVersion</a></dt>
+    <dd><p>Maximum value of an ordered version number</p>
 </dd>
   </dl>
 
   <h2 class="section" id="properties">Properties
 </h2>
 
-  <dl class="jumplist">
-    <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.BuildMeta.html#Ubiquity_NET_Versioning_CSemVer_BuildMeta">BuildMeta</a></dt>
-    <dd><p>Gets the build components of the version</p>
-</dd>
-  </dl>
   <dl class="jumplist">
     <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.FileVersion.html#Ubiquity_NET_Versioning_CSemVer_FileVersion">FileVersion</a></dt>
     <dd><p>Gets the <a class="xref" href="Ubiquity.NET.Versioning.FileVersionQuad.html">FileVersionQuad</a> representation of this <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a></p>
@@ -170,23 +224,8 @@ Struct CSemVer  <a class="header-action link-secondary" title="View source" href
 </dd>
   </dl>
   <dl class="jumplist">
-    <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.Major.html#Ubiquity_NET_Versioning_CSemVer_Major">Major</a></dt>
-    <dd><p>Gets the Major portion of the core version</p>
-</dd>
-  </dl>
-  <dl class="jumplist">
-    <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.Minor.html#Ubiquity_NET_Versioning_CSemVer_Minor">Minor</a></dt>
-    <dd><p>Gets the Minor portion of the core version</p>
-</dd>
-  </dl>
-  <dl class="jumplist">
     <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.OrderedVersion.html#Ubiquity_NET_Versioning_CSemVer_OrderedVersion">OrderedVersion</a></dt>
     <dd><p>Gets the CSemVer ordered version value of the version</p>
-</dd>
-  </dl>
-  <dl class="jumplist">
-    <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.Patch.html#Ubiquity_NET_Versioning_CSemVer_Patch">Patch</a></dt>
-    <dd><p>Gets the Patch portion of the core version</p>
 </dd>
   </dl>
   <dl class="jumplist">
@@ -194,53 +233,38 @@ Struct CSemVer  <a class="header-action link-secondary" title="View source" href
     <dd><p>Gets the Pre-Release version value (if any)</p>
 </dd>
   </dl>
+  <dl class="jumplist">
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.Zero.html#Ubiquity_NET_Versioning_CSemVer_Zero">Zero</a></dt>
+    <dd><p>Gets a Zero value for a <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a></p>
+</dd>
+  </dl>
 
   <h2 class="section" id="methods">Methods
 </h2>
 
   <dl class="jumplist">
-    <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.CompareTo.html#Ubiquity_NET_Versioning_CSemVer_CompareTo_Ubiquity_NET_Versioning_CSemVer_">CompareTo(CSemVer)</a></dt>
-    <dd><p>Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.</p>
-</dd>
-  </dl>
-  <dl class="jumplist">
-    <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.Equals.html#Ubiquity_NET_Versioning_CSemVer_Equals_System_Object_">Equals(object?)</a></dt>
-    <dd><p>Indicates whether this instance and a specified object are equal.</p>
-</dd>
-  </dl>
-  <dl class="jumplist">
-    <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.Equals.html#Ubiquity_NET_Versioning_CSemVer_Equals_Ubiquity_NET_Versioning_CSemVer_">Equals(CSemVer)</a></dt>
-    <dd><p>Indicates whether the current object is equal to another object of the same type.</p>
-</dd>
-  </dl>
-  <dl class="jumplist">
-    <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.From.html#Ubiquity_NET_Versioning_CSemVer_From_System_String_System_Collections_Generic_IReadOnlyCollection_System_String__">From(string, IReadOnlyCollection&lt;string&gt;?)</a></dt>
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.From.html#Ubiquity_NET_Versioning_CSemVer_From_System_String_System_Collections_Immutable_ImmutableArray_System_String__">From(string, ImmutableArray&lt;string&gt;)</a></dt>
     <dd><p>Factory method to create a <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a> from information available as part of a build</p>
 </dd>
   </dl>
   <dl class="jumplist">
-    <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.From.html#Ubiquity_NET_Versioning_CSemVer_From_System_UInt64_System_Collections_Generic_IReadOnlyCollection_System_String__">From(ulong, IReadOnlyCollection&lt;string&gt;?)</a></dt>
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.From.html#Ubiquity_NET_Versioning_CSemVer_From_Ubiquity_NET_Versioning_FileVersionQuad_System_Collections_Immutable_ImmutableArray_System_String__">From(FileVersionQuad, ImmutableArray&lt;string&gt;)</a></dt>
     <dd><p>Converts a file version form (as a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a>) of a CSemVer into a full <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a></p>
 </dd>
   </dl>
   <dl class="jumplist">
-    <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.FromOrderedVersion.html#Ubiquity_NET_Versioning_CSemVer_FromOrderedVersion_System_UInt64_System_Collections_Generic_IReadOnlyCollection_System_String__">FromOrderedVersion(ulong, IReadOnlyCollection&lt;string&gt;?)</a></dt>
-    <dd><p>Converts a CSemVer ordered version integral value (UInt64) into a full <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a></p>
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.From.html#Ubiquity_NET_Versioning_CSemVer_From_Ubiquity_NET_Versioning_ParsedBuildVersionXml_System_Collections_Immutable_ImmutableArray_System_String__">From(ParsedBuildVersionXml, ImmutableArray&lt;string&gt;)</a></dt>
+    <dd><p>Factory method to create a <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a> from information available as part of a build</p>
 </dd>
   </dl>
   <dl class="jumplist">
-    <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.GetHashCode.html#Ubiquity_NET_Versioning_CSemVer_GetHashCode">GetHashCode()</a></dt>
-    <dd><p>Returns the hash code for this instance.</p>
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.FromOrderedVersion.html#Ubiquity_NET_Versioning_CSemVer_FromOrderedVersion_System_Int64_System_Collections_Immutable_ImmutableArray_System_String__">FromOrderedVersion(long, ImmutableArray&lt;string&gt;)</a></dt>
+    <dd><p>Converts a CSemVer ordered version integral value (UInt64) into a full <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a></p>
 </dd>
   </dl>
   <dl class="jumplist">
     <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.Parse.html#Ubiquity_NET_Versioning_CSemVer_Parse_System_String_System_IFormatProvider_">Parse(string, IFormatProvider?)</a></dt>
     <dd><p>Parses a string into a value.</p>
-</dd>
-  </dl>
-  <dl class="jumplist">
-    <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.ToString.html#Ubiquity_NET_Versioning_CSemVer_ToString">ToString()</a></dt>
-    <dd><p>Converts the internal representation of this version to a valid CSemVer formatted string</p>
 </dd>
   </dl>
   <dl class="jumplist">
@@ -259,40 +283,6 @@ Struct CSemVer  <a class="header-action link-secondary" title="View source" href
 </dd>
   </dl>
 
-  <h2 class="section" id="operators">Operators
-</h2>
-
-  <dl class="jumplist">
-    <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.op_Equality.html#Ubiquity_NET_Versioning_CSemVer_op_Equality_Ubiquity_NET_Versioning_CSemVer_Ubiquity_NET_Versioning_CSemVer_">operator ==(CSemVer, CSemVer)</a></dt>
-    <dd><p>Compares two values to determine equality.</p>
-</dd>
-  </dl>
-  <dl class="jumplist">
-    <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.op_GreaterThan.html#Ubiquity_NET_Versioning_CSemVer_op_GreaterThan_Ubiquity_NET_Versioning_CSemVer_Ubiquity_NET_Versioning_CSemVer_">operator &gt;(CSemVer, CSemVer)</a></dt>
-    <dd><p>Compares two values to determine which is greater.</p>
-</dd>
-  </dl>
-  <dl class="jumplist">
-    <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.op_GreaterThanOrEqual.html#Ubiquity_NET_Versioning_CSemVer_op_GreaterThanOrEqual_Ubiquity_NET_Versioning_CSemVer_Ubiquity_NET_Versioning_CSemVer_">operator &gt;=(CSemVer, CSemVer)</a></dt>
-    <dd><p>Compares two values to determine which is greater or equal.</p>
-</dd>
-  </dl>
-  <dl class="jumplist">
-    <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.op_Inequality.html#Ubiquity_NET_Versioning_CSemVer_op_Inequality_Ubiquity_NET_Versioning_CSemVer_Ubiquity_NET_Versioning_CSemVer_">operator !=(CSemVer, CSemVer)</a></dt>
-    <dd><p>Compares two values to determine inequality.</p>
-</dd>
-  </dl>
-  <dl class="jumplist">
-    <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.op_LessThan.html#Ubiquity_NET_Versioning_CSemVer_op_LessThan_Ubiquity_NET_Versioning_CSemVer_Ubiquity_NET_Versioning_CSemVer_">operator &lt;(CSemVer, CSemVer)</a></dt>
-    <dd><p>Compares two values to determine which is less.</p>
-</dd>
-  </dl>
-  <dl class="jumplist">
-    <dt><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.op_LessThanOrEqual.html#Ubiquity_NET_Versioning_CSemVer_op_LessThanOrEqual_Ubiquity_NET_Versioning_CSemVer_Ubiquity_NET_Versioning_CSemVer_">operator &lt;=(CSemVer, CSemVer)</a></dt>
-    <dd><p>Compares two values to determine which is less or equal.</p>
-</dd>
-  </dl>
-
 
   <h2 id="seealso">See Also</h2>
   <div class="seealso">
@@ -302,7 +292,7 @@ Struct CSemVer  <a class="header-action link-secondary" title="View source" href
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.4/src/Ubiquity.NET.Versioning/CSemVer.cs/#L22" class="edit-link">Edit this page</a>
+          <a href="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/blob/v6.0.0/src/Ubiquity.NET.Versioning/CSemVer.cs/#L20" class="edit-link">Edit this page</a>
         </div>
 
 

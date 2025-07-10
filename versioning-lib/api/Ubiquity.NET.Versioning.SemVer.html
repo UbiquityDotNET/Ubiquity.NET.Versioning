@@ -16,7 +16,7 @@
       
       
       
-      <meta name="docfx:docurl" content="https://github.com/UbiquityDotNET/CSemVer.GitBuild/new/develop/apiSpec/new?filename=Ubiquity_NET_Versioning_SemVer.md&amp;value=---%0Auid%3A%20Ubiquity.NET.Versioning.SemVer%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/new/develop/apiSpec/new?filename=Ubiquity_NET_Versioning_SemVer.md&amp;value=---%0Auid%3A%20Ubiquity.NET.Versioning.SemVer%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -84,7 +84,7 @@
 
 
   <h1 id="Ubiquity_NET_Versioning_SemVer" data-uid="Ubiquity.NET.Versioning.SemVer" class="text-break">
-Class SemVer  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.4/src/Ubiquity.NET.Versioning/SemVer.cs/#L43"><i class="bi bi-code-slash"></i></a>
+Class SemVer  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/blob/v6.0.0/src/Ubiquity.NET.Versioning/SemVer.cs/#L48"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,7 +97,7 @@ Class SemVer  <a class="header-action link-secondary" title="View source" href="
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class SemVer : IParsable&lt;SemVer&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class SemVer : IParsable&lt;SemVer&gt;, IComparable&lt;SemVer&gt;, IEquatable&lt;SemVer&gt;, IComparisonOperators&lt;SemVer?, SemVer?, bool&gt;, IEqualityOperators&lt;SemVer?, SemVer?, bool&gt;</code></pre>
   </div>
 
 
@@ -115,24 +115,32 @@ Class SemVer  <a class="header-action link-secondary" title="View source" href="
     <dt>Implements</dt>
     <dd>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iparsable-1">IParsable</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.SemVer.html">SemVer</a>&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.icomparable-1">IComparable</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.SemVer.html">SemVer</a>&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.SemVer.html">SemVer</a>&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.icomparisonoperators-3">IComparisonOperators</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.SemVer.html">SemVer</a>, <a class="xref" href="Ubiquity.NET.Versioning.SemVer.html">SemVer</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.iequalityoperators-3">IEqualityOperators</a>&lt;<a class="xref" href="Ubiquity.NET.Versioning.SemVer.html">SemVer</a>, <a class="xref" href="Ubiquity.NET.Versioning.SemVer.html">SemVer</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</div>
     </dd>
   </dl>
 
+  <dl class="typelist derived">
+    <dt>Derived</dt>
+    <dd>
+      <div><a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a></div>
+      <div><a class="xref" href="Ubiquity.NET.Versioning.CSemVerCI.html">CSemVerCI</a></div>
+    </dd>
+  </dl>
 
   <dl class="typelist inheritedMembers">
     <dt>Inherited Members</dt>
     <dd>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
-    </div>
-    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
@@ -149,35 +157,30 @@ allows all possible values.</p>
 <p>In practical terms any such component will likely "down convert" to an integer. If a
 version component in the real world exceeds the size of an integer, then there is probably
 something wrong with how the versioning is maintained.</p>
-<div class="IMPORTANT"><h5>important</h5><p>
-<p>This type is ***intentionally*** NOT a value type or `record struct` etc... as the ONLY
-valid comparison that is always correct is reference equality. Any other comparison/ordering
-requires a specific comparer that not only understands the rules of a Semantic Version, but
-also deals with case sensitivity of those comparisons. Sadly, the SemVer spec is silent on
+<p>The comparison/ordering of this type is based on the rules for Semantic Versioning with
+the extension of <a class="xref" href="Ubiquity.NET.Versioning.SemVer.AlphaNumericOrdering.html#Ubiquity_NET_Versioning_SemVer_AlphaNumericOrdering">AlphaNumericOrdering</a>. Sadly, the SemVer spec is silent on
 the point of case comparisons and different major component repositories have chosen different
 interpretations of the spec as a result. Thus any consumer must explicitly decide which comparison
-to use.</p>
-<p>Technically, the SemVer spec states that alphanumeric Identifiers are ordered lexicographically,
-which would make them case sensitive. However, since MAJOR framework repositories have chosen
-to use each approach the real world of ambiguity, sadly, wins.</p>
-</div>
+a version expects and that is part of the version.</p>
+<div class="IMPORTANT"><h5>important</h5><p>
+Due to all the confusion and ambiguity surrounding the use of case sensitivity in ordering of
+semantic versions it is <b><em>STRONGLY</em></b> recommended that ALL use of [C]SemVer[-CI]
+value strings <b><em>always</em></b> uses a single case form. (That is 'ALL UPPERCASE`, or
+'all lower case' so that the versions are ordered consistently no matter what a particular
+repository uses. This is especially true of CSemVer[-CI] variants when used in a repository
+that supports case sensitive SemVer as the spec for CSemVer[-CI] explicitly calls out a case
+insensitive comparison.
+</p></div>
+<div class="NOTE"><h5>note</h5><p>Technically, the SemVer spec states that alphanumeric Identifiers are ordered
+lexicographically, which would make them case sensitive. However, since MAJOR framework repositories
+have chosen to use each approach the real world of ambiguity, sadly, wins.</p></div>
 </div>
 
   <h2 class="section" id="constructors">Constructors
 </h2>
 
   <dl class="jumplist">
-    <dt><a class="xref" href="Ubiquity.NET.Versioning.SemVer.-ctor.html#Ubiquity_NET_Versioning_SemVer__ctor_System_Numerics_BigInteger_System_Numerics_BigInteger_System_Numerics_BigInteger_">SemVer(BigInteger, BigInteger, BigInteger)</a></dt>
-    <dd><p>Initializes a new instance of the <a class="xref" href="Ubiquity.NET.Versioning.SemVer.html">SemVer</a> class.</p>
-</dd>
-  </dl>
-  <dl class="jumplist">
-    <dt><a class="xref" href="Ubiquity.NET.Versioning.SemVer.-ctor.html#Ubiquity_NET_Versioning_SemVer__ctor_System_Numerics_BigInteger_System_Numerics_BigInteger_System_Numerics_BigInteger_System_Collections_Generic_IEnumerable_System_String__">SemVer(BigInteger, BigInteger, BigInteger, IEnumerable&lt;string&gt;?)</a></dt>
-    <dd><p>Initializes a new instance of the <a class="xref" href="Ubiquity.NET.Versioning.SemVer.html">SemVer</a> class.</p>
-</dd>
-  </dl>
-  <dl class="jumplist">
-    <dt><a class="xref" href="Ubiquity.NET.Versioning.SemVer.-ctor.html#Ubiquity_NET_Versioning_SemVer__ctor_System_Numerics_BigInteger_System_Numerics_BigInteger_System_Numerics_BigInteger_System_Collections_Generic_IEnumerable_System_String__System_Collections_Generic_IEnumerable_System_String__">SemVer(BigInteger, BigInteger, BigInteger, IEnumerable&lt;string&gt;?, IEnumerable&lt;string&gt;?)</a></dt>
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.SemVer.-ctor.html#Ubiquity_NET_Versioning_SemVer__ctor_System_Numerics_BigInteger_System_Numerics_BigInteger_System_Numerics_BigInteger_Ubiquity_NET_Versioning_AlphaNumericOrdering_System_Collections_Immutable_ImmutableArray_System_String__System_Collections_Immutable_ImmutableArray_System_String__">SemVer(BigInteger, BigInteger, BigInteger, AlphaNumericOrdering, ImmutableArray&lt;string&gt;, ImmutableArray&lt;string&gt;)</a></dt>
     <dd><p>Initializes a new instance of the <a class="xref" href="Ubiquity.NET.Versioning.SemVer.html">SemVer</a> class.</p>
 </dd>
   </dl>
@@ -185,6 +188,11 @@ to use each approach the real world of ambiguity, sadly, wins.</p>
   <h2 class="section" id="properties">Properties
 </h2>
 
+  <dl class="jumplist">
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.SemVer.AlphaNumericOrdering.html#Ubiquity_NET_Versioning_SemVer_AlphaNumericOrdering">AlphaNumericOrdering</a></dt>
+    <dd><p>Gets the sort ordering applied to this version</p>
+</dd>
+  </dl>
   <dl class="jumplist">
     <dt><a class="xref" href="Ubiquity.NET.Versioning.SemVer.BuildMeta.html#Ubiquity_NET_Versioning_SemVer_BuildMeta">BuildMeta</a></dt>
     <dd><p>Gets the build components of the version</p>
@@ -215,8 +223,28 @@ to use each approach the real world of ambiguity, sadly, wins.</p>
 </h2>
 
   <dl class="jumplist">
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.SemVer.CompareTo.html#Ubiquity_NET_Versioning_SemVer_CompareTo_Ubiquity_NET_Versioning_SemVer_">CompareTo(SemVer?)</a></dt>
+    <dd><p>Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.</p>
+</dd>
+  </dl>
+  <dl class="jumplist">
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.SemVer.Equals.html#Ubiquity_NET_Versioning_SemVer_Equals_System_Object_">Equals(object?)</a></dt>
+    <dd><p>Determines whether the specified object is equal to the current object.</p>
+</dd>
+  </dl>
+  <dl class="jumplist">
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.SemVer.Equals.html#Ubiquity_NET_Versioning_SemVer_Equals_Ubiquity_NET_Versioning_SemVer_">Equals(SemVer?)</a></dt>
+    <dd><p>Indicates whether the current object is equal to another object of the same type.</p>
+</dd>
+  </dl>
+  <dl class="jumplist">
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.SemVer.GetHashCode.html#Ubiquity_NET_Versioning_SemVer_GetHashCode">GetHashCode()</a></dt>
+    <dd><p>Serves as the default hash function.</p>
+</dd>
+  </dl>
+  <dl class="jumplist">
     <dt><a class="xref" href="Ubiquity.NET.Versioning.SemVer.Parse.html#Ubiquity_NET_Versioning_SemVer_Parse_System_String_System_IFormatProvider_">Parse(string, IFormatProvider?)</a></dt>
-    <dd><p>Parses a string into a value.</p>
+    <dd><p>Parses a string into a <a class="xref" href="Ubiquity.NET.Versioning.SemVer.html">SemVer</a></p>
 </dd>
   </dl>
   <dl class="jumplist">
@@ -226,7 +254,41 @@ to use each approach the real world of ambiguity, sadly, wins.</p>
   </dl>
   <dl class="jumplist">
     <dt><a class="xref" href="Ubiquity.NET.Versioning.SemVer.TryParse.html#Ubiquity_NET_Versioning_SemVer_TryParse_System_String_System_IFormatProvider_Ubiquity_NET_Versioning_SemVer__">TryParse(string?, IFormatProvider?, out SemVer)</a></dt>
-    <dd><p>Tries to parse a string into a value.</p>
+    <dd><p>Tries to parse a string into a <a class="xref" href="Ubiquity.NET.Versioning.SemVer.html">SemVer</a> or derived type</p>
+</dd>
+  </dl>
+
+  <h2 class="section" id="operators">Operators
+</h2>
+
+  <dl class="jumplist">
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.SemVer.op_Equality.html#Ubiquity_NET_Versioning_SemVer_op_Equality_Ubiquity_NET_Versioning_SemVer_Ubiquity_NET_Versioning_SemVer_">operator ==(SemVer?, SemVer?)</a></dt>
+    <dd><p>Compares two values to determine equality.</p>
+</dd>
+  </dl>
+  <dl class="jumplist">
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.SemVer.op_GreaterThan.html#Ubiquity_NET_Versioning_SemVer_op_GreaterThan_Ubiquity_NET_Versioning_SemVer_Ubiquity_NET_Versioning_SemVer_">operator &gt;(SemVer?, SemVer?)</a></dt>
+    <dd><p>Compares two values to determine which is greater.</p>
+</dd>
+  </dl>
+  <dl class="jumplist">
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.SemVer.op_GreaterThanOrEqual.html#Ubiquity_NET_Versioning_SemVer_op_GreaterThanOrEqual_Ubiquity_NET_Versioning_SemVer_Ubiquity_NET_Versioning_SemVer_">operator &gt;=(SemVer?, SemVer?)</a></dt>
+    <dd><p>Compares two values to determine which is greater or equal.</p>
+</dd>
+  </dl>
+  <dl class="jumplist">
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.SemVer.op_Inequality.html#Ubiquity_NET_Versioning_SemVer_op_Inequality_Ubiquity_NET_Versioning_SemVer_Ubiquity_NET_Versioning_SemVer_">operator !=(SemVer?, SemVer?)</a></dt>
+    <dd><p>Compares two values to determine inequality.</p>
+</dd>
+  </dl>
+  <dl class="jumplist">
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.SemVer.op_LessThan.html#Ubiquity_NET_Versioning_SemVer_op_LessThan_Ubiquity_NET_Versioning_SemVer_Ubiquity_NET_Versioning_SemVer_">operator &lt;(SemVer?, SemVer?)</a></dt>
+    <dd><p>Compares two values to determine which is less.</p>
+</dd>
+  </dl>
+  <dl class="jumplist">
+    <dt><a class="xref" href="Ubiquity.NET.Versioning.SemVer.op_LessThanOrEqual.html#Ubiquity_NET_Versioning_SemVer_op_LessThanOrEqual_Ubiquity_NET_Versioning_SemVer_Ubiquity_NET_Versioning_SemVer_">operator &lt;=(SemVer?, SemVer?)</a></dt>
+    <dd><p>Compares two values to determine which is less or equal.</p>
 </dd>
   </dl>
 
@@ -239,7 +301,7 @@ to use each approach the real world of ambiguity, sadly, wins.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.4/src/Ubiquity.NET.Versioning/SemVer.cs/#L43" class="edit-link">Edit this page</a>
+          <a href="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/blob/v6.0.0/src/Ubiquity.NET.Versioning/SemVer.cs/#L48" class="edit-link">Edit this page</a>
         </div>
 
 

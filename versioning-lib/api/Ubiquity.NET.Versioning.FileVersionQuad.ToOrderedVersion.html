@@ -16,7 +16,7 @@
       
       
       
-      <meta name="docfx:docurl" content="https://github.com/UbiquityDotNET/CSemVer.GitBuild/new/develop/apiSpec/new?filename=Ubiquity_NET_Versioning_FileVersionQuad_ToOrderedVersion_.md&amp;value=---%0Auid%3A%20Ubiquity.NET.Versioning.FileVersionQuad.ToOrderedVersion*%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/new/develop/apiSpec/new?filename=Ubiquity_NET_Versioning_FileVersionQuad_ToOrderedVersion_.md&amp;value=---%0Auid%3A%20Ubiquity.NET.Versioning.FileVersionQuad.ToOrderedVersion*%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -86,7 +86,7 @@
 
 
 <h1 id="Ubiquity_NET_Versioning_FileVersionQuad_ToOrderedVersion_" data-uid="Ubiquity.NET.Versioning.FileVersionQuad.ToOrderedVersion*" class="text-break">
-Method ToOrderedVersion  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.4/src/Ubiquity.NET.Versioning/FileVersionQuad.cs/#L95"><i class="bi bi-code-slash"></i></a>
+Method ToOrderedVersion  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/blob/v6.0.0/src/Ubiquity.NET.Versioning/FileVersionQuad.cs/#L178"><i class="bi bi-code-slash"></i></a>
 </h1>
 
 <div class="facts text-secondary">
@@ -116,7 +116,7 @@ Method ToOrderedVersion  <a class="header-action link-secondary" title="View sou
 
 <h3 id="Ubiquity_NET_Versioning_FileVersionQuad_ToOrderedVersion_System_Boolean__" data-uid="Ubiquity.NET.Versioning.FileVersionQuad.ToOrderedVersion(System.Boolean@)">
   ToOrderedVersion(out bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.4/src/Ubiquity.NET.Versioning/FileVersionQuad.cs/#L95"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/blob/v6.0.0/src/Ubiquity.NET.Versioning/FileVersionQuad.cs/#L178"><i class="bi bi-code-slash"></i></a>
 </h3>
 
 <div class="markdown level1 summary"><p>Gets the CSemVer defined ordered version number for this FileVersion quad</p>
@@ -124,7 +124,7 @@ Method ToOrderedVersion  <a class="header-action link-secondary" title="View sou
 <div class="markdown level1 conceptual"></div>
 
 <div class="codewrapper">
-  <pre><code class="lang-csharp hljs">public ulong ToOrderedVersion(out bool isCIBuild)</code></pre>
+  <pre><code class="lang-csharp hljs">public long ToOrderedVersion(out bool isCIBuild)</code></pre>
 </div>
 
 <h4 class="section">Parameters</h4>
@@ -136,7 +136,7 @@ Method ToOrderedVersion  <a class="header-action link-secondary" title="View sou
 
 <h4 class="section">Returns</h4>
 <dl class="parameters">
-  <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a></dt>
+  <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
   <dd><p>Ordered version number of this file version</p>
 </dd>
 </dl>
@@ -159,7 +159,7 @@ or not. This condition is important for ordering</p>
 
 <h3 id="Ubiquity_NET_Versioning_FileVersionQuad_ToOrderedVersion" data-uid="Ubiquity.NET.Versioning.FileVersionQuad.ToOrderedVersion">
   ToOrderedVersion()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.4/src/Ubiquity.NET.Versioning/FileVersionQuad.cs/#L102"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/blob/v6.0.0/src/Ubiquity.NET.Versioning/FileVersionQuad.cs/#L185"><i class="bi bi-code-slash"></i></a>
 </h3>
 
 <div class="markdown level1 summary"><p>Gets the CSemVer defined ordered version number for this FileVersion quad</p>
@@ -167,13 +167,13 @@ or not. This condition is important for ordering</p>
 <div class="markdown level1 conceptual"></div>
 
 <div class="codewrapper">
-  <pre><code class="lang-csharp hljs">public ulong ToOrderedVersion()</code></pre>
+  <pre><code class="lang-csharp hljs">public long ToOrderedVersion()</code></pre>
 </div>
 
 
 <h4 class="section">Returns</h4>
 <dl class="parameters">
-  <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a></dt>
+  <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
   <dd><p>Ordered version number of this file version</p>
 </dd>
 </dl>
@@ -195,7 +195,7 @@ or not. This condition is important for ordering</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.4/src/Ubiquity.NET.Versioning/FileVersionQuad.cs/#L95" class="edit-link">Edit this page</a>
+          <a href="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/blob/v6.0.0/src/Ubiquity.NET.Versioning/FileVersionQuad.cs/#L178" class="edit-link">Edit this page</a>
         </div>
 
 

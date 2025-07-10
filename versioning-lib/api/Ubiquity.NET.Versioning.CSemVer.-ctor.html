@@ -16,7 +16,7 @@
       
       
       
-      <meta name="docfx:docurl" content="https://github.com/UbiquityDotNET/CSemVer.GitBuild/new/develop/apiSpec/new?filename=Ubiquity_NET_Versioning_CSemVer__ctor_.md&amp;value=---%0Auid%3A%20Ubiquity.NET.Versioning.CSemVer.%23ctor*%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/new/develop/apiSpec/new?filename=Ubiquity_NET_Versioning_CSemVer__ctor_.md&amp;value=---%0Auid%3A%20Ubiquity.NET.Versioning.CSemVer.%23ctor*%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -86,7 +86,7 @@
 
 
 <h1 id="Ubiquity_NET_Versioning_CSemVer__ctor_" data-uid="Ubiquity.NET.Versioning.CSemVer.#ctor*" class="text-break">
-Constructor CSemVer  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.4/src/Ubiquity.NET.Versioning/CSemVer.cs/#L34"><i class="bi bi-code-slash"></i></a>
+Constructor CSemVer  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/blob/v6.0.0/src/Ubiquity.NET.Versioning/CSemVer.cs/#L28"><i class="bi bi-code-slash"></i></a>
 </h1>
 
 <div class="facts text-secondary">
@@ -114,17 +114,47 @@ Constructor CSemVer  <a class="header-action link-secondary" title="View source"
 
 <a id="Ubiquity_NET_Versioning_CSemVer__ctor_" data-uid="Ubiquity.NET.Versioning.CSemVer.#ctor*"></a>
 
-<h3 id="Ubiquity_NET_Versioning_CSemVer__ctor_System_Int32_System_Int32_System_Int32_System_Nullable_Ubiquity_NET_Versioning_PrereleaseVersion__System_Collections_Generic_IEnumerable_System_String__" data-uid="Ubiquity.NET.Versioning.CSemVer.#ctor(System.Int32,System.Int32,System.Int32,System.Nullable{Ubiquity.NET.Versioning.PrereleaseVersion},System.Collections.Generic.IEnumerable{System.String})">
-  CSemVer(int, int, int, PrereleaseVersion?, IEnumerable&lt;string&gt;?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.4/src/Ubiquity.NET.Versioning/CSemVer.cs/#L34"><i class="bi bi-code-slash"></i></a>
+<h3 id="Ubiquity_NET_Versioning_CSemVer__ctor" data-uid="Ubiquity.NET.Versioning.CSemVer.#ctor">
+  CSemVer()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/blob/v6.0.0/src/Ubiquity.NET.Versioning/CSemVer.cs/#L28"><i class="bi bi-code-slash"></i></a>
 </h3>
 
-<div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a> struct.</p>
+<div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a> class.</p>
 </div>
 <div class="markdown level1 conceptual"></div>
 
 <div class="codewrapper">
-  <pre><code class="lang-csharp hljs">public CSemVer(int major, int minor, int patch, PrereleaseVersion? preRelVersion = null, IEnumerable&lt;string&gt;? buildMetaData = null)</code></pre>
+  <pre><code class="lang-csharp hljs">public CSemVer()</code></pre>
+</div>
+
+
+
+
+
+
+
+
+
+<h4 class="section" id="Ubiquity_NET_Versioning_CSemVer__ctor_remarks">Remarks</h4>
+<div class="markdown level1 remarks"><p>Default constructs a <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a> with a version of 0.0.0 no pre-release nor build meta data</p>
+</div>
+
+
+
+
+<a id="Ubiquity_NET_Versioning_CSemVer__ctor_" data-uid="Ubiquity.NET.Versioning.CSemVer.#ctor*"></a>
+
+<h3 id="Ubiquity_NET_Versioning_CSemVer__ctor_System_Int32_System_Int32_System_Int32_System_Nullable_Ubiquity_NET_Versioning_PrereleaseVersion__System_Collections_Immutable_ImmutableArray_System_String__" data-uid="Ubiquity.NET.Versioning.CSemVer.#ctor(System.Int32,System.Int32,System.Int32,System.Nullable{Ubiquity.NET.Versioning.PrereleaseVersion},System.Collections.Immutable.ImmutableArray{System.String})">
+  CSemVer(int, int, int, PrereleaseVersion?, ImmutableArray&lt;string&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/blob/v6.0.0/src/Ubiquity.NET.Versioning/CSemVer.cs/#L39"><i class="bi bi-code-slash"></i></a>
+</h3>
+
+<div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Ubiquity.NET.Versioning.CSemVer.html">CSemVer</a> class.</p>
+</div>
+<div class="markdown level1 conceptual"></div>
+
+<div class="codewrapper">
+  <pre><code class="lang-csharp hljs">public CSemVer(int major, int minor, int patch, PrereleaseVersion? preRelVersion = null, ImmutableArray&lt;string&gt; buildMetaData = default)</code></pre>
 </div>
 
 <h4 class="section">Parameters</h4>
@@ -141,7 +171,7 @@ Constructor CSemVer  <a class="header-action link-secondary" title="View source"
   <dt><code>preRelVersion</code> <a class="xref" href="Ubiquity.NET.Versioning.PrereleaseVersion.html">PrereleaseVersion</a>?</dt>
   <dd><p>Pre-release version information (if a pre-release build)</p>
 </dd>
-  <dt><code>buildMetaData</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+  <dt><code>buildMetaData</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.immutable.immutablearray-1">ImmutableArray</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
   <dd><p>Any additional build meta data [default: empty string]</p>
 </dd>
 </dl>
@@ -160,7 +190,7 @@ Constructor CSemVer  <a class="header-action link-secondary" title="View source"
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/UbiquityDotNET/CSemVer.GitBuild/blob/v5.0.4/src/Ubiquity.NET.Versioning/CSemVer.cs/#L34" class="edit-link">Edit this page</a>
+          <a href="https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning/blob/v6.0.0/src/Ubiquity.NET.Versioning/CSemVer.cs/#L28" class="edit-link">Edit this page</a>
         </div>
 
 

@@ -266,7 +266,7 @@ namespace Ubiquity.NET.Versioning
                 patchP1.Minor,
                 patchP1.Patch,
                 AlphaNumericOrdering.CaseInsensitive,
-                [ .. patchP1.PreRelease, .. ciSeq ],
+                [ .. patchP1.PrereleaseVersion?.FormatElements(alwaysIncludeZero: true) ?? patchP1.PreRelease, .. ciSeq ],
                 patchP1.BuildMeta
             )
         {

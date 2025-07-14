@@ -77,10 +77,10 @@ if($PSCmdlet.ShouldProcess("$forkRemoteName $mergeBackBranchName", "git push"))
     Invoke-External git push $forkRemoteName $mergeBackBranchName
 }
 
-if($PSCmdlet.ShouldProcess("$tagName", "Fast-Forward main (Switch, merge -ff-only, push)"))
+if($PSCmdlet.ShouldProcess("$tagName", "Reset main to point to release tag"))
 {
-    Write-Information 'Fast-forwarding main to tagged release'
+    Write-Information 'Updating main to point to tagged release'
     Invoke-External git switch '-C' $mainBranchName $officialMainBranch
-    Invoke-External git merge --ff-only $tagName
-    Invoke-External git push $officialRemoteName $mainBranchName
+    Invoke-External git reset --hard $tagName
+    Invoke-External git push --force $officialRemoteName $mainBranchName
 }

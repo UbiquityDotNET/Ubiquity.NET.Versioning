@@ -68,23 +68,23 @@ namespace Ubiquity.NET.Versioning
         public string Name => CSemVerPrereleaseGrammar.ValidPrereleaseNames[ Index ];
 
         /// <summary>Gets this <see cref="PrereleaseVersion"/> as a sequence of strings</summary>
-        /// <param name="alawaysIncludeZero">Indicates whether the result will always include zero values</param>
+        /// <param name="alwaysIncludeZero">Indicates whether the result will always include zero values</param>
         /// <returns>Sequence of strings that represent this instance</returns>
         /// <remarks>
         /// The default behavior is to skip the <see cref="Number"/> value if it and the <see cref="Fix"/>
-        /// value are zero. <paramref name="alawaysIncludeZero"/> is used to override this and show the
+        /// value are zero. <paramref name="alwaysIncludeZero"/> is used to override this and show the
         /// zero value always. (Normally this is only used for a <see cref="CSemVerCI"/>)
         /// </remarks>
         /// <seealso cref="SemVer.PreRelease"/>
         /// <seealso cref="CSemVer"/>
         /// <seealso cref="CSemVerCI"/>
-        public IEnumerable<string> FormatElements( bool alawaysIncludeZero = false )
+        public IEnumerable<string> FormatElements( bool alwaysIncludeZero = false )
         {
             yield return Name;
-            if(Number > 0 || Fix > 0 || alawaysIncludeZero)
+            if(Number > 0 || Fix > 0 || alwaysIncludeZero)
             {
                 yield return Number.ToString( CultureInfo.InvariantCulture );
-                if(Fix >= 1 || alawaysIncludeZero)
+                if(Fix >= 1 || alwaysIncludeZero)
                 {
                     yield return Fix.ToString( CultureInfo.InvariantCulture );
                 }

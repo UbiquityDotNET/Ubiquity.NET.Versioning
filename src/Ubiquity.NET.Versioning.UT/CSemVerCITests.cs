@@ -192,8 +192,8 @@ namespace Ubiquity.NET.Versioning.UT
             var ver_beta = new CSemVerCI( new CSemVer(20, 1, 4, beta_1_0, ["buildMeta"]), testIndex, testName);
             var ver_delta = new CSemVerCI( new CSemVer(20, 1, 4, delta_0_1, ["buildMeta"]), testIndex, testName);
 
-            Assert.AreEqual("20.1.5-alpha.ci.BuildIndex.BuildName+buildMeta", ver_alpha.ToString());
-            Assert.AreEqual("20.1.5-beta.1.ci.BuildIndex.BuildName+buildMeta", ver_beta.ToString());
+            Assert.AreEqual("20.1.5-alpha.0.0.ci.BuildIndex.BuildName+buildMeta", ver_alpha.ToString());
+            Assert.AreEqual("20.1.5-beta.1.0.ci.BuildIndex.BuildName+buildMeta", ver_beta.ToString());
             Assert.AreEqual("20.1.5-delta.0.1.ci.BuildIndex.BuildName+buildMeta", ver_delta.ToString());
         }
 

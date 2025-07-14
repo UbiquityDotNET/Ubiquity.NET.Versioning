@@ -81,10 +81,10 @@ namespace Ubiquity.NET.Versioning.UT
 
             string[] expectedSeq = ["beta", "0", "0"];
             prv = new PrereleaseVersion( "beta", 0, 0 );
-            Assert.IsTrue( expectedSeq.SequenceEqual( prv.FormatElements( alawaysIncludeZero: true ) ) );
+            Assert.IsTrue( expectedSeq.SequenceEqual( prv.FormatElements( alwaysIncludeZero: true ) ) );
 
             expectedSeq = ["beta"];
-            Assert.IsTrue( expectedSeq.SequenceEqual( prv.FormatElements( alawaysIncludeZero: false ) ) );
+            Assert.IsTrue( expectedSeq.SequenceEqual( prv.FormatElements( alwaysIncludeZero: false ) ) );
         }
     }
 }

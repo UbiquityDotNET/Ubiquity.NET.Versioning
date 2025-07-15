@@ -6,5 +6,4 @@ will be based on
     BuildMajor = "6"
     BuildMinor = "0"
     BuildPatch = "1"
-    PreReleaseName="alpha"
 />

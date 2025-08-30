@@ -47,6 +47,8 @@ function Initialize-BuildEnvironment
     {
         # use common repo-neutral function to perform most of the initialization
         $buildInfo = Initialize-CommonBuildEnvironment $repoRoot -FullInit:$FullInit
+
+        # Add repo specific values
         $buildInfo['OfficialGitRemoteUrl'] = 'https://github.com/UbiquityDotNET/Ubiquity.NET.Versioning.git'
 
         # make sure directories required (but not created by build tools) exist

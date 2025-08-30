@@ -1,9 +1,19 @@
 <!--
 This file is updated on a public release to set the build number for a release and that all subsequent CI builds
-will be based on
--->
-<BuildVersionData
+will be based on.
+
+Valid attributes are:
+BuildMajor,
+BuildMinor,
+BuildPatch,
+PreReleaseName,
+    Valid names are:
+    "alpha", "beta", "delta", "epsilon", "gamma", "kappa", "pre"|"prerelease", "rc"
+PreReleaseNumber,
+PreReleaseFix
+--><BuildVersionData
     BuildMajor = "6"
     BuildMinor = "0"
-    BuildPatch = "1"
+    BuildPatch = "2"
+    PreReleaseName = "beta"
 />

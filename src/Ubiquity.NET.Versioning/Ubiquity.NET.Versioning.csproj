@@ -1,7 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <IsAotCompatible>true</IsAotCompatible>
+        <NeutralLanguage>en-US</NeutralLanguage>
+
         <PackageId>Ubiquity.NET.Versioning</PackageId>
         <Authors>UbiquityDotNET</Authors>
         <Copyright>Copyright (C) 2017-2020, Ubiquity.NET Contributors</Copyright>
@@ -15,13 +18,15 @@
         <PackageTags>Version;CSemVer;CI;SemVer</PackageTags>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
-        <PackageReadmeFile>ReadMe.md</PackageReadmeFile>
-        <IsAotCompatible>True</IsAotCompatible>
-        <NeutralLanguage>en-US</NeutralLanguage>
+        <PackageReadmeFile>PackageReadMe.md</PackageReadmeFile>
     </PropertyGroup>
+
     <ItemGroup>
       <PackageReference Include="Sprache" />
+      <!-- Override dependent version with explicit form to resolve CVE vulnerability -->
+      <PackageReference Include="System.Text.RegularExpressions" />
     </ItemGroup>
+
     <ItemGroup>
       <Compile Update="Properties\Resources.Designer.cs">
         <DesignTime>True</DesignTime>
@@ -29,6 +34,7 @@
         <DependentUpon>Resources.resx</DependentUpon>
       </Compile>
     </ItemGroup>
+
     <ItemGroup>
       <EmbeddedResource Update="Properties\Resources.resx">
         <Generator>ResXFileCodeGenerator</Generator>
@@ -37,6 +43,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="PackageReadMe.md" Pack="true" PackagePath="ReadMe.md" />
+        <None Include="PackageReadMe.md" Pack="true" PackagePath="/" />
     </ItemGroup>
 </Project>

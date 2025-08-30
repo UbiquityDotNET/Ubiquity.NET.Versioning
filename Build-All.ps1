@@ -14,8 +14,8 @@ using module "PSModules/RepoBuild/RepoBuild.psd1"
 
 .DESCRIPTION
     This script is used by the automated build to perform the actual build. The Ubiquity.NET
-    family of projects all employ a PowerShell driven build that is generally divorced from the
-    automated build infrastructure used. This is done for several reasons, but the most
+    family of projects all employ a PowerShell driven build that is generally divorced from
+    the automated build infrastructure used. This is done for several reasons, but the most
     important ones are the ability to reproduce the build locally for inner development and
     for flexibility in selecting the actual back end. The back ends have changed a few times
     over the years and re-writing the entire build in terms of those back ends each time is
@@ -28,7 +28,8 @@ Param(
     [switch]$ForceClean
 )
 
-Set-StrictMode -Version 3.0
+$ErrorActionPreference = "Stop"
+$InformationPreference = "Continue"
 
 Push-Location $PSScriptRoot
 $oldPath = $env:Path
@@ -48,7 +49,7 @@ try
         Remove-Item -Recurse -Force $buildInfo['BuildOutputPath'] -ProgressAction SilentlyContinue | Out-Null
     }
 
-    mkdir $buildInfo['NuGetOutputPath'] -ErrorAction SilentlyContinue | Out-Null
+    New-Item -ItemType Directory $buildInfo['NuGetOutputPath'] -ErrorAction SilentlyContinue | Out-Null
     dotnet build -c $Configuration --no-incremental 'src/Ubiquity.NET.Versioning.slnx'
 }
 catch

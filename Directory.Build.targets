@@ -1,6 +1,6 @@
-<Project InitialTargets="VerifyProjectSettings;ShowBuildParameters">
-    <Target Name="EnsureBuildOutputPaths" Condition="!EXISTS($(PackageOutputPath))" BeforeTargets="Build;Restore">
-        <MakeDir Directories="$(PackageOutputPath)"/>
+<Project InitialTargets="VerifyProjectSettings;ShowBuildParameters;EnsureBuildOutputPaths">
+    <Target Name="EnsureBuildOutputPaths">
+        <MakeDir Condition="!EXISTS($(PackageOutputPath))" Directories="$(PackageOutputPath)"/>
     </Target>
 
     <Target Name="ShowBuildParameters">

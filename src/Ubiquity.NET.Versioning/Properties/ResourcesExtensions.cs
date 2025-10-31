@@ -13,7 +13,7 @@ namespace Ubiquity.NET.Versioning.Properties
 {
     internal static class ResourcesExtensions
     {
-        internal static CompositeFormat AsFormat([NotNull] this string? self)
+        internal static CompositeFormat ParseAsFormat([NotNull][StringSyntax(StringSyntaxAttribute.CompositeFormat)] this string? self)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(self);
             return CompositeFormat.Parse(self);
@@ -37,22 +37,22 @@ namespace Ubiquity.NET.Versioning.Properties
             return string.Format(CultureInfo.CurrentCulture, self, arg0, arg1, arg3);
         }
 
-        internal static string Format<TArg0>([NotNull]this string? self, TArg0 arg0)
+        internal static string Format<TArg0>([NotNull][StringSyntax( StringSyntaxAttribute.CompositeFormat )] this string? self, TArg0 arg0)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(self);
-            return string.Format(CultureInfo.CurrentCulture, self.AsFormat(), arg0);
+            return string.Format(CultureInfo.CurrentCulture, self.ParseAsFormat(), arg0);
         }
 
-        internal static string Format<TArg0, TArg1>([NotNull]this string? self, TArg0 arg0, TArg1 arg1)
+        internal static string Format<TArg0, TArg1>([NotNull][StringSyntax( StringSyntaxAttribute.CompositeFormat )] this string? self, TArg0 arg0, TArg1 arg1)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(self);
-            return string.Format(CultureInfo.CurrentCulture, self.AsFormat(), arg0, arg1);
+            return string.Format(CultureInfo.CurrentCulture, self.ParseAsFormat(), arg0, arg1);
         }
 
-        internal static string Format<TArg0, TArg1, TArg3>([NotNull]this string? self, TArg0 arg0, TArg1 arg1, TArg3 arg3)
+        internal static string Format<TArg0, TArg1, TArg3>([NotNull][StringSyntax( StringSyntaxAttribute.CompositeFormat )] this string? self, TArg0 arg0, TArg1 arg1, TArg3 arg3)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(self);
-            return string.Format(CultureInfo.CurrentCulture, self.AsFormat(), arg0, arg1, arg3);
+            return string.Format(CultureInfo.CurrentCulture, self.ParseAsFormat(), arg0, arg1, arg3);
         }
     }
 }

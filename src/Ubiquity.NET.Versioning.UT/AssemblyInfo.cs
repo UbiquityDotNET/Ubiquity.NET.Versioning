@@ -8,6 +8,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 // In SDK-style projects such as this one, several assembly attributes that were historically
 // defined in this file are now automatically added during build and populated with
 // values defined in project properties. For details of which attributes are included
@@ -24,3 +26,11 @@ using System.Runtime.InteropServices;
 [assembly: CLSCompliant( false )]
 
 [assembly: ExcludeFromCodeCoverage]
+
+// Resolve MSTEST001 - explicitly declare parallelization
+// There are enough tests at the method level to warrant some
+// level of parallelization. However, the class level is the
+// optimal granularity for these tests. The method level ends
+// up with more overhead per thread since the test methods are
+// so small, diminishing the value of parallelization.
+[assembly: Parallelize( Scope = ExecutionScope.ClassLevel )]

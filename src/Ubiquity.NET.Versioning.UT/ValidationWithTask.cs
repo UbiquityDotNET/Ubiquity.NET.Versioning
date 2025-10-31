@@ -102,7 +102,7 @@ namespace Ubiquity.NET.Versioning.UT
                 // Assert.AreEqual( expectedVersion.Index, actualCI.Index);
                 Assert.AreEqual( expectedVersion.Name, actualCI.Name);
 
-                Assert.AreEqual( expectedVersion.PreRelease.Length, actualCI.PreRelease.Length, "prerelease sequence should have matching element count" );
+                Assert.HasCount( expectedVersion.PreRelease.Length, actualCI.PreRelease, "prerelease sequence should have matching element count" );
             }
             else
             {

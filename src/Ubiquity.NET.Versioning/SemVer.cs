@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
@@ -73,17 +72,17 @@ namespace Ubiquity.NET.Versioning
 
             if(!preRel.IsDefaultOrEmpty)
             {
-                PreRelease = ValidateElementsWithParser(preRel, SemVerGrammar.PreReleaseIdentifier);
+                PreRelease = ValidateElementsWithParser( preRel, SemVerGrammar.PreReleaseIdentifier );
             }
 
             if(!build.IsDefaultOrEmpty)
             {
-                BuildMeta = ValidateElementsWithParser(build, SemVerGrammar.BuildIdentifier);
+                BuildMeta = ValidateElementsWithParser( build, SemVerGrammar.BuildIdentifier );
             }
 
-            if( sortOrdering == AlphaNumericOrdering.None)
+            if(sortOrdering == AlphaNumericOrdering.None)
             {
-                throw new ArgumentException("Sort ordering of 'None' is an invalid value", nameof(sortOrdering));
+                throw new ArgumentException( "Sort ordering of 'None' is an invalid value", nameof( sortOrdering ) );
             }
 
             AlphaNumericOrdering = sortOrdering;
@@ -121,13 +120,13 @@ namespace Ubiquity.NET.Versioning
         public override string ToString( )
         {
             var bldr = new StringBuilder($"{Major}.{Minor}.{Patch}");
-            if( PreRelease.Length > 0 )
+            if(PreRelease.Length > 0)
             {
                 bldr.Append( '-' )
                     .AppendJoin( '.', PreRelease );
             }
 
-            if( BuildMeta.Length > 0 )
+            if(BuildMeta.Length > 0)
             {
                 bldr.Append( '+' )
                     .AppendJoin( '.', BuildMeta );
@@ -135,6 +134,8 @@ namespace Ubiquity.NET.Versioning
 
             return bldr.ToString();
         }
+
+        #region Relational operators
 
         /// <inheritdoc/>
         /// <exception cref="InvalidOperationException">The <see cref="AlphaNumericOrdering"/> for both sides does not match</exception>
@@ -153,35 +154,33 @@ namespace Ubiquity.NET.Versioning
                 return 1;
             }
 
-            if (AlphaNumericOrdering != other.AlphaNumericOrdering)
+            if(AlphaNumericOrdering != other.AlphaNumericOrdering)
             {
-                throw new InvalidOperationException("SemVer values have different AlphaNumericOrdering, direct comparison is not supported.");
+                throw new InvalidOperationException( "SemVer values have different AlphaNumericOrdering, direct comparison is not supported." );
             }
 
             return AlphaNumericOrdering == AlphaNumericOrdering.CaseSensitive
-                 ? Comparison.CaseSensitive.SemVer.Compare(this, other)
-                 : Comparison.CaseInsensitive.SemVer.Compare(this, other);
+                 ? Comparison.CaseSensitive.SemVer.Compare( this, other )
+                 : Comparison.CaseInsensitive.SemVer.Compare( this, other );
         }
-
-        #region Relational operators
 
         /// <inheritdoc/>
         public override bool Equals( object? obj )
         {
-            return obj is SemVer v && Equals(v);
+            return obj is SemVer v && Equals( v );
         }
 
         /// <inheritdoc/>
         public override int GetHashCode( )
         {
             // NOTE: Build meta does not contribute to ordering and therefore does not contribute to the hash
-            return HashCode.Combine(AlphaNumericOrdering, Major, Minor, Patch, PreRelease);
+            return HashCode.Combine( AlphaNumericOrdering, Major, Minor, Patch, PreRelease );
         }
 
         /// <inheritdoc/>
         public bool Equals( SemVer? other )
         {
-            return CompareTo(other) == 0;
+            return CompareTo( other ) == 0;
         }
 
         /// <inheritdoc/>
@@ -255,19 +254,25 @@ namespace Ubiquity.NET.Versioning
         /// <inheritdoc cref="Parse(string, IFormatProvider?)" path="/remarks"/>
         public static bool TryParse( [NotNullWhen( true )] string? s, IFormatProvider? provider, [MaybeNullWhen( false )] out SemVer result )
         {
-            return TryParseIncludeDerived(s, provider, out result, out _);
+            return TryParseIncludeDerived( s, provider, out result, out _ );
         }
 
         /// <summary>Tries to parse a string into a semantic version providing details of any failures</summary>
         /// <param name="s">Input string to parse</param>
-        /// <param name="provider">Formatting provider to use</param>
+        /// <param name="provider">Formatting provider to use [<see cref="SemVerFormatProvider.CaseSensitive"/> or <see cref="SemVerFormatProvider.CaseInsensitive"/>]</param>
         /// <param name="result">Resulting <see cref="SemVer"/> if parse succeeds</param>
         /// <param name="ex">Exception data for any errors or <see langword="null"/> if parse succeeded</param>
         /// <returns><see langword="true"/> if string successfully parsed or <see langword="false"/> if not</returns>
         /// <remarks>
-        /// This does NOT consider derived types. It is used by the general parsing as well as parsing of derived types
-        /// themselves.
+        /// <para>This does NOT consider derived types. It is used by the general parsing as well as parsing of derived types
+        /// themselves.</para>
+        /// <para>The sort ordering for alpha numeric identifies in the version is specified by the <paramref name="provider"/>.
+        /// It must provide a value for the <see cref="AlphaNumericOrdering"/> in it's <see cref="IFormatProvider.GetFormat(Type?)"/>
+        /// otherwise an exception occurs.
+        /// </para>
         /// </remarks>
+        /// <exception cref="ArgumentNullException">One or more of the arguments provided is <see langword="null"/></exception>
+        /// <exception cref="ArgumentException">The <paramref name="provider"/> does not support the <see cref="AlphaNumericOrdering"/> format</exception>
         internal static bool TryParse(
             [NotNull] string? s,
             IFormatProvider? provider,
@@ -278,8 +283,14 @@ namespace Ubiquity.NET.Versioning
             ArgumentNullException.ThrowIfNull( s );
 
             provider ??= SemVerFormatProvider.CaseSensitive;
+            if(provider is null)
+            {
+                string msg = Resources.Unrecognized_format_provider_Provider_must_provide_formatting_for_0.Format( nameof( AlphaNumericOrdering ) );
+                throw new ArgumentException( msg, nameof(provider) );
+            }
+
             IResult<SemVer> parseResult = SemVerGrammar.SemanticVersion(provider.GetOrdering()).TryParse(s);
-            if(parseResult.Failed(out ex))
+            if(parseResult.Failed( out ex ))
             {
                 result = default;
                 return false;
@@ -300,11 +311,11 @@ namespace Ubiquity.NET.Versioning
             result = default;
             ex = default;
 
-            if(TryParse(s, provider, out SemVer? baseVer, out ex))
+            if(TryParse( s, provider, out SemVer? baseVer, out ex ))
             {
                 // if caller expects case sensitivity then CSmeVer[-CI] are off the table.
                 // Those are explicitly case insensitive.
-                if( provider.IsCaseSensitive())
+                if(provider.IsCaseSensitive())
                 {
                     result = baseVer;
                     return true;
@@ -312,13 +323,13 @@ namespace Ubiquity.NET.Versioning
 
                 // expect case insensitive so consider CSemVer/CSemVerCI
 
-                if(CSemVer.TryFrom(baseVer, out CSemVer? ver, out ex))
+                if(CSemVer.TryFrom( baseVer, out CSemVer? ver, out ex ))
                 {
                     result = ver;
                     return true;
                 }
 
-                if(CSemVerCI.TryFrom(baseVer, out CSemVerCI? ciVer, out ex))
+                if(CSemVerCI.TryFrom( baseVer, out CSemVerCI? ciVer, out ex ))
                 {
                     result = ciVer;
                     return true;
@@ -334,18 +345,9 @@ namespace Ubiquity.NET.Versioning
         #endregion
 
         private static ImmutableArray<string> ValidateElementsWithParser(
-            IEnumerable<string>? value,
-            Parser<string> parser,
-            [CallerArgumentExpression(nameof(value))] string? exp = null
-            )
-        {
-            return value is null ? [] : ValidateElementsWithParser( [.. value], parser, exp);
-        }
-
-        private static ImmutableArray<string> ValidateElementsWithParser(
             ImmutableArray<string>? value,
             Parser<string> parser,
-            [CallerArgumentExpression(nameof(value))] string? exp = null
+            [CallerArgumentExpression( nameof( value ) )] string? exp = null
             )
         {
             if(value is null)
@@ -358,7 +360,7 @@ namespace Ubiquity.NET.Versioning
                 IResult<string> parseResult = parser.TryParse(part);
                 if(!parseResult.WasSuccessful)
                 {
-                    throw new FormatException( Resources.exp_0_contains_invalid_value_1_2.Format(exp, part, parseResult.Message) );
+                    throw new FormatException( Resources.exp_0_contains_invalid_value_1_2.Format( exp, part, parseResult.Message ) );
                 }
             }
 

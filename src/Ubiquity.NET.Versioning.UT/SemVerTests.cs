@@ -25,23 +25,23 @@ namespace Ubiquity.NET.Versioning.UT
             Assert.AreEqual( 1, sv1.Major );
             Assert.AreEqual( 2, sv1.Minor );
             Assert.AreEqual( 3, sv1.Patch );
-            Assert.AreEqual( 0, sv1.PreRelease.Length );
-            Assert.AreEqual( 0, sv1.BuildMeta.Length );
+            Assert.IsEmpty( sv1.PreRelease);
+            Assert.IsEmpty( sv1.BuildMeta);
 
             var sv2 = new SemVer(1, 2, 3, AlphaNumericOrdering.CaseSensitive, ["pre-rel"]);
             Assert.AreEqual( 1, sv2.Major );
             Assert.AreEqual( 2, sv2.Minor );
             Assert.AreEqual( 3, sv2.Patch );
-            Assert.AreEqual( 1, sv2.PreRelease.Length );
+            Assert.HasCount( 1, sv2.PreRelease );
             Assert.AreEqual( "pre-rel", sv2.PreRelease[ 0 ] );
-            Assert.AreEqual( 0, sv2.BuildMeta.Length );
+            Assert.IsEmpty( sv2.BuildMeta);
 
             var sv3 = new SemVer(1, 2, 3, AlphaNumericOrdering.CaseSensitive, [], ["meta"]);
             Assert.AreEqual( 1, sv3.Major );
             Assert.AreEqual( 2, sv3.Minor );
             Assert.AreEqual( 3, sv3.Patch );
-            Assert.AreEqual( 0, sv3.PreRelease.Length );
-            Assert.AreEqual( 1, sv3.BuildMeta.Length );
+            Assert.IsEmpty( sv3.PreRelease);
+            Assert.HasCount( 1, sv3.BuildMeta );
             Assert.AreEqual( "meta", sv3.BuildMeta[ 0 ] );
         }
 
@@ -73,12 +73,12 @@ namespace Ubiquity.NET.Versioning.UT
                 var lhs = sample[i-1];
                 var rhs = sample[i];
 
-                Assert.IsTrue( lhs.CompareTo( rhs ) < 0, $"'{lhs}' should compare less than '{rhs}'" );
+                Assert.IsLessThan( 0, lhs.CompareTo( rhs ), $"'{lhs}' should compare less than '{rhs}'" );
 
                 // inverted should produce correct results too.
-                Assert.IsTrue( rhs.CompareTo( lhs ) > 0, $"'{rhs}' should compare greater than '{lhs}'" );
+                Assert.IsGreaterThan( 0, rhs.CompareTo( lhs ), $"'{rhs}' should compare greater than '{lhs}'" );
 
-                Assert.IsTrue( lhs.CompareTo( null ) > 0, "Any version should compare greater than null" );
+                Assert.IsGreaterThan( 0, lhs.CompareTo( null ), "Any version should compare greater than null" );
 #pragma warning disable IDE0002 // Simplify Member Access
                 // Simplification results in a different API call! Test is for a specific case
                 Assert.IsTrue( SemVer.Equals( null, null ) );
@@ -163,8 +163,8 @@ namespace Ubiquity.NET.Versioning.UT
             Assert.AreEqual( expected.Major, actual.Major, $"Major should match for '{input}'" );
             Assert.AreEqual( expected.Minor, actual.Minor, $"Minor should match for '{input}'" );
             Assert.AreEqual( expected.Patch, actual.Patch, $"Patch should match for '{input}'" );
-            Assert.AreEqual( expected.PreRelease.Length, actual.PreRelease.Length, $"PreRelease.Count should match for '{input}'" );
-            Assert.AreEqual( expected.BuildMeta.Length, actual.BuildMeta.Length, $"BuildMeta.Count should match for '{input}'" );
+            Assert.HasCount( expected.PreRelease.Length, actual.PreRelease, $"PreRelease.Count should match for '{input}'" );
+            Assert.HasCount( expected.BuildMeta.Length, actual.BuildMeta, $"BuildMeta.Count should match for '{input}'" );
             for(int i = 0; i < expected.PreRelease.Length; ++i)
             {
                 Assert.AreEqual( expected.PreRelease[ i ], actual.PreRelease[ i ], $"PreRelease[{i}] should match for '{input}'" );

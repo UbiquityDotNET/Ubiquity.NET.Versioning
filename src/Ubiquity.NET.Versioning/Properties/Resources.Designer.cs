@@ -19,7 +19,7 @@ namespace Ubiquity.NET.Versioning.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -111,6 +111,15 @@ namespace Ubiquity.NET.Versioning.Properties {
         internal static string odd_file_versions_are_reserved_for_CI {
             get {
                 return ResourceManager.GetString("odd_file_versions_are_reserved_for_CI", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unrecognized format provider. Provider must provide formatting for {0}.
+        /// </summary>
+        internal static string Unrecognized_format_provider_Provider_must_provide_formatting_for_0 {
+            get {
+                return ResourceManager.GetString("Unrecognized_format_provider_Provider_must_provide_formatting_for_0", resourceCulture);
             }
         }
         

@@ -145,4 +145,8 @@
     <value>'{0}' must be in range {1}. {2}</value>
     <comment>{0} - Value name; {1} - range notation for the value; {2} post message text (Usually a spec reference)</comment>
   </data>
+  <data name="Unrecognized_format_provider_Provider_must_provide_formatting_for_0" xml:space="preserve">
+    <value>Unrecognized format provider. Provider must provide formatting for {0}</value>
+    <comment>Format provider for a parse of a SemVer string doesn't report the ordering required.</comment>
+  </data>
 </root>

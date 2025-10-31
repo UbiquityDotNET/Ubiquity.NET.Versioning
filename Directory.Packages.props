@@ -18,9 +18,9 @@
   <ItemGroup>
     <PackageVersion Include="Sprache" Version="2.3.1" />
     <!-- Tests all use the same framework versions -->
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.0" />
-    <PackageVersion Include="MSTest.TestAdapter" Version="3.9.1" />
-    <PackageVersion Include="MSTest.TestFramework" Version="3.9.1" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
+    <PackageVersion Include="MSTest.TestAdapter" Version="4.0.1" />
+    <PackageVersion Include="MSTest.TestFramework" Version="4.0.1" />
     <PackageVersion Include="System.Text.RegularExpressions" Version="4.3.1" />
   </ItemGroup>
 </Project>

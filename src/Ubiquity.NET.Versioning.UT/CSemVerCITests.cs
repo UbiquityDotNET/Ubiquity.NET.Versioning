@@ -205,8 +205,8 @@ namespace Ubiquity.NET.Versioning.UT
             var ver_name_1_same = new CSemVerCI( new CSemVer( 20, 1, 4 ), "BuildIndex01", "BuildName01" );
             var ver_name_2 = new CSemVerCI( new CSemVer( 20, 1, 4 ), "BuildIndex01", "BuildName02" );
 
-            Assert.IsTrue(ver_name_1.CompareTo(ver_name_2) < 0);
-            Assert.IsTrue(ver_name_2.CompareTo(ver_name_1) > 0);
+            Assert.IsLessThan( 0, ver_name_1.CompareTo( ver_name_2 ) );
+            Assert.IsGreaterThan( 0, ver_name_2.CompareTo( ver_name_1 ) );
 
             Assert.AreEqual(0, ver_name_1.CompareTo( ver_name_1_same ));
             Assert.AreEqual(0, ver_name_1_same.CompareTo( ver_name_1 ));
@@ -221,8 +221,8 @@ namespace Ubiquity.NET.Versioning.UT
             var ver_name_1_same = new CSemVerCI( new CSemVer( 20, 1, 4, null, [ "buildMeta" ] ), "BuildIndex01", "BuildName01" );
             var ver_name_2 = new CSemVerCI( new CSemVer( 20, 1, 4, null, [ "buildMeta" ] ), "BuildIndex01", "BuildName02" );
 
-            Assert.IsTrue(ver_name_1.CompareTo(ver_name_2) < 0);
-            Assert.IsTrue(ver_name_2.CompareTo(ver_name_1) > 0);
+            Assert.IsLessThan( 0, ver_name_1.CompareTo( ver_name_2 ) );
+            Assert.IsGreaterThan( 0, ver_name_2.CompareTo( ver_name_1 ) );
 
             Assert.AreEqual(0, ver_name_1.CompareTo( ver_name_1_same ));
             Assert.AreEqual(0, ver_name_1_same.CompareTo( ver_name_1 ));
@@ -238,8 +238,8 @@ namespace Ubiquity.NET.Versioning.UT
             var ver_name_1_same = new CSemVerCI( new CSemVer( 1, 2, 3, alpha_0_1 ), "BuildIndex01", "BuildName01" );
             var ver_name_2 = new CSemVerCI( new CSemVer( 1, 2, 3, alpha_0_1 ), "BuildIndex01", "BuildName02" );
 
-            Assert.IsTrue(ver_name_1.CompareTo(ver_name_2) < 0);
-            Assert.IsTrue(ver_name_2.CompareTo(ver_name_1) > 0);
+            Assert.IsLessThan( 0, ver_name_1.CompareTo( ver_name_2 ) );
+            Assert.IsGreaterThan( 0, ver_name_2.CompareTo( ver_name_1 ) );
 
             Assert.AreEqual(0, ver_name_1.CompareTo( ver_name_1_same ));
             Assert.AreEqual(0, ver_name_1_same.CompareTo( ver_name_1 ));
@@ -257,8 +257,8 @@ namespace Ubiquity.NET.Versioning.UT
             var ver_name_1_same = new CSemVerCI( new CSemVer( 1, 2, 3, alpha_0_1, ["BuildMeta", "MoreMeta"] ), "BuildIndex01", "BuildName01" );
             var ver_name_2 = new CSemVerCI( new CSemVer( 1, 2, 3, alpha_0_1, ["SomeOhterMeta"] ), "BuildIndex01", "BuildName02" );
 
-            Assert.IsTrue(ver_name_1.CompareTo(ver_name_2) < 0);
-            Assert.IsTrue(ver_name_2.CompareTo(ver_name_1) > 0);
+            Assert.IsLessThan( 0, ver_name_1.CompareTo( ver_name_2 ) );
+            Assert.IsGreaterThan( 0, ver_name_2.CompareTo( ver_name_1 ) );
 
             Assert.AreEqual(0, ver_name_1.CompareTo( ver_name_1_same ));
             Assert.AreEqual(0, ver_name_1_same.CompareTo( ver_name_1 ));

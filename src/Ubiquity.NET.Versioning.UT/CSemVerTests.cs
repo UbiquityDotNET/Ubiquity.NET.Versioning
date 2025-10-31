@@ -26,7 +26,7 @@ namespace Ubiquity.NET.Versioning.UT
             Assert.AreEqual( 3, ver.Patch );
             Assert.IsFalse( ver.IsPrerelease );
             Assert.IsFalse( ver.PrereleaseVersion.HasValue);
-            Assert.AreEqual( 0, ver.BuildMeta.Length);
+            Assert.IsEmpty( ver.BuildMeta);
 
             var preRelInfo = new PrereleaseVersion(1, 2, 3);
             ImmutableArray<string> expectedMeta = ["buildMeta"];
@@ -48,7 +48,7 @@ namespace Ubiquity.NET.Versioning.UT
             Assert.AreEqual( 0, ver.Patch );
             Assert.IsFalse( ver.IsPrerelease );
             Assert.IsFalse( ver.PrereleaseVersion.HasValue);
-            Assert.AreEqual( 0, ver.BuildMeta.Length);
+            Assert.IsEmpty( ver.BuildMeta);
         }
 
         [TestMethod]
@@ -80,11 +80,11 @@ namespace Ubiquity.NET.Versioning.UT
             var val = new CSemVer(1,2,3);
             var val2 = new CSemVer(1,2,3);
             var valp1 = new CSemVer(1,2,4); // "+1"
-            Assert.IsTrue(val.CompareTo(valm1) > 0, "[CompareTo] val > (val -1)");
-            Assert.IsTrue(valm1.CompareTo(val) < 0, "[CompareTo] (val - 1) < val");
+            Assert.IsGreaterThan( 0, val.CompareTo( valm1 ), "[CompareTo] val > (val -1)");
+            Assert.IsLessThan( 0, valm1.CompareTo( val ), "[CompareTo] (val - 1) < val");
             Assert.AreEqual(0, val.CompareTo(val2), "[CompareTo] val == val");
-            Assert.IsTrue(val.CompareTo(valp1) < 0, "[CompareTo] val < (val + 1)");
-            Assert.IsTrue(valp1.CompareTo(val) > 0, "[CompareTo] (val + 1) > val");
+            Assert.IsLessThan( 0, val.CompareTo( valp1 ), "[CompareTo] val < (val + 1)");
+            Assert.IsGreaterThan( 0, valp1.CompareTo( val ), "[CompareTo] (val + 1) > val");
 
             // Ensure operator variants are correct
             // (They should internally use CompareTo, this verifies correct behavior
@@ -149,7 +149,7 @@ namespace Ubiquity.NET.Versioning.UT
             Assert.AreEqual(number, ver.PrereleaseVersion.Value.Number, exp);
             Assert.AreEqual(fix, ver.PrereleaseVersion.Value.Fix, exp);
             Assert.IsNotNull(ver.BuildMeta, $"non-nullable property should not be null for '{exp}'");
-            Assert.AreEqual(0, ver.BuildMeta.Length, $"non-nullable property should be empty if not set for '{exp}'");
+            Assert.IsEmpty( ver.BuildMeta, $"non-nullable property should be empty if not set for '{exp}'");
             Assert.AreEqual(orderedVersion, ver.OrderedVersion , $"builds should have the same ordered version number provided for '{exp}'");
         }
 
@@ -168,7 +168,7 @@ namespace Ubiquity.NET.Versioning.UT
             Assert.IsFalse(ver.PrereleaseVersion.HasValue, exp);
             Assert.IsFalse(ver.IsPrerelease, exp);
             Assert.IsNotNull(ver.BuildMeta, $"non-nullable property should not be null for '{exp}'");
-            Assert.AreEqual(0, ver.BuildMeta.Length, $"non-nullable property should be empty if not set for '{exp}'");
+            Assert.IsEmpty( ver.BuildMeta, $"non-nullable property should be empty if not set for '{exp}'");
             Assert.AreEqual(orderedVersion, ver.OrderedVersion , $"should have the same ordered version number as provided for '{exp}'");
         }
     }

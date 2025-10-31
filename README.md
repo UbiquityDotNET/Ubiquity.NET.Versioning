@@ -1,8 +1,6 @@
 # Ubiquity.NET.Versioning
 This repo includes support for versioning numbers. This support includes:
-1) Automated Constrained Semantic Versioning ([CSemVer](https://csemver.org)) for MSBuild
-   projects.
-2) A standalone library useful for parsing, sorting and validating versions.
+1) A standalone library useful for parsing, sorting and validating versions.
     - [SemVer](https://semver.org)
     - [CSemVer](https://csemver.org)
         - This is a Constrained Semantic Version (That is, a strict subset of a SemVer)

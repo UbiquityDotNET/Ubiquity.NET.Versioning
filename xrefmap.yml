@@ -475,6 +475,24 @@ references:
   commentId: Overload:Ubiquity.NET.Versioning.Comparison.CaseInsensitive.SemVer
   fullName: Ubiquity.NET.Versioning.Comparison.CaseInsensitive.SemVer
   nameWithType: CaseInsensitive.SemVer
+- uid: Ubiquity.NET.Versioning.Comparison.CaseSensitive
+  name: CaseSensitive
+  href: versioning-lib/api/Ubiquity.NET.Versioning.Comparison.CaseSensitive.html
+  commentId: T:Ubiquity.NET.Versioning.Comparison.CaseSensitive
+  fullName: Ubiquity.NET.Versioning.Comparison.CaseSensitive
+  nameWithType: CaseSensitive
+- uid: Ubiquity.NET.Versioning.Comparison.CaseSensitive.SemVer
+  name: SemVer
+  href: versioning-lib/api/Ubiquity.NET.Versioning.Comparison.CaseSensitive.SemVer.html#Ubiquity_NET_Versioning_Comparison_CaseSensitive_SemVer
+  commentId: P:Ubiquity.NET.Versioning.Comparison.CaseSensitive.SemVer
+  fullName: Ubiquity.NET.Versioning.Comparison.CaseSensitive.SemVer
+  nameWithType: CaseSensitive.SemVer
+- uid: Ubiquity.NET.Versioning.Comparison.CaseSensitive.SemVer*
+  name: SemVer
+  href: versioning-lib/api/Ubiquity.NET.Versioning.Comparison.CaseSensitive.SemVer.html
+  commentId: Overload:Ubiquity.NET.Versioning.Comparison.CaseSensitive.SemVer
+  fullName: Ubiquity.NET.Versioning.Comparison.CaseSensitive.SemVer
+  nameWithType: CaseSensitive.SemVer
 - uid: Ubiquity.NET.Versioning.DateTimeExtensions
   name: DateTimeExtensions
   href: versioning-lib/api/Ubiquity.NET.Versioning.DateTimeExtensions.html

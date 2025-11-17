@@ -34,7 +34,8 @@ namespace Ubiquity.NET.Versioning
     /// would ADD a new (correctly spelled) name and then adjust the implementation to treat the old and new forms
     /// identically. The published name and it's associated behavior is immutable. Whether it does anything or not
     /// depends on the version, but the behavior itself may never be re-defined. That is, it always either does what
-    /// it was documented to do in the first release available, or it does nothing. It ***NEVER*** does something else.
+    /// it was documented to do in the first release available, or it does nothing. It <b><em>NEVER</em></b> does
+    /// something else.
     /// </note>
     /// </remarks>
     /// <seealso href="https://csemver.org/"/>

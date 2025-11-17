@@ -16,5 +16,3 @@ library and documentation:
     * Used to validate conformance to style within the repo
 * [docfx](https://dotnet.github.io/docfx/)
     * Used to generate the documentation site for this repo
-* [MSBUILD Project Creator](https://github.com/jeffkl/MSBuildProjectCreator)
-    * Used for unit testing the task package itself.

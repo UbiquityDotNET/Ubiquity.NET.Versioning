@@ -61,7 +61,6 @@ RequiredModules = @(Join-Path $PsScriptRoot '..' CommonBuild CommonBuild.psd1)
 
 # Functions to export from this module
 FunctionsToExport = @(
-    'Get-FunctionsToExport'
     'Initialize-BuildEnvironment'
 )
 
